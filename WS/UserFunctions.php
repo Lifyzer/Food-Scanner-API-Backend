@@ -1,0 +1,306 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: c157
+ * Date: 17/01/18
+ * Time: 11:53 AM
+ */
+
+
+class UserFunctions
+{
+    protected $connection;
+    function __construct(PDO $con)
+    {
+        $this->connection = $con;
+    }
+
+    public function call_service($service, $postData)
+    {
+        switch ($service) {
+            case "Login": {
+                return $this->Login($postData);
+            }
+                break;
+
+            case "Registration": {
+                return $this->Registration($postData);
+            }
+                break;
+
+            case "ChangePassword": {
+                return $this->ChangePassword($postData);
+            }
+                break;
+            case "EditProfile": {
+                return $this->EditProfile($postData);
+            }
+                break;
+
+            default:
+                return null;
+                break;
+        }
+    }
+
+
+    public function Registration($userData)
+    {
+        $connection = $this->connection;
+
+        $email_id = validateObject($userData, 'email_id', "");
+        $email_id = addslashes($email_id);
+
+        $password = validateObject($userData, 'password', "");
+        $password = addslashes($password);
+        $password = encryptPassword($password);
+
+        $first_name = validateObject($userData, 'first_name', "");
+        $first_name = addslashes($first_name);
+
+        $last_name = validateObject($userData, 'last_name', "");
+        $last_name = addslashes($last_name);
+
+        $device_type = validateObject($userData, 'device_type', "");
+        $device_type = addslashes($device_type);
+
+        $device_token = validateObject($userData, 'device_token', "");
+        $device_token = addslashes($device_token);
+
+        $posts = array();
+        $is_delete = IS_DELETE;
+        $created_date = date("Y-m-d H:i:s");
+
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", array('email' => $email_id, 'is_delete' => $is_delete));
+        if (!empty($objUser)) {
+            $status = FAILED;
+            $message = EMAIL_ALREADY_EXISTS;
+        }
+        else {
+
+            //****  INSERT USER ****//
+            $security = new SecurityFunctions($connection);
+            $generate_guid = $security->gen_uuid();
+            $user_array = array('email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
+                'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token,'created_date' => $created_date, 'guid' => $generate_guid);
+            $user_response = addData($connection, "Registration", TABLE_USER, $user_array);
+            if ($user_response[STATUS_KEY] == SUCCESS) {
+                $user_inserted_id = $user_response[MESSAGE_KEY];
+                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_inserted_id, 'is_delete' => $is_delete));
+                if (!empty($getUser)) {
+                    $tokenData = new stdClass;
+                    $tokenData->GUID = $getUser['guid'];
+                    $tokenData->userId = $getUser['id'];
+                    $user_token = $security->updateTokenforUser($tokenData);
+                    if ($user_token[STATUS_KEY] == SUCCESS) {
+                        $data[USERTOKEN] = $user_token[USERTOKEN];
+                    }
+                    $posts[] = $getUser;
+                    $status = SUCCESS;
+                    $message = REGISTRATION_SUCCESSFULLY_DONE;
+                }
+                else {
+                    $status = FAILED;
+                    $message = DEFAULT_NO_RECORD;
+                }
+            }
+            else {
+                $status = FAILED;
+                $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+            }
+        }
+        $data['status'] = $status;
+        $data['message'] = $message;
+        $data['User'] = $posts;
+        return $data;
+    }
+
+    public function EditProfile($userData)
+    {
+        $connection = $this->connection;
+
+        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = addslashes($user_id);
+
+        $email_id = validateObject($userData, 'email_id', "");
+        $email_id = addslashes($email_id);
+
+        $first_name = validateObject($userData, 'first_name', "");
+        $first_name = addslashes($first_name);
+
+        $is_delete = IS_DELETE;
+
+        $posts = array();
+
+        $objUserEmail = getSingleTableData($connection, TABLE_USER, "", "*", " id != $user_id ", array('email' => $email_id, 'is_delete' => $is_delete));
+        if (!empty($objUserEmail)) {
+                $created_date=getDefaultDate();
+                $update_array=array('first_name'=>$first_name,'email'=>$email_id,'modified_date'=>$created_date);
+
+            $edit_response = editData($connection, "UpdateProfile", TABLE_USER, $update_array, array('id' => $user_id));
+                if ($edit_response[STATUS_KEY] == SUCCESS) {
+                    $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
+                    if (!empty($getUser)) {
+                        $posts[] = $getUser;
+                    }
+                    $status = SUCCESS;
+                    $message = PROFILE_UPDATED_SUCCESSFULLY;
+                }
+                else {
+                    $status = FAILED;
+                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                }
+        }
+        else {
+            $status = FAILED;
+            $message = EMAIL_ALREADY_EXISTS;
+        }
+        $data['status'] = $status;
+        $data['message'] = $message;
+        $data['User'] = $posts;
+        return $data;
+    }
+
+    public function ChangePassword($userData)
+    {
+        $connection = $this->connection;
+
+        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = addslashes($user_id);
+
+        $password = validateObject($userData, 'password', "");
+        $password = addslashes($password);
+        $password = encryptPassword($password);
+
+        $new_password = validateObject($userData, 'new_password', "");
+        $new_password = addslashes($new_password);
+        $new_password = encryptPassword($new_password);
+
+        $is_delete = IS_DELETE;
+        $posts = array();
+
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,password", "", array('id' => $user_id, 'is_delete' => $is_delete));
+        if (!empty($objUser)) {
+            if ($password === $objUser['password']) {
+                $created_date=getDefaultDate();
+                $edit_response = editData($connection, "Login", TABLE_USER, array('password' => $new_password,'modified_date'=>$created_date), array('id' => $user_id));
+                if ($edit_response[STATUS_KEY] == SUCCESS) {
+                    $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
+                    if (!empty($getUser)) {
+                        $posts[] = $getUser;
+                        $status=SUCCESS;
+                        $message=PASSWORD_CHANGED_SUCCESSFULLY;
+                    }
+                    else {
+                        $status = FAILED;
+                        $message = DEFAULT_NO_RECORD;
+                    }
+                }
+                else{
+                    $status=FAILED;
+                    $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                }
+            }
+            else{
+                $status=FAILED;
+                $message=WRONG_PASSWORD_MESSAGE;
+            }
+        }
+        else{
+            $status=FAILED;
+            $message=NO_DATA_AVAILABLE;
+        }
+        $data['status'] = $status;
+        $data['message'] = $message;
+        $data['User'] = $posts;
+        return $data;
+    }
+
+    public function Login($userData)
+    {
+        $connection = $this->connection;
+
+        $email_id = validateObject($userData, 'email_id', "");
+        $email_id = addslashes($email_id);
+
+        $password = validateObject($userData, 'password', "");
+        $password = addslashes($password);
+
+        $device_type = validateObject($userData, 'device_type', "");
+        $device_type = addslashes($device_type);
+
+        $posts = array();
+
+        $is_delete = IS_DELETE;
+
+        $token = "";
+
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('email' => $email_id, 'is_delete' => $is_delete));
+        if (!empty($objUser)) {
+            if (encryptPassword($password) === $objUser['password']) {
+
+                $user_id = $objUser['id'];
+$created_date=getDefaultDate();
+                $edit_response = editData($connection, "Login", TABLE_USER, array('device_type' => $device_type,'modified_date'=>$created_date), array('id' => $user_id));
+                if ($edit_response[STATUS_KEY] == SUCCESS) {
+                    if ($objUser['guid'] == null || $objUser['guid'] == "") {
+                        $generate_user_guid = $this->updateGuidForUser($user_id);
+                    }
+                    else {
+                        $generate_user_guid = $objUser['guid'];
+                    }
+                    $tokenData = new stdClass;
+                    $tokenData->GUID = $generate_user_guid;
+                    $tokenData->userId = $user_id;
+                    $security = new SecurityFunctions($connection);
+                    $user_token = $security->updateTokenforUser($tokenData);
+
+                    if ($user_token[STATUS_KEY] == SUCCESS) {
+                        $token = $user_token[USERTOKEN];
+                    }
+                    $objUser['device_type']=$device_type;
+                    $objUser['modified_date']=$created_date;
+                    $posts[] = $objUser;
+                    $status = SUCCESS;
+                    $message = USER_LOGIN_SUCCESSFULLY;
+                    $data[USERTOKEN] = $token;
+                }
+                else {
+                    $status = FAILED;
+                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                }
+            }
+            else {
+                $status = FAILED;
+                $message = WRONG_PASSWORD_MESSAGE;
+            }
+        }
+        else {
+            $status = FAILED;
+            $message = NO_DATA_AVAILABLE;
+        }
+
+        $data['status'] = $status;
+        $data['message'] = $message;
+        $data['User'] = $posts;
+        return $data;
+    }
+
+    function updateGuidForUser($user_id)
+    {
+        $connection = $this->connection;
+        $is_delete=DELETE_STATUS::NOT_DELETE;
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,guid", "", array('id' => $user_id, 'is_delete' => $is_delete));
+        if (!empty($objUser)) {
+            $security = new SecurityFunctions($connection);
+            $generate_guid = $security->gen_uuid();
+                $edit_response = editData($connection, "UpdateGuid", TABLE_USER, array('guid' => $generate_guid), array('id' => $user_id));
+                if ($edit_response[STATUS_KEY] == SUCCESS) {
+                    return $generate_guid;
+                }
+        }
+        return "";
+    }
+}
+
+?>
