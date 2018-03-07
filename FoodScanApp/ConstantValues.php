@@ -28,7 +28,7 @@ define("USERTOKEN","UserToken");
 
 // ************  Messages  ****************//
 define("SOMETHING_WENT_WRONG_TRY_AGAIN_LATER", "Something went wrong, Please try again later");
-define("EMAIL_ALREADY_EXISTS", "Email address already exists");
+define("EMAIL_ALREADY_EXISTS", "Email ID already exists");
 define("REGISTRATION_SUCCESSFULLY_DONE", "Registration successfully done");
 define("MALICIOUS_SOURCE","Malicious source detected");
 define("TOKEN_ERROR","Please ensure that security token is supplied in your request");

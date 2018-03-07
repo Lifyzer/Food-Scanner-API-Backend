@@ -20,6 +20,7 @@ class Security {
         $data = base64_encode($data);
         return $data;
     }
+
     private static function pkcs5_pad ($text, $blocksize) {
         $pad = $blocksize - (strlen($text) % $blocksize);
         return $text . str_repeat(chr($pad), $pad);
