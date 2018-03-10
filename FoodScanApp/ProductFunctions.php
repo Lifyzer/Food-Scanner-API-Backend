@@ -61,63 +61,66 @@ class ProductFunctions
 
         $cacher = new Psr16Adapter('files');
         $cacheKey = 'productdetails' . $product_name;
-
         if(!$cacher->has($cacheKey)) {
             $select_product_details_stmt = getMultipleTableData($connection, TABLE_PRODUCT, "", "*", "LOWER(product_name) LIKE LOWER(:productName) AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1", ['productName' => "%$product_name%"]);
-            if ($select_product_details_stmt->rowCount() > 0) {
-                while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
-                    //******************* get user favourite ****************//
-                    $is_favourite = 1;
-                    $conditional_array = array('product_id' => $product['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete);
-                    $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
-                    if (!empty($objFavourite)) {
-                        $product['is_favourite'] = 1;
+            $cacher->set($cacheKey, $select_product_details_stmt, 3600 * 24);
+        } else {
+            $select_product_details_stmt = $cacher->get($cacheKey);
+        }
+
+        if ($select_product_details_stmt->rowCount() > 0) {
+            while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
+                //******************* get user favourite ****************//
+                $is_favourite = 1;
+                $conditional_array = array('product_id' => $product['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete);
+                $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
+
+                if (!empty($objFavourite)) {
+                    $product['is_favourite'] = 1;
+                } else {
+                    $product['is_favourite'] = 0;
+                }
+
+                //**** Product found in database insert data into history table ****//
+                $product_id = $product['id'];
+                $conditional_array = array('product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete);
+                $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
+
+                if (!empty($objHistory)) {
+                    //******** Update history ********//
+                    $history_id = $objHistory['id'];
+                    $edit_history_response = editData($connection, "getProductDetails", TABLE_HISTORY, array('created_date' => $current_date), array('id' => $history_id), "");
+                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                        $posts[] = $product;
                     } else {
-                        $product['is_favourite'] = 0;
+                        $status = FAILED;
+                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                        break;
                     }
-                    //**** Product found in database insert data into history table ****//
-                    $product_id = $product['id'];
-                    $conditional_array = array('product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete);
-                    $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
-                    if (!empty($objHistory)) {
-                        //******** Update history ********//
-                        $history_id = $objHistory['id'];
-                        $edit_history_response = editData($connection, "getProductDetails", TABLE_HISTORY, array('created_date' => $current_date), array('id' => $history_id), "");
-                        if ($edit_history_response[STATUS_KEY] == SUCCESS) {
-                            $posts[] = $product;
-                        } else {
-                            $status = FAILED;
-                            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                            break;
-                        }
+                } else {
+                    //******** Insert data into history ********//
+                    $history_array = array('user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date);
+                    $add_history_response = addData($connection, "getProductDetails", TABLE_HISTORY, $history_array);
+                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                        $posts[] = $product;
                     } else {
-                        //******** Insert data into history ********//
-                        $history_array = array('user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date);
-                        $add_history_response = addData($connection, "getProductDetails", TABLE_HISTORY, $history_array);
-                        if ($add_history_response[STATUS_KEY] == SUCCESS) {
-                            $posts[] = $product;
-                        } else {
-                            $status = FAILED;
-                            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                            break;
-                        }
+                        $status = FAILED;
+                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                        break;
                     }
                 }
-                $message = DATA_FETCHED_SUCCESSFULLY;
-                $status = SUCCESS;
-            } else {
-                $status = SUCCESS;
-                $message = NO_PRODUCT_FOUND_IN_DATABASE;
             }
-            $select_product_details_stmt->closeCursor();
-            $data['status'] = $status;
-            $data['message'] = $message;
-            $data['product'] = $posts;
-
-            $cacher->set($cacheKey, $data, 3600 * 24);
+            $message = DATA_FETCHED_SUCCESSFULLY;
+            $status = SUCCESS;
         } else {
-            $data = $cacher->get($cacheKey);
+            $status = SUCCESS;
+            $message = NO_PRODUCT_FOUND_IN_DATABASE;
         }
+
+        $select_product_details_stmt->closeCursor();
+        $data['status'] = $status;
+        $data['message'] = $message;
+        $data['product'] = $posts;
 
         return $data;
     }
@@ -279,8 +282,7 @@ class ProductFunctions
         }
         $data['status'] = $status;
         $data['message'] = $message;
+
         return $data;
     }
 }
-
-?>
