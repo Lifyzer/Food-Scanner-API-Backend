@@ -286,7 +286,7 @@ $created_date=getDefaultDate();
         return $data;
     }
 
-    function updateGuidForUser($user_id)
+    private function updateGuidForUser($user_id)
     {
         $connection = $this->connection;
         $is_delete=DELETE_STATUS::NOT_DELETE;

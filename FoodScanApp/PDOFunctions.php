@@ -1,5 +1,6 @@
 <?php
 include_once "ConstantValues.php";
+
 function addData(PDO $connection,$function_name="",$table_name,$dataArray)
 {
     $status=FAILED;
@@ -197,7 +198,6 @@ function getSingleTableData(PDO $connection,$table,$sql,$columns,$customConditio
 //         print_r($execute_array);
         $statement = $connection->prepare($sql);
         $statement->execute($execute_array);
-        $result = array();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $statement->closeCursor();
     } catch (PDOException $e) {
@@ -209,7 +209,7 @@ function getSingleTableData(PDO $connection,$table,$sql,$columns,$customConditio
     return $result;
 }
 
-function getMultipleTableData(PDO $connection,$table,$sql,$columns,$customCondition,$dataArray)
+function getMultipleTableData(PDO $connection,$table,$sql,$columns,$customCondition, array $dataArray = null)
 {
     try{
         $numOfItems = count($dataArray);
@@ -313,4 +313,3 @@ function editDataWithCustomCondition(PDO $connection,$function_name="",$table_na
     $data['sql']=$sql;
     return $data;
 }
-?>

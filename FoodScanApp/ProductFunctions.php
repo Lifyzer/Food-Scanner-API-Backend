@@ -9,7 +9,8 @@
 class ProductFunctions
 {
     protected $connection;
-    function __construct(PDO $con)
+
+    public function __construct(PDO $con)
     {
         $this->connection = $con;
     }
@@ -57,14 +58,12 @@ class ProductFunctions
         $user_id = addslashes($user_id);
 
         $product_name = validateObject($userData, 'product_name', "");
-        $product_name = addslashes($product_name);
-
         $posts = array();
 
         $is_delete = IS_DELETE;
         $current_date = getDefaultDate();
 
-        $select_product_details_stmt=getMultipleTableData($connection,TABLE_PRODUCT,"","*", "LOWER(product_name) = LOWER('".$product_name."') AND is_delete ='".$is_delete."' ORDER BY created_date LIMIT 1","");
+        $select_product_details_stmt=getMultipleTableData($connection,TABLE_PRODUCT,"","*", "LOWER(product_name) LIKE LOWER(:productName) AND is_delete ='".$is_delete."' ORDER BY created_date LIMIT 1", ['productName' => "%$product_name%"]);
         if($select_product_details_stmt->rowCount()>0){
             while ($product=$select_product_details_stmt->fetch(PDO::FETCH_ASSOC)){
                 //******************* get user favourite ****************//
