@@ -168,7 +168,6 @@ function addTagsToFeed($tags, $isTest, &$isQuerySuccess, mysqli $con)
             $stmt->close();
 
             if ($tagId > 0) {
-
                 $currentTags[] = $tagId;
 
                 $updateTag = "UPDATE " . TABLE_HASHTAGS . " SET tag_count=tag_count+1 WHERE id=?";
@@ -272,7 +271,3 @@ function fetch_stmt_with_attributes($stmt)
 
     return null;
 }
-
-
-
-?>
