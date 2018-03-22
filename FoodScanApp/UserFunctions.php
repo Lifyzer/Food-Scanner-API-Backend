@@ -5,6 +5,10 @@
  * Date: 17/01/18
  * Time: 11:53 AM
  */
+ 
+include_once 'TableVars.php';
+include_once 'ConstantValues.php';
+include_once 'SendEmail.php';
 
 
 class UserFunctions
@@ -209,7 +213,7 @@ class UserFunctions
             }
             else{
                 $status=FAILED;
-                $message=WRONG_PASSWORD_MESSAGE;
+                $message=CHNG_WRONG_PASSWORD_MESSAGE;
             }
         }
         else{
@@ -283,7 +287,7 @@ $created_date=getDefaultDate();
         }
         else {
             $status = FAILED;
-            $message = NO_DATA_AVAILABLE;
+            $message = NO_EMAIL_AND_PASSOWRD_AVAILABLE;
         }
 
         $data['status'] = $status;
@@ -316,16 +320,21 @@ $created_date=getDefaultDate();
         $email_id = addslashes($email_id);
 
         $is_delete = IS_DELETE;
-
+        
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", array('email' => $email_id, 'is_delete' => $is_delete));
+        
+    
         if(!empty($objUser)){
+         
             $sendEmail = new SendEmail();
             $randomString = generateRandomString(10);
             $userPassword = $randomString;
             $dbPassword = encryptPassword($userPassword);
             $created_date=getDefaultDate();
+                        
             $edit_response = editData($connection, "Forgot Password", TABLE_USER, array('password' => $dbPassword,'modified_date'=>$created_date), array('email' => $email_id));
             if ($edit_response[STATUS_KEY] == SUCCESS) {
+        
                 $appname = APPNAME;
                 $firstname = $objUser['first_name'];
                 $lastname = "";
