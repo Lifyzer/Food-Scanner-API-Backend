@@ -46,6 +46,13 @@ class ProductFunctions
         }
     }
 
+    /**
+     * @param mixed $userData
+     *
+     * @return mixed
+     *
+     * @throws \phpFastCache\Exceptions\phpFastCacheSimpleCacheException
+     */
     public function getProductDetails($userData)
     {
         $connection = $this->connection;
@@ -62,20 +69,22 @@ class ProductFunctions
         $cacher = new Psr16Adapter('files');
         $cacheKey = 'productdetails' . $product_name;
         if(!$cacher->has($cacheKey)) {
-            $select_product_details_stmt = getMultipleTableData($connection, TABLE_PRODUCT, "", "*", "LOWER(product_name) LIKE LOWER(:productName) AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1", ['productName' => "%$product_name%"]);
+            $select_product_details_stmt=getMultipleTableData($connection,TABLE_PRODUCT,"","*",
+                "LOWER(product_name) = LOWER('".$product_name."') AND is_delete ='".$is_delete."' ORDER BY created_date LIMIT 1","");
             $cacher->set($cacheKey, $select_product_details_stmt, 3600 * 24);
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
 
-        if ($select_product_details_stmt->rowCount() > 0) {
-            while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
+        if ($select_product_details_stmt->rowCount()> 0) {
+            while ($product=$select_product_details_stmt->fetch(PDO::FETCH_ASSOC)){
                 //******************* get user favourite ****************//
                 $is_favourite = 1;
-                $conditional_array = array('product_id' => $product['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete);
-                $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
-
+                $conditional_array=array('product_id'=>$product['id'],'user_id'=>$user_id,'is_favourite'=>$is_favourite,'is_delete'=>$is_delete);
+                $objFavourite=getSingleTableData($connection,TABLE_FAVOURITE,"","id","",$conditional_array);
+//                echo $product['id']."-2-".$user_id."-3-".$is_favourite."-4-".$is_delete;
                 if (!empty($objFavourite)) {
+
                     $product['is_favourite'] = 1;
                 } else {
                     $product['is_favourite'] = 0;
@@ -259,9 +268,13 @@ class ProductFunctions
         $objFavourite=getSingleTableData($connection,TABLE_FAVOURITE,"","id,is_favourite","",$conditional_array);
         if(!empty($objFavourite)){
             $edit_response=editData($connection,"addToFavourite",TABLE_FAVOURITE,array('is_favourite'=>$is_favourite,'created_date'=>$current_date),array('id'=>$objFavourite['id']),"");
+
             if($edit_response[STATUS_KEY]==SUCCESS){
                 $status=SUCCESS;
-                $message="Like / Dislike updated Successfully !!!";
+                if($is_favourite==1)
+                    $message="Product added in favourite.";
+                else
+                    $message="Product remove from favourite.";
             }
             else{
                 $status=FAILED;

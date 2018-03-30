@@ -22,7 +22,6 @@ $postData = $reqData[0];
 $debug = 0;
 $logger->Log($debug, 'POST DATA :', $postData);
 $status = "";
-
 $logger->Log($debug, 'Service :', $_REQUEST['Service']);
 
 switch ($_REQUEST['Service']) {
@@ -32,6 +31,7 @@ switch ($_REQUEST['Service']) {
     case "Login":
     case "ChangePassword":
     case "EditProfile":
+    case "ForgotPassword":
     {
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
@@ -40,9 +40,7 @@ switch ($_REQUEST['Service']) {
         $secret_key = addslashes($secret_key);
 
         $connection = $GLOBALS['con'];
-
         $isSecure = (new SecurityFunctions($connection))->checkForSecurityNew($access_key, $secret_key);
-
         if ($isSecure == NO) {
             $data['status'] = FAILED;
             $data['message'] = MALICIOUS_SOURCE;

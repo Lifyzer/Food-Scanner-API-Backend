@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c119
- * Date: 03/03/15
- * Time: 5:10 PM
- */
 
 // print array with format
 function pr($arr = null, $exit = 1, $append_text = null) {
@@ -40,7 +34,7 @@ function errorLogFunction($error_message){
 
 function validateObject($object, $key, $placeHolder) {
 
-    if(isset($object -> $key))
+    if (isset($object -> $key))
     {
 //        $value = validateValue($object->$key, "");
         return $object->$key;
@@ -126,11 +120,11 @@ function generatecoupontring($length = 6)
 }
 
 
-function generateRandomCode($length) 
+function generateRandomCode($length)
 {
 	    $numbers = range('0','9');
 	    $final_array = array_merge($numbers);
-        while($length--) 
+        while($length--)
 	       {
     		  $key = array_rand($final_array);
 		      $randomString = $final_array[$key];
@@ -147,127 +141,4 @@ function validateFormdata($object, $key, $placeHolder)
     } else {
         return $placeHolder;
     }
-}
-
-function addTagsToFeed($tags, $isTest, &$isQuerySuccess, mysqli $con)
-{
-    $currentTags = array();
-
-    foreach ($tags as $hashTag) {
-        if ($isQuerySuccess) {
-
-            $hashTag = strtolower($hashTag);
-
-            $selectQuery = "SELECT id FROM " . TABLE_HASHTAGS . " WHERE tag_name = ?";
-            $stmt = $con->prepare($selectQuery);
-            $tagId = -1;
-            $stmt->bind_param("s", $hashTag);
-            $stmt->execute();
-            $stmt->bind_result($tagId);
-            $stmt->fetch();
-            $stmt->close();
-
-            if ($tagId > 0) {
-                $currentTags[] = $tagId;
-
-                $updateTag = "UPDATE " . TABLE_HASHTAGS . " SET tag_count=tag_count+1 WHERE id=?";
-                $stmtUpdate = $con->prepare($updateTag);
-                $stmtUpdate->bind_param("i", $tagId);
-                if ($stmtUpdate->execute()) {
-                    $stmtUpdate->close();
-                    $isQuerySuccess = true;
-                } else {
-                    $isQuerySuccess = false;
-                    break;
-                }
-            } else {
-                $tagCount = 1;
-
-                $createdDate = getDefaultDate();
-                $insertQuery = "INSERT INTO " . TABLE_HASHTAGS . "(tag_name,tag_count,is_test,created_date) VALUES(?,?,?,?)";
-
-                $insertStmt = $con->prepare($insertQuery);
-                $insertStmt->bind_param('siss', $hashTag, $tagCount, $isTest, $createdDate);
-
-                if ($insertStmt->execute()) {
-                    $insertStmt->close();
-                    $currentTags[] = mysqli_insert_id($con);
-                    $isQuerySuccess = true;
-                } else {
-                    $isQuerySuccess = false;
-                    break;
-                }
-            }
-        }
-    }
-    return $currentTags;
-}
-
-function copy_value($v) 
-{
-    return $v;
-}
-function fetch_assoc_all_values($stmt)
-{
-    if($stmt->num_rows>0)
-    {
-        $result = array();
-        $md = $stmt->result_metadata();
-        $params = array();
-        while($field = $md->fetch_field()) {
-            $params[] = &$result[$field->name];
-        }
-        call_user_func_array(array($stmt, 'bind_result'), $params);
-        if($stmt->fetch())
-            return $result;
-    }
-
-    return null;
-}
-
-
-function fetch_assoc_stmt(\mysqli_stmt $stmt, $buffer = true) 
-{
-    if ($buffer) 
-    {
-        $stmt->store_result();
-    }
-    $fields = $stmt->result_metadata()->fetch_fields();
-    $args = array();
-    foreach($fields AS $field) 
-    {
-        $key = str_replace(' ', '_', $field->name); // space may be valid SQL, but not PHP
-        $args[$key] = &$field->name; // this way the array key is also preserved
-    }
-    call_user_func_array(array($stmt, "bind_result"), $args);
-
-    $results = array();
-    while($stmt->fetch()) 
-    {
-        //$results[] = array_map(array($this, "copy_value"), $args);        
-        $results[] = array_map("copy_value", $args); 
-    }
-    if ($buffer) 
-    {
-        $stmt->free_result();
-    }
-    return $results;
-}
-
-function fetch_stmt_with_attributes($stmt)
-{
-    if($stmt->num_rows>0)
-    {
-        $result = array();
-        $md = $stmt->result_metadata();
-        $params = array();
-        while($field = $md->fetch_field()) {
-            $params[] = &$result[$field->name];
-        }
-        call_user_func_array(array($stmt, 'bind_result'), $params);
-        if($stmt->fetch())
-            return $result;
-    }
-
-    return null;
 }

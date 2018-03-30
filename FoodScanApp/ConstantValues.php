@@ -10,7 +10,7 @@ define("ENCRYPTION_KEY", "niplframework");
 define("DEFAULT_NO_RECORDS", "No records found.");
 define("SUCCESS","success");
 define("FAILED", "failed");
-define("APPNAME", "Flier_App");
+define("APPNAME", "FoodScan App");
 //define("SENDER_EMAIL_ID", "demo.narola@gmail.com");
 define("SENDER_EMAIL_ID", "pra@narola.email");
 define("SENDER_EMAIL_PASSWORD", "jUVAO8ufUmaucHM");
@@ -28,13 +28,15 @@ define("USERTOKEN","UserToken");
 
 // ************  Messages  ****************//
 define("SOMETHING_WENT_WRONG_TRY_AGAIN_LATER", "Something went wrong, Please try again later");
-define("EMAIL_ALREADY_EXISTS", "Email address already exists");
+define("EMAIL_ALREADY_EXISTS", "Email ID already exists");
 define("REGISTRATION_SUCCESSFULLY_DONE", "Registration successfully done");
 define("MALICIOUS_SOURCE","Malicious source detected");
 define("TOKEN_ERROR","Please ensure that security token is supplied in your request");
 define("DEFAULT_NO_RECORD","No record found");
 define("WRONG_PASSWORD_MESSAGE","you have entered wrong Password");
+define("CHNG_WRONG_PASSWORD_MESSAGE","Old password is incorrect");
 define("NO_DATA_AVAILABLE","No data available");
+define("NO_EMAIL_AND_PASSOWRD_AVAILABLE","Email ID or Password is incorrect.");
 define("USER_LOGIN_SUCCESSFULLY","User Login Successfully");
 define("PASSWORD_CHANGED_SUCCESSFULLY","Password Changed Successfully");
 define("NO_FAVOURITE_PRODUCT_FOUND","No Favourite Product not found");

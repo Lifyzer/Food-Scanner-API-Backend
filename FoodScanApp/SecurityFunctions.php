@@ -30,6 +30,7 @@ class SecurityFunctions
 
             case "testEncryption": {
                 return $this->testEncryption($postData);
+//                return $this->test($postData);
             }
                 break;
 
@@ -41,6 +42,10 @@ class SecurityFunctions
             case "expiredAllTokenofUser": {
                 return $this->expiredAllTokenofUser($postData);
             }
+                break;
+
+            default:
+                return null;
                 break;
         }
     }
@@ -112,11 +117,38 @@ class SecurityFunctions
         return $data;
     }
 
-
     public function getUserAgent()
     {
         $string = $_SERVER ['HTTP_USER_AGENT'];
         $data['User_agent'] = $string;
+        return $data;
+    }
+
+    function test($userData){
+
+        $plaintext= validateValue($userData->guid, "");
+        $key="_$(Skill)!_square@#$%_23_06_2017";
+        //$key previously generated safely, ie: openssl_random_pseudo_bytes
+        $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $iv = openssl_random_pseudo_bytes($ivlen);
+        $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+        $ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+
+        //decrypt later....
+        $c = base64_decode($ciphertext);
+        $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $iv = substr($c, 0, $ivlen);
+        $hmac = substr($c, $ivlen, $sha2len=32);
+        $ciphertext_raw = substr($c, $ivlen+$sha2len);
+        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+        if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
+        {
+            $decode=$original_plaintext;
+        }
+        $data['encode']=$ciphertext;
+        $data['decode']=$decode;
         return $data;
     }
 
@@ -132,7 +164,6 @@ class SecurityFunctions
         return $data;
     }
 
-
     public function expiredAllTokenofUser($userData)
     {
         $user_id = validateValue($userData['userId'], '');
@@ -145,7 +176,6 @@ class SecurityFunctions
         }
         return NO;
     }
-
 
     // USED METHODS
     public function updateTokenForUser($userData)
@@ -265,7 +295,11 @@ class SecurityFunctions
                                     $response['value'] = $secretvalue;
                                     return $response;
                                 } else {
-                                    $secretvalue1 = $security->encrypt($tempToken, $masterKey);
+                                    /*echo "\n temp=>".$tempToken;
+                                    echo "\n master=>".$masterKey;
+                                    echo "\n secret=>".$secretvalue;
+                                    echo "\n new serc==> ". $secretvalue1 */
+                                    $secretvalue1= $security->encrypt($tempToken, $masterKey);
                                     if (trim($secretvalue1) == trim($secretvalue)) {
                                         return YES;
                                     } else {
@@ -274,8 +308,8 @@ class SecurityFunctions
                                 }
                             }
                             else {
-//                                                        echo "acces=>".$accessvalue;
-//                                                        echo "\nsec=>".$secretvalue;
+//                                echo "\nacces=>".$accessvalue;
+//                                echo "\nsec=>".$secretvalue;
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
                                 return $this->checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken);
                             }
@@ -375,6 +409,9 @@ class SecurityFunctions
                                 // check user passed temporary token or request with temporary token.
 
                                 if ($secretvalue == NULL) {
+//                                    echo "\n temp=>".$tempToken;
+//                                    echo "\n master=>".$masterKey;
+//                                    echo "\n new serc==> ".
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
                                     $response = array();
                                     $response['key'] = "Temp";// return temporary token
@@ -415,8 +452,10 @@ class SecurityFunctions
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
         if ($access_key == "") {
-
-        } else {
+            $data[STATUS_KEY] = FAILED;
+            $data[MESSAGE_KEY] = TOKEN_ERROR;
+        }
+        else {
             $isSecure = $this->checkForSecurityNew($access_key, $secret_key);
             if ($isSecure != NO) {
                 $stmt_get_admin_config=getMultipleTableData($connection,TABLE_ADMIN_CONFIG,"","config_key,config_value"," config_key IN('globalPassword','userAgent','tempToken')",array('is_delete'=>DELETE_STATUS::NOT_DELETE ));
