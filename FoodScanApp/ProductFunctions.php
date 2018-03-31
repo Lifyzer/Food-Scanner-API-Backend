@@ -4,6 +4,8 @@ use phpFastCache\Helper\Psr16Adapter;
 
 class ProductFunctions
 {
+    const CACHE_LIFETIME = 3600*24;
+
     protected $connection;
 
     public function __construct(PDO $con)
@@ -71,7 +73,7 @@ class ProductFunctions
         if(!$cacher->has($cacheKey)) {
             $select_product_details_stmt=getMultipleTableData($connection,TABLE_PRODUCT,"","*",
                 "LOWER(product_name) = LOWER('".$product_name."') AND is_delete ='".$is_delete."' ORDER BY created_date LIMIT 1","");
-            $cacher->set($cacheKey, $select_product_details_stmt, 3600 * 24);
+            $cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
