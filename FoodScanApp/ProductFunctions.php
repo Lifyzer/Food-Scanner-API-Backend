@@ -268,29 +268,24 @@ class ProductFunctions
 
         $conditional_array=array('product_id'=>$product_id,'user_id'=>$user_id,'is_delete'=>$is_delete);
         $objFavourite=getSingleTableData($connection,TABLE_FAVOURITE,"","id,is_favourite","",$conditional_array);
-        if(!empty($objFavourite)){
+        if (!empty($objFavourite)){
             $edit_response=editData($connection,"addToFavourite",TABLE_FAVOURITE,array('is_favourite'=>$is_favourite,'created_date'=>$current_date),array('id'=>$objFavourite['id']),"");
 
-            if($edit_response[STATUS_KEY]==SUCCESS){
+            if ($edit_response[STATUS_KEY]==SUCCESS){
                 $status=SUCCESS;
-                if($is_favourite==1)
-                    $message="Product added in favourite.";
-                else
-                    $message="Product remove from favourite.";
+                $message = $is_favourite == 1 ? 'Product added in favourite.' : 'Product remove from favourite.';
             }
             else{
                 $status=FAILED;
                 $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
             }
-        }
-        else{
+        } else {
             $favourite_product_array=array('user_id'=>$user_id,'product_id'=>$product_id,'is_favourite'=>$is_favourite,'created_date'=>$current_date);
             $favourite_response=addData($connection,"addToFavourite",TABLE_FAVOURITE,$favourite_product_array);
-            if($favourite_response[STATUS_KEY]==SUCCESS){
+            if ($favourite_response[STATUS_KEY]==SUCCESS) {
                 $status=SUCCESS;
                 $message=FAVOURITE_SUCCESSFULLY;
-            }
-            else{
+            } else {
                 $status=FAILED;
                 $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
             }
