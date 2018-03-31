@@ -50,8 +50,6 @@ function addData(PDO $connection,$function_name="",$table_name,$dataArray)
 
 function editData(PDO $connection,$function_name="",$table_name,$dataArray,$conditionArray,$query="")
 {
-    $status = FAILED;
-    $message = NO_ERROR;
     $sql="";
     $data = array();
     try {
