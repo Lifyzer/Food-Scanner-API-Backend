@@ -472,5 +472,3 @@ class SecurityFunctions
         return $data;
     }
 }
-
-?>

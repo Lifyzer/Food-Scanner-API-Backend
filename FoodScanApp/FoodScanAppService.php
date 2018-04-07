@@ -116,7 +116,7 @@ switch ($_REQUEST['Service']) {
     }
         break;
 }
+
 header('Content-type: application/json');
 echo json_encode($data);
 $GLOBALS['con']=null;
-?>
