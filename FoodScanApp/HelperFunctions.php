@@ -14,7 +14,7 @@ function pr($arr = null, $exit = 1, $append_text = null) {
     }
 }
 
-function errorLogFunction($error_message){
+function errorLogFunction($error_message) {
     $log_file = date("F_j_Y").'_log.txt';
     $file = 'error_log_' . date("Ymd") . '.txt';
     $current = @file_get_contents($file);
@@ -34,15 +34,12 @@ function errorLogFunction($error_message){
 
 function validateObject($object, $key, $placeHolder) {
 
-    if (isset($object -> $key))
-    {
-//        $value = validateValue($object->$key, "");
+    if (isset($object->$key)) {
+        // $value = validateValue($object->$key, "");
         return $object->$key;
     }
-    else
-    {
-        return $placeHolder;
-    }
+
+    return $placeHolder;
 }
 
 function json_validate($string) {

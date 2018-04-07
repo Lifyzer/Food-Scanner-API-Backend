@@ -250,7 +250,7 @@ class UserFunctions
             if (encryptPassword($password) === $objUser['password']) {
 
                 $user_id = $objUser['id'];
-$created_date=getDefaultDate();
+                $created_date=getDefaultDate();
                 $edit_response = editData($connection, "Login", TABLE_USER, array('device_type' => $device_type,'modified_date'=>$created_date), array('id' => $user_id));
                 if ($edit_response[STATUS_KEY] == SUCCESS) {
                     if ($objUser['guid'] == null || $objUser['guid'] == "") {
