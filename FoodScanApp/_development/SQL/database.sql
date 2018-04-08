@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS product (
     salt float NOT NULL,
     sodium float NOT NULL,
     alcohol float NOT NULL,
-    is_organic enum('1','0') NOT NULL,
-    is_healthy enum('1','0') NOT NULL,
+    is_organic enum('1','0') NOT NULL DEFAULT '0',
+    is_healthy enum('1','0') NOT NULL DEFAULT '0',
     PRIMARY KEY (id),
     UNIQUE KEY (barcode_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
@@ -114,7 +114,7 @@ CREATE TABLE user (
   created_date datetime NOT NULL,
   modified_date datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '1',
+  is_test enum('0','1') NOT NULL DEFAULT '0',
   guid varchar(100) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY (email)
