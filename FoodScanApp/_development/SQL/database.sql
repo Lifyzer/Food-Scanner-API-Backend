@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS product (
     salt float NOT NULL,
     sodium float NOT NULL,
     alcohol float NOT NULL,
+    is_organic enum('1','0') NOT NULL,
     is_healthy enum('1','0') NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY (barcode_id)
