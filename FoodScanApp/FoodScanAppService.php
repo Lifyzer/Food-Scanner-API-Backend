@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c157
- * Date: 17/01/18
- * Time: 11:45 AM
- */
 
 include_once 'config.php';
 include_once 'HelperFunctions.php';

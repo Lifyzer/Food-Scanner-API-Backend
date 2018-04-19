@@ -84,16 +84,7 @@ function matchStringValue($str1, $str2)
 }
 
 function encryptPassword( $str ) {
-//    $qEncoded      = base64_encode( mcrypt_encrypt( MCRYPT_RIJNDAEL_256, md5( ENCRYPTION_KEY ), $str, MCRYPT_MODE_CBC, md5( md5( ENCRYPTION_KEY ) ) ) );
-
-    $qEncoded      = md5($str );
-
-    return( $qEncoded );
-}
-
-function decryptPassword( $str ) {
-    $qDecoded      = rtrim( mcrypt_decrypt( MCRYPT_RIJNDAEL_256, md5( ENCRYPTION_KEY ), base64_decode( $str ), MCRYPT_MODE_CBC, md5( md5( ENCRYPTION_KEY ) ) ), "\0");
-    return( $qDecoded );
+    return md5($str);
 }
 
 function generateRandomString($length = 10)

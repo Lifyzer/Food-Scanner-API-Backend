@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c157
- * Date: 17/01/18
- * Time: 12:22 PM
- */
-
 
 class Security {
      public static function encrypt($input, $key) {
