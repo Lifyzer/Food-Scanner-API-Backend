@@ -14,6 +14,7 @@ include_once 'TableVars.php';
 class SecurityFunctions
 {
     protected $connection;
+
     function __construct(PDO $con)
     {
         $this->connection = $con;
@@ -43,7 +44,10 @@ class SecurityFunctions
                 return $this->expiredAllTokenofUser($postData);
             }
                 break;
-
+            case "GetTokenData": {
+                return $this->GetTokenData($postData);
+            }
+                break;
             default:
                 return null;
                 break;
@@ -112,7 +116,9 @@ class SecurityFunctions
         $data[STATUS_KEY] = $status;
         $data[MESSAGE_KEY] = $message;
 
-        $data['data']['adminConfig'] = $this->getAdminConfigWithToken($userData);
+        $arr_adminconfig = $this->getAdminConfigWithToken($userData);
+        $arr_adminconfig['key_iv'] = ENCRYPTION_KEY_IV;
+        $data['data']['adminConfig'] = $arr_adminconfig;
 
         return $data;
     }
@@ -124,39 +130,41 @@ class SecurityFunctions
         return $data;
     }
 
-    function test($userData){
+    function test($userData)
+    {
 
-        $plaintext= validateValue($userData->guid, "");
-        $key="_$(Skill)!_square@#$%_23_06_2017";
+        $plaintext = validateValue($userData->guid, "");
+        $key = "_$(Skill)!_square@#$%_23_06_2017";
         //$key previously generated safely, ie: openssl_random_pseudo_bytes
-        $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
         $iv = openssl_random_pseudo_bytes($ivlen);
-        $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
-        $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
-        $ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+        $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+        $ciphertext = base64_encode($iv . $hmac . $ciphertext_raw);
 
         //decrypt later....
         $c = base64_decode($ciphertext);
-        $ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
         $iv = substr($c, 0, $ivlen);
-        $hmac = substr($c, $ivlen, $sha2len=32);
-        $ciphertext_raw = substr($c, $ivlen+$sha2len);
-        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
-        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+        $hmac = substr($c, $ivlen, $sha2len = 32);
+        $ciphertext_raw = substr($c, $ivlen + $sha2len);
+        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
         if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
         {
-            $decode=$original_plaintext;
+            $decode = $original_plaintext;
         }
-        $data['encode']=$ciphertext;
-        $data['decode']=$decode;
+        $data['encode'] = $ciphertext;
+        $data['decode'] = $decode;
         return $data;
     }
 
     public function testEncryption($userData)
     {
-        //echo '  Current PHP version: ' . phpversion();
+//        echo '  Current PHP version: ' . phpversion();
+//        error_reporting(E_ALL & ~E_NOTICE);
         $guid = validateValue($userData->guid, "");
-        $global_pwd_value="_$(Skill)!_square@#$%_23_06_2017";
+        $global_pwd_value = "_$(Skill)!_square@#$%_23_06_2017";
         $security = new Security();
         $encrpt_acesskey = $security->encrypt($guid, $global_pwd_value);
         $data['encrypted_value'] = $encrpt_acesskey;
@@ -171,7 +179,7 @@ class SecurityFunctions
         if ($user_id != '') {
 
             $modifiedDate = date('Y-m-d H:i:s', time());
-            editData($this->connection,"ExpireToken",TABLE_APP_TOKENS,array('modified_date'=>$modifiedDate),array('userid'=>$user_id),"");
+            editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, array('modified_date' => $modifiedDate), array('userid' => $user_id), "");
             return YES;
         }
         return NO;
@@ -191,9 +199,11 @@ class SecurityFunctions
                 $currentdate = date("dmyHis", time() + $expiryDuration);
                 $token_array = array(':userid' => $user_id, ':token' => $generateToken,
                     ':expiry' => $currentdate, ':token1' => $generateToken, ':expiry1' => $currentdate, ':created_date' => $modifiedDate);
+                error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
-            if ($stmt = $connection->prepare($insertUpdateQuery)) {
+
+                if ($stmt = $connection->prepare($insertUpdateQuery)) {
                     if ($stmt->execute($token_array)) {
                         $stmt->closeCursor();
                         $uuid = validateValue($userData->GUID, '');
@@ -211,20 +221,17 @@ class SecurityFunctions
                         $data[USERTOKEN] = $encryptedTokenName;
                         $data['status'] = SUCCESS;
                         return $data;
-                    }
-                    else {
+                    } else {
                         $data['status'] = FAILED;
                         $data[USERTOKEN] = NO;
                         return $data;
                     }
-                }
-                else {
+                } else {
                     $data['status'] = FAILED;
                     $data[USERTOKEN] = NO;
                     return $data;
                 }
-            }
-            else {
+            } else {
                 $data[STATUS_KEY] = FAILED;
                 $data[USERTOKEN] = NO;
                 return $data;
@@ -270,16 +277,18 @@ class SecurityFunctions
             return ERROR;
         } else {
             // get user-agent from database
-            $objUserAgent=getSingleTableData($connection,TABLE_ADMIN_CONFIG,"","config_value","",array('config_key'=>'userAgent','is_delete'=>DELETE_STATUS::NOT_DELETE));
-            if(!empty($objUserAgent)) {
+            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+
+            if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
                 $separateKey = (explode(',', $user_agent));
+
                 // check user-agent is valid
                 if ((strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[0]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[1]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[2]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[3]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[4]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[5]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[6]) !== false)) {
                     // get temporary token for user.
 
-                    $getTempToken=getSingleTableData($connection,TABLE_ADMIN_CONFIG,"","config_value","",array('config_key'=>'tempToken','is_delete'=>DELETE_STATUS::NOT_DELETE));
-                    if(!empty($getTempToken)) {
+                    $getTempToken = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'tempToken', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                    if (!empty($getTempToken)) {
                         $tempToken = $getTempToken['config_value'];
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
                         if (!empty($objGlobalPassword)) {
@@ -287,7 +296,6 @@ class SecurityFunctions
                             $security = new Security();
                             if ($accessvalue == "nousername") {
                                 // check user passed temporary token or request with temporary token.
-
                                 if ($secretvalue == NULL) {
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
                                     $response = array();
@@ -299,15 +307,14 @@ class SecurityFunctions
                                     echo "\n master=>".$masterKey;
                                     echo "\n secret=>".$secretvalue;
                                     echo "\n new serc==> ". $secretvalue1 */
-                                    $secretvalue1= $security->encrypt($tempToken, $masterKey);
+                                    $secretvalue1 = $security->encrypt($tempToken, $masterKey);
                                     if (trim($secretvalue1) == trim($secretvalue)) {
                                         return YES;
                                     } else {
                                         return NO;
                                     }
                                 }
-                            }
-                            else {
+                            } else {
 //                                echo "\nacces=>".$accessvalue;
 //                                echo "\nsec=>".$secretvalue;
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
@@ -330,10 +337,10 @@ class SecurityFunctions
             $masterKey = $objGlobalPassword['config_value'];
             $security = new Security();
             $decrypted_access_key = $security->decrypt($accessvalue, $masterKey);
-            $objUser= getSingleTableData($connection, TABLE_USER, "", "id", "", array('guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE));
-            if(!empty($objUser)){
-                $row_token= getSingleTableData($connection, TABLE_APP_TOKENS, "", "token,expiry", "", array('userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE));
-                if(!empty($row_token)){
+            $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", array('guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE));
+            if (!empty($objUser)) {
+                $row_token = getSingleTableDataLastDate($connection, TABLE_APP_TOKENS, "", "token,expiry", "", array('userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                if (!empty($row_token)) {
                     $tokenName = $row_token['token'];
                     $currentdate = $row_token['expiry'];
                     if ($secretvalue == $tempToken) {
@@ -372,10 +379,10 @@ class SecurityFunctions
                             return NO;
                         }
                     }
+                } else {
+                    return NO;
                 }
-                else{return NO;}
-            }
-            else{
+            } else {
                 return NO;
             }
         }
@@ -390,16 +397,16 @@ class SecurityFunctions
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
-            $objUserAgent=getSingleTableData($connection,TABLE_ADMIN_CONFIG,"","config_value","",array('config_key'=>'userAgent','is_delete'=>DELETE_STATUS::NOT_DELETE));
-            if(!empty($objUserAgent)) {
+            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+            if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
                 $separateKey = (explode(',', $user_agent));
                 // check user-agent is valid
                 if ((strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[0]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[1]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[2]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[3]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[4]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[5]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[6]) !== false)) {
                     // get temporary token for user.
 
-                    $getTempToken=getSingleTableData($connection,TABLE_ADMIN_CONFIG,"","config_value","",array('config_key'=>'tempToken','is_delete'=>DELETE_STATUS::NOT_DELETE));
-                    if(!empty($getTempToken)) {
+                    $getTempToken = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'tempToken', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                    if (!empty($getTempToken)) {
                         $tempToken = $getTempToken['config_value'];
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
                         if (!empty($objGlobalPassword)) {
@@ -426,8 +433,7 @@ class SecurityFunctions
                                         return NO;
                                     }
                                 }
-                            }
-                            else {
+                            } else {
 //                                                        echo "acces=>".$accessvalue;
 //                                                        echo "\nsec=>".$secretvalue;
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
@@ -438,7 +444,7 @@ class SecurityFunctions
                 }
             }
         }
-    return NO;
+        return NO;
     }
 
     // USED METHODS
@@ -454,13 +460,12 @@ class SecurityFunctions
         if ($access_key == "") {
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
-        }
-        else {
+        } else {
             $isSecure = $this->checkForSecurityNew($access_key, $secret_key);
             if ($isSecure != NO) {
-                $stmt_get_admin_config=getMultipleTableData($connection,TABLE_ADMIN_CONFIG,"","config_key,config_value"," config_key IN('globalPassword','userAgent','tempToken')",array('is_delete'=>DELETE_STATUS::NOT_DELETE ));
-                if($stmt_get_admin_config->rowCount() > 0){
-                    while($objAdminConfig=$stmt_get_admin_config->fetch(PDO::FETCH_ASSOC)){
+                $stmt_get_admin_config = getMultipleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_key,config_value", " config_key IN('globalPassword','userAgent','tempToken')", array('is_delete' => DELETE_STATUS::NOT_DELETE));
+                if ($stmt_get_admin_config->rowCount() > 0) {
+                    while ($objAdminConfig = $stmt_get_admin_config->fetch(PDO::FETCH_ASSOC)) {
                         $data[$objAdminConfig['config_key']] = $objAdminConfig['config_value'];
                     }
                 }
@@ -470,5 +475,28 @@ class SecurityFunctions
             }
         }
         return $data;
+    }
+
+    public function GetTokenData($userData)
+    {
+        $user_id = $userData->id;
+        $connection = $this->connection;
+        $select_user_favourite_query = "SELECT *  FROM " . TABLE_APP_TOKENS . "
+                                        where userid=" . $user_id;
+
+
+        $select_user_favourite_stmt = $connection->prepare($select_user_favourite_query);
+        $select_user_favourite_stmt->execute();
+
+        if ($select_user_favourite_stmt->rowCount() > 0) {
+            while ($product = $select_user_favourite_stmt->fetch(PDO::FETCH_ASSOC)) {
+                $posts[] = $product;
+            }
+            print_r($posts);
+            $status = SUCCESS;
+            $message = DATA_FETCHED_SUCCESSFULLY;
+        } else {
+            echo "no data";
+        }
     }
 }

@@ -70,7 +70,7 @@ class ProductFunctions
 
         $cacher = new Psr16Adapter('files');
         $cacheKey = 'productdetails' . $product_name;
-        if(!$cacher->has($cacheKey)) {
+        if (!$cacher->has($cacheKey)) {
             $select_product_details_stmt=getMultipleTableData($connection,TABLE_PRODUCT,"","*",
                 "LOWER(product_name) = LOWER('".$product_name."') AND is_delete ='".$is_delete."' ORDER BY created_date LIMIT 1","");
             $cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
@@ -121,8 +121,8 @@ class ProductFunctions
                     }
                 }
             }
-            $message = DATA_FETCHED_SUCCESSFULLY;
-            $status = SUCCESS;
+//            $message = DATA_FETCHED_SUCCESSFULLY;
+//            $status = SUCCESS;
         } else {
             $status = SUCCESS;
             $message = NO_PRODUCT_FOUND_IN_DATABASE;
@@ -213,7 +213,6 @@ class ProductFunctions
     public function getAllUserFavourite($userData)
     {
         $connection = $this->connection;
-
         $user_id = validateObject($userData, 'user_id', "");
         $user_id = addslashes($user_id);
 
@@ -233,6 +232,7 @@ class ProductFunctions
                                         where f.user_id = :user_id and f.is_favourite = :is_favourite and f.is_delete = :is_delete ORDER BY f.created_date DESC limit $from_index,$to_index  ";
 
         $select_user_favourite_stmt=getMultipleTableData($connection,"",$select_user_favourite_query,"","",array('user_id'=>$user_id,'is_favourite'=>$is_favourite,'is_delete'=>$is_delete));
+
         if($select_user_favourite_stmt->rowCount()>0){
             while ($product=$select_user_favourite_stmt->fetch(PDO::FETCH_ASSOC)){
                 $posts[] = $product;
