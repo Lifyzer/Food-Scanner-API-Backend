@@ -16,6 +16,8 @@ define("SENDER_EMAIL_ID", "pra@narola.email");
 define("SENDER_EMAIL_PASSWORD", "jUVAO8ufUmaucHM");
 //define("SENDER_EMAIL_PASSWORD", "narola21");
 
+define("ENCRYPTION_KEY_IV", "@#$%!@#$#$%!@#$%");
+
 define("YES","yes");
 define("NO","no");
 define("ERROR","error");

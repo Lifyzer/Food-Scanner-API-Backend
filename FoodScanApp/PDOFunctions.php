@@ -203,6 +203,60 @@ function getSingleTableData(PDO $connection,$table,$sql,$columns,$customConditio
     return $result;
 }
 
+function getSingleTableDataLastDate(PDO $connection,$table,$sql,$columns,$customCondition,$dataArray)
+{
+    try {
+        $numOfItems = count($dataArray);
+        $cnt = 0;
+        $execute_array = array();
+        $condition = "";
+        $statement = "";
+        if(!empty($dataArray)){
+            foreach ($dataArray as $key => $value) {
+                if (empty($sql)) {
+                    if (empty($customCondition)) {
+                        if (++$cnt == $numOfItems) {
+                            $condition .= $key . " = :$key ";
+                        }
+                        else {
+                            $condition .= $key . " = :$key AND ";
+                        }
+                    }
+                }
+                $execute_array[":$key"] = $value;
+            }
+        }
+
+        if (empty($customCondition)) {
+            $check_conditions = $condition;
+        }
+        else {
+            $check_conditions = $customCondition;
+        }
+        if (empty($sql)) {
+            $sql = "SELECT " . $columns . " FROM " . $table . " WHERE " . $check_conditions;
+        }
+        $sql = $sql." ORDER BY modified_date DESC";
+
+        $statement = $connection->prepare($sql);
+        if(!empty($dataArray)){
+            foreach ($dataArray as $key => $value) {
+                $statement->bindValue(":$key", $value);
+            }
+        }
+        $statement->execute();
+        $result = array();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
+    } catch (PDOException $e) {
+        $message = $e->getMessage();
+        $result['message'] = $message;
+        $err_msg = "\nFunction=> " . " Query=> " . $sql . "  Error message= " . $message;
+        errorLogFunction($err_msg);
+    }
+    return $result;
+}
+
 function getMultipleTableData(PDO $connection,$table,$sql,$columns,$customCondition,$dataArray)
 {
     try{
