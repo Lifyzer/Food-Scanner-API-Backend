@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c157
- * Date: 17/01/18
- * Time: 12:19 PM
- */
 
 include_once 'ApiCrypter.php';
 include_once 'HelperFunctions.php';
@@ -22,7 +16,6 @@ class SecurityFunctions
 
     public function call_service($service, $postData)
     {
-
         switch ($service) {
             case "refreshToken": {
                 return $this->refreshToken($postData);
