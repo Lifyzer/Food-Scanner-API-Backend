@@ -35,7 +35,7 @@ define("REGISTRATION_SUCCESSFULLY_DONE", "Registration successfully done");
 define("MALICIOUS_SOURCE","Malicious source detected");
 define("TOKEN_ERROR","Please ensure that security token is supplied in your request");
 define("DEFAULT_NO_RECORD","No record found");
-define("WRONG_PASSWORD_MESSAGE","you have entered wrong Password");
+define("WRONG_PASSWORD_MESSAGE","You have entered a wrong password");
 define("CHNG_WRONG_PASSWORD_MESSAGE","Old password is incorrect");
 define("NO_DATA_AVAILABLE","No data available");
 define("NO_EMAIL_AND_PASSOWRD_AVAILABLE","Email ID or Password is incorrect.");
@@ -56,5 +56,3 @@ abstract class DELETE_STATUS
     const IS_DELETE = "1";
     const NOT_DELETE = "0";
 }
-
-?>
