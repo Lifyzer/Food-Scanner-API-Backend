@@ -325,7 +325,6 @@ class UserFunctions
         
     
         if(!empty($objUser)){
-         
             $sendEmail = new SendEmail();
             $randomString = generateRandomString(10);
             $userPassword = $randomString;
@@ -347,7 +346,7 @@ class UserFunctions
                               ' . $appname . ' Team</p>
                               </body></html>';
 
-                $result = $sendEmail->sendemail(SENDER_EMAIL_ID, $message, "Forgot Password", $email_id);
+                $result = $sendEmail->sendEmail(SENDER_EMAIL_ID, $message, "Forgot Password", $email_id);
                 $status = SUCCESS;
                 $message = "Password is sent successfully.";
             }
@@ -367,5 +366,3 @@ class UserFunctions
     }
 
 }
-
-?>

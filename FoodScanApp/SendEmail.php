@@ -6,14 +6,7 @@ include 'class.phpmailer.php';
 
 class SendEmail
 {
-    //put your code here
-    // constructor
-    function __construct()
-    {
-
-    }
-
-    function sendemail($sender_email_id,$message, $Mailsubject, $userEmailId)
+    public function sendEmail($sender_email_id,$message, $Mailsubject, $userEmailId)
     {
         date_default_timezone_set('Asia/Calcutta');
         $headers = 'MIME-Version: 1.0' . "\r\n";
@@ -59,5 +52,3 @@ class SendEmail
         //echo "EMAIL SENDED YOOOO!!!";
     }
 }
-
-?>
