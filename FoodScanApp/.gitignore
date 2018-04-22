@@ -1,4 +1,5 @@
 vendor
+LogFile
 node_modules
 composer.lock
 composer.phar
