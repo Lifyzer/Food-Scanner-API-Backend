@@ -52,7 +52,7 @@ function json_validate($string) {
 
 function getDefaultDate()
 {
-    return date("Y-m-d H:i:s");
+    return date('Y-m-d H:i:s');
 }
 
 function generatePassword($password)
@@ -69,18 +69,20 @@ function generatePassword($password)
 
 function matchPassword($userPassword, $dbPassword)
 {
-    if (crypt($userPassword, $dbPassword) == $dbPassword)
+    if (crypt($userPassword, $dbPassword) === $dbPassword) {
         return 1;
-    else
-        return 0;
+    }
+
+    return 0;
 }
 
 function matchStringValue($str1, $str2)
 {
-    if (strcmp($str1, $str2))
+    if (strcmp($str1, $str2)) {
         return 1;
-    else
-        return 0;
+    }
+
+    return 0;
 }
 
 function encryptPassword( $str ) {
@@ -94,6 +96,7 @@ function generateRandomString($length = 10)
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
+
     return $randomString;
 }
 
@@ -104,20 +107,21 @@ function generatecoupontring($length = 6)
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
+
     return $randomString;
 }
 
 
 function generateRandomCode($length)
 {
-	    $numbers = range('0','9');
-	    $final_array = array_merge($numbers);
-        while($length--)
-	       {
-    		  $key = array_rand($final_array);
-		      $randomString = $final_array[$key];
-           }
-	     return $randomString;
+    $numbers = range('0','9');
+    $final_array = array_merge($numbers);
+    while($length--) {
+        $key = array_rand($final_array);
+        $randomString = $final_array[$key];
+    }
+
+    return $randomString;
 }
 
 function validateFormdata($object, $key, $placeHolder)
@@ -126,7 +130,7 @@ function validateFormdata($object, $key, $placeHolder)
     if (isset($object[$key])) {
 //        $value = validateValue($object->$key, "");
         return $object[$key];
-    } else {
-        return $placeHolder;
     }
+
+    return $placeHolder;
 }

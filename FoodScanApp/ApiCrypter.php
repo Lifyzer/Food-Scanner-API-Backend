@@ -2,7 +2,8 @@
 
 include_once 'ConstantValues.php';
 
-class Security {
+class Security
+{
     public static function encrypt($input, $key) {
         $iv = ENCRYPTION_KEY_IV;
         $plaintext = $input;

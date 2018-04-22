@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c109
- * Date: 21/07/17
- * Time: 10:38 AM
- */
 
 define("ENCRYPTION_KEY", "niplframework");
 define("DEFAULT_NO_RECORDS", "No records found.");

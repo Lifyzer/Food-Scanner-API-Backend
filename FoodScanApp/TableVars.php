@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c119
- * Date: 03/03/15
- * Time: 6:07 PM
- */
 
 define("TABLE_USER", "user");
 define("TABLE_PRODUCT", "product");

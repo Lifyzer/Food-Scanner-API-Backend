@@ -1,4 +1,5 @@
 <?php
+// TODO: FILE UNUSED (for the moment)
 
 class GCM
 {

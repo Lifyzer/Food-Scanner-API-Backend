@@ -1,21 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c157
- * Date: 17/01/18
- * Time: 11:53 AM
- */
  
 include_once 'TableVars.php';
 include_once 'ConstantValues.php';
 include_once 'SendEmail.php';
 
-
 class UserFunctions
 {
+    /** @var PDO */
     protected $connection;
-    function __construct(PDO $con)
-    {
+
+    public function __construct(PDO $con) {
         $this->connection = $con;
     }
 
@@ -52,7 +46,6 @@ class UserFunctions
                 break;
         }
     }
-
 
     public function Registration($userData)
     {
@@ -364,5 +357,4 @@ class UserFunctions
 
         return $data;
     }
-
 }

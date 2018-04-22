@@ -1,24 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: c119
- * Date: 03/03/15
- * Time: 4:15 PM
- */
 
-class Logger {
-
-    //put your code here
-    // constructor
-    function __construct()
+class Logger
+{
+    public function Log($debug, $identifer, $content)
     {
-
-    }
-
-    public function Log($debug,$identifer,$content)
-    {
-        if($debug)
-        {
+        if ($debug) {
             echo '<pre>';
             echo $identifer;
             echo "<br>";
@@ -29,28 +15,10 @@ class Logger {
 
     }
 
-
-    public function LogWithFunction($debug,$identifer,$content,$debugmode)
-    {
-        if($debug)
-        {
-            echo '<pre>';
-            echo $identifer;
-            echo "<br>";
-            print_r($debugmode);
-            echo "<br>";
-            print_r($content);
-            echo "<br>";
-            echo '<pre>';
-        }
-
-    }
-
-    public  function WritetoFile($debug,$identifer,$content,$filename)
+    public  function WritetoFile($debug, $identifer, $content, $filename)
     {
         /*** Debug Log ***/
-        if($debug)
-        {
+        if ($debug) {
             $file = $filename;
 
             $logtime  = date('m/d/Y h:i:s a', time());
@@ -64,5 +32,3 @@ class Logger {
         }
     }
 }
-
-?>
