@@ -1,28 +1,22 @@
 <?php
-//session_start();
+
 class GCM
 {
-    function __construct() 
-    {
-  	  
-    }
-     public function call_service($service,$deviceToken,$Notifsubject,$pushMessage,$isReject)
-    {
-    	
-        switch($service)
-        {
-            case "sendPushIOS":
-            {
-                return $this->sendPushiOS($deviceToken,$Notifsubject,$pushMessage,$isReject);
-            }
-                break;
-            case "send_notification":
-            {
-                return $this->send_notification($deviceToken, $pushMessage,$Notifsubject,$isReject);
-            }
-        }
-    }
+    const GOOGLE_API_KEY = 'THE-GOOGLE-API-KEY';
 
+    const IOS_PUSH_NOTIFICATION = 'sendPushIOS';
+    const ANDROID_PUSH_NOTIFICATION = 'send_notification';
+
+     public function call_service($service,$deviceToken,$Notifsubject,$pushMessage,$isReject)
+     {
+        switch($service) {
+            case self::IOS_PUSH_NOTIFICATION:
+                return $this->sendPushiOS($deviceToken,$Notifsubject,$pushMessage,$isReject);
+
+            case self::ANDROID_PUSH_NOTIFICATION:
+                return $this->send_notification($deviceToken, $pushMessage,$Notifsubject,$isReject);
+        }
+     }
 
     public function sendPushiOS($deviceToken,$Notifsubject,$pushMessage,$isReject)
     {
@@ -121,10 +115,6 @@ class GCM
         // include config
         //include_once './config.php';
 
-        //   $GOOGLE_API_KEY = "AIzaSyABiZeJp_4W4P8mLr9YIEHsPbObdXFe6nw";
-        //$GOOGLE_API_KEY = "AIzaSyA0wqkE5CHK-peZbqi2lzdAAvyo3Kb8qQw";
-        $GOOGLE_API_KEY = "AIzaSyBrj8QuOdJ6i6uNmMkze2z1qwmhEFq027I";
-
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';
 
@@ -137,7 +127,7 @@ class GCM
         );
 
         $headers = array(
-            'Authorization: key=' . $GOOGLE_API_KEY,
+            'Authorization: key=' . self::GOOGLE_API_KEY,
             'Content-Type: application/json'
         );
         // Open connection
@@ -146,19 +136,17 @@ class GCM
         // Set the url, number of POST vars, POST data
         curl_setopt($ch, CURLOPT_URL, $url);
 
-        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        // Disabling SSL Certificate support temporarly
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
 
         // Execute post
         $result = curl_exec($ch);
         if ($result === FALSE) {
-            die('Curl failed: ' . curl_error($ch));
+            exit('Curl failed: ' . curl_error($ch));
         }
 
         // Close connection
@@ -166,4 +154,3 @@ class GCM
         // echo $result;
     }
 }
-?>
