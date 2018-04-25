@@ -1,19 +1,5 @@
 <?php
 
-// print array with format
-function pr($arr = null, $exit = 1, $append_text = null) {
-    if ($arr != null) {
-        echo "<pre>";
-        if ($arr != null)
-            echo $append_text;
-
-        print_r($arr);
-
-        if ($exit == 1)
-            exit;
-    }
-}
-
 function errorLogFunction($error_message) {
     $log_file = date("F_j_Y").'_log.txt';
     $file = 'error_log_' . date("Ymd") . '.txt';
@@ -68,39 +54,4 @@ function generateRandomString($length = 10)
     }
 
     return $randomString;
-}
-
-function generatecoupontring($length = 6)
-{
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
-    }
-
-    return $randomString;
-}
-
-
-function generateRandomCode($length)
-{
-    $numbers = range('0','9');
-    $final_array = array_merge($numbers);
-    while($length--) {
-        $key = array_rand($final_array);
-        $randomString = $final_array[$key];
-    }
-
-    return $randomString;
-}
-
-function validateFormdata($object, $key, $placeHolder)
-{
-
-    if (isset($object[$key])) {
-//        $value = validateValue($object->$key, "");
-        return $object[$key];
-    }
-
-    return $placeHolder;
 }
