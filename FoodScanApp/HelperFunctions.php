@@ -55,38 +55,8 @@ function getDefaultDate()
     return date('Y-m-d H:i:s');
 }
 
-function generatePassword($password)
-{
-    $cost = 10;
-
-    $saltPassword = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
-    $saltPassword = sprintf("$2a$%02d$", $cost). $saltPassword;
-
-    $finalHashPassword = crypt($password, $saltPassword);
-
-    return $finalHashPassword;
-}
-
-function matchPassword($userPassword, $dbPassword)
-{
-    if (crypt($userPassword, $dbPassword) === $dbPassword) {
-        return 1;
-    }
-
-    return 0;
-}
-
-function matchStringValue($str1, $str2)
-{
-    if (strcmp($str1, $str2)) {
-        return 1;
-    }
-
-    return 0;
-}
-
-function encryptPassword( $str ) {
-    return md5($str);
+function encryptPassword($str) {
+    return sha1($str);
 }
 
 function generateRandomString($length = 10)
