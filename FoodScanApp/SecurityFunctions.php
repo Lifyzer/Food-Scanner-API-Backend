@@ -121,9 +121,8 @@ class SecurityFunctions
         return $data;
     }
 
-    function test($userData)
+    private function test($userData)
     {
-
         $plaintext = validateValue($userData->guid, "");
         $key = "_$(Skill)!_square@#$%_23_06_2017";
         //$key previously generated safely, ie: openssl_random_pseudo_bytes
@@ -163,7 +162,7 @@ class SecurityFunctions
         return $data;
     }
 
-    public function expiredAllTokenofUser($userData)
+    private function expiredAllTokenofUser($userData)
     {
         $user_id = validateValue($userData['userId'], '');
 
@@ -468,7 +467,7 @@ class SecurityFunctions
         return $data;
     }
 
-    public function GetTokenData($userData)
+    private function getTokenData($userData)
     {
         $user_id = $userData->id;
         $connection = $this->connection;
