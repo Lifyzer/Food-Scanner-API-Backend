@@ -49,7 +49,6 @@ class UserFunctions
 
             default:
                 return null;
-                break;
         }
     }
 
