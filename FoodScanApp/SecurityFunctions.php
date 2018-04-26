@@ -81,7 +81,7 @@ class SecurityFunctions
     }
 
     // USED METHODS
-    public function refreshToken($userData)
+    private function refreshToken($userData)
     {
         $access_key = validateObject($userData, 'access_key', "");
         $access_key = addslashes($access_key);
@@ -153,7 +153,7 @@ class SecurityFunctions
         return $data;
     }
 
-    public function testEncryption($userData)
+    private function testEncryption($userData)
     {
 //        echo '  Current PHP version: ' . phpversion();
 //        error_reporting(E_ALL & ~E_NOTICE);
