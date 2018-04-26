@@ -6,6 +6,13 @@ include_once 'SendEmail.php';
 
 class UserFunctions
 {
+    public const LOGIN_ACTION = 'Login';
+    public const REGISTRATION_ACTION = 'Registration';
+    public const CHANGE_PASSWORD_ACTION = 'ChangePassword';
+    public const FORGOT_PASSWORD_ACTION = 'ForgotPassword';
+    public const EDIT_PROFILE_ACTION = 'EditProfile';
+    public const DELETE_ACCOUNT_ACTION = 'DeleteAccount';
+
     /** @var PDO */
     protected $connection;
 
@@ -13,33 +20,28 @@ class UserFunctions
         $this->connection = $con;
     }
 
-    public function call_service($service, $postData)
+    public function callService($service, $postData)
     {
         switch ($service) {
-            case "Login": {
-                return $this->Login($postData);
-            }
-                break;
+            case self::LOGIN_ACTION:
+                return $this->login($postData);
 
-            case "Registration": {
-                return $this->Registration($postData);
-            }
-                break;
+            case self::REGISTRATION_ACTION:
+                return $this->registration($postData);
 
-            case "ChangePassword": {
+            case self::CHANGE_PASSWORD_ACTION: {
                 return $this->ChangePassword($postData);
             }
                 break;
 
-            case "EditProfile": {
-                return $this->EditProfile($postData);
-            }
-                break;
+            case self::EDIT_PROFILE_ACTION:
+                return $this->editProfile($postData);
 
-            case "ForgotPassword": {
+            case self::FORGOT_PASSWORD_ACTION:
                 return $this->forgotPassword($postData);
-            }
-                break;
+
+            case self::DELETE_ACCOUNT_ACTION:
+                return $this->deleteAccount($postData);
 
             default:
                 return null;
@@ -47,7 +49,7 @@ class UserFunctions
         }
     }
 
-    public function Registration($userData)
+    private function registration($userData)
     {
         $connection = $this->connection;
 
@@ -118,7 +120,7 @@ class UserFunctions
         return $data;
     }
 
-    public function EditProfile($userData)
+    private function editProfile($userData)
     {
         $connection = $this->connection;
 
@@ -164,7 +166,7 @@ class UserFunctions
         return $data;
     }
 
-    public function ChangePassword($userData)
+    private function changePassword($userData)
     {
         $connection = $this->connection;
 
@@ -219,7 +221,7 @@ class UserFunctions
         return $data;
     }
 
-    public function Login($userData)
+    private function login($userData)
     {
         $connection = $this->connection;
 

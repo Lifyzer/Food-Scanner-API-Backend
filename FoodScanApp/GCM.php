@@ -49,15 +49,12 @@ class GCM
 		$apns_cert = NULL;
 		$apns_port = 2195;
 	
-		if($development)
-		{
+		if ($development) {
 			$apns_url = 'gateway.sandbox.push.apple.com';
 			$apns_cert = 'ck_Dev.pem';
            // $apns_url = 'gateway.push.apple.com';
             //$apns_cert = 'ck_Prod.pem';
-		}
-		else
-		{
+		} else {
 			$apns_url = 'gateway.push.apple.com';
 			$apns_cert = 'ck_Prod.pem';
 		}

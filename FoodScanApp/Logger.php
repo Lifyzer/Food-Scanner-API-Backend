@@ -2,7 +2,7 @@
 
 class Logger
 {
-    public function Log($debug, $identifer, $content)
+    public function log($debug, $identifer, $content)
     {
         if ($debug) {
             echo '<pre>';
@@ -15,7 +15,7 @@ class Logger
 
     }
 
-    public  function WritetoFile($debug, $identifer, $content, $filename)
+    public function writetoFile($debug, $identifer, $content, $filename)
     {
         /*** Debug Log ***/
         if ($debug) {

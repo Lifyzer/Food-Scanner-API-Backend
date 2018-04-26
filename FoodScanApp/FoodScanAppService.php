@@ -14,19 +14,19 @@ error_reporting(0);
 $postData = $reqData[0];
 
 $debug = 0;
-$logger->Log($debug, 'POST DATA :', $postData);
+$logger->log($debug, 'POST DATA :', $postData);
 $status = "";
-$logger->Log($debug, 'Service :', $_REQUEST['Service']);
+$logger->log($debug, 'Service :', $_REQUEST['Service']);
 
 switch ($_REQUEST['Service']) {
     /*********************  User Functions ******************************/
 
-    case "Registration":
-    case "Login":
-    case "ChangePassword":
-    case "EditProfile":
-    case "ForgotPassword":
-    {
+    case UserFunctions::REGISTRATION_ACTION:
+    case UserFunctions::LOGIN_ACTION:
+    case UserFunctions::CHANGE_PASSWORD_ACTION:
+    case UserFunctions::EDIT_PROFILE_ACTION:
+    case UserFunctions::FORGOT_PASSWORD_ACTION:
+    case UserFunctions::DELETE_ACCOUNT_ACTION: {
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
 
@@ -45,7 +45,7 @@ switch ($_REQUEST['Service']) {
 
             include_once 'UserFunctions.php';
             $user = new UserFunctions($connection);
-            $data = $user->call_service($_REQUEST['Service'], $postData);
+            $data = $user->callService($_REQUEST['Service'], $postData);
 
             if ($isSecure != 'yes' || $isSecure != 'yes') {
                 if ($isSecure['key'] == "Temp") {
