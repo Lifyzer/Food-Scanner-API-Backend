@@ -7,6 +7,12 @@ include_once 'TableVars.php';
 
 class SecurityFunctions
 {
+    public const REFRESH_TOKEN = 'refreshToken';
+    public const TEST_ENCRYPTION = 'testEncryption';
+    public const UPDATE_USER_TOKEN = 'updateTokenForUser';
+    public const EXPIRED_ALL_USER_TOKEN = 'expiredAllTokenofUser';
+    public const TOKEN_DATA = 'GetTokenData';
+
     /** @var PDO */
     protected $connection;
 
@@ -18,33 +24,24 @@ class SecurityFunctions
     public function callService($service, $postData)
     {
         switch ($service) {
-            case "refreshToken": {
+            case self::REFRESH_TOKEN:
                 return $this->refreshToken($postData);
-            }
-                break;
 
-            case "testEncryption": {
+            case self::TEST_ENCRYPTION:
                 return $this->testEncryption($postData);
 //                return $this->test($postData);
-            }
-                break;
 
-            case "updateTokenForUser": {
+            case self::UPDATE_USER_TOKEN:
                 return $this->updateTokenForUser($postData);
-            }
-                break;
 
-            case "expiredAllTokenofUser": {
+            case self::EXPIRED_ALL_USER_TOKEN:
                 return $this->expiredAllTokenofUser($postData);
-            }
-                break;
-            case "GetTokenData": {
-                return $this->GetTokenData($postData);
-            }
-                break;
+
+            case self::TOKEN_DATA:
+                return $this->getTokenData($postData);
+
             default:
                 return null;
-                break;
         }
     }
 
