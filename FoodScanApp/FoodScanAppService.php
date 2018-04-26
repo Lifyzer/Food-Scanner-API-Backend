@@ -75,10 +75,10 @@ switch ($_REQUEST['Service']) {
 
         $isSecure = (new SecurityFunctions($connection))->checkForSecurityNew($access_key, $secret_key);
 
-        if ($isSecure == NO) {
+        if ($isSecure === NO) {
             $data['status'] = FAILED;
             $data['message'] = MALICIOUS_SOURCE;
-        } elseif ($isSecure == ERROR) {
+        } elseif ($isSecure === ERROR) {
             $data['status'] = FAILED;
             $data['message'] = TOKEN_ERROR;
         } else {
