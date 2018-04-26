@@ -26,7 +26,8 @@ switch ($_REQUEST['Service']) {
     case UserFunctions::CHANGE_PASSWORD_ACTION:
     case UserFunctions::EDIT_PROFILE_ACTION:
     case UserFunctions::FORGOT_PASSWORD_ACTION:
-    case UserFunctions::DELETE_ACCOUNT_ACTION: {
+    case UserFunctions::DELETE_ACCOUNT_ACTION:
+    case UserFunctions::DATA_TAKEOUT: {
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
 

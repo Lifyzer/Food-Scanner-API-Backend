@@ -12,6 +12,7 @@ class UserFunctions
     public const FORGOT_PASSWORD_ACTION = 'ForgotPassword';
     public const EDIT_PROFILE_ACTION = 'EditProfile';
     public const DELETE_ACCOUNT_ACTION = 'DeleteAccount';
+    public const DATA_TAKEOUT = 'TakeOut';
 
     /** @var PDO */
     protected $connection;
@@ -42,6 +43,9 @@ class UserFunctions
 
             case self::DELETE_ACCOUNT_ACTION:
                 return $this->deleteAccount($postData);
+
+            case self::DATA_TAKEOUT:
+                return $this->dataTakeOut($postData);
 
             default:
                 return null;
@@ -375,7 +379,52 @@ class UserFunctions
             $message = 'Account successfully deleted';
         } else {
             $status = FAILED;
-            $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+        }
+
+        $data['status'] = $status;
+        $data['message'] = $message;
+
+        return $data;
+    }
+
+    /**
+     * Data takeout feature. Ideal to be GDPR compliant.
+     *
+     * @param array $userData
+     *
+     * @return array
+     */
+    private function dataTakeOut($userData)
+    {
+        $email_id = validateObject($userData, 'email_id', '');
+
+        $sqlQuery = <<<QUERY
+SELECT u.email, u.first_name, u.user_image, u.created_date, u.modified_date, h.*, f.* 
+FROM %s AS u INNER JOIN %s AS h ON u.id = h.user_id 
+INNER JOIN %s AS f ON u.id = f.user_id
+WHERE u.email = :emailId
+QUERY;
+
+        $stmt = $this->connection->prepare(
+            sprintf(
+                $sqlQuery,
+                TABLE_USER,
+                TABLE_HISTORY,
+                TABLE_FAVOURITE
+            )
+        );
+        $stmt->bindValue(':emailId', $email_id);
+        $stmt->execute();
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($data)) {
+            $status = SUCCESS;
+            $message = 'You full data have been exported!';
+        } else {
+            $status = FAILED;
+            $message = NO_DATA_AVAILABLE;
         }
 
         $data['status'] = $status;
