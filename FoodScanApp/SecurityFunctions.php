@@ -461,7 +461,7 @@ class SecurityFunctions
                 }
                 $stmt_get_admin_config->closeCursor();
             } else {
-                $data = "";
+                $data = '';
             }
         }
         return $data;
@@ -486,7 +486,7 @@ class SecurityFunctions
             $status = SUCCESS;
             $message = DATA_FETCHED_SUCCESSFULLY;
         } else {
-            echo "no data";
+            echo 'no data';
         }
     }
 }
