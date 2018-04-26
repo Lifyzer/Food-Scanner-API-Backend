@@ -359,4 +359,28 @@ class UserFunctions
 
         return $data;
     }
+
+    private function deleteAccount($userData)
+    {
+        $email_id = validateObject($userData, 'email_id', '');
+
+        $sqlQuery = 'DELETE FROM %s WHERE email = :emailId LIMIT 1';
+        $stmt = $this->connection->prepare(
+            sprintf($sqlQuery, TABLE_USER)
+        );
+        $stmt->bindValue(':emailId', $email_id);
+
+        if ($stmt->execute()) {
+            $status = SUCCESS;
+            $message = 'Account successfully deleted';
+        } else {
+            $status = FAILED;
+            $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+        }
+
+        $data['status'] = $status;
+        $data['message'] = $message;
+
+        return $data;
+    }
 }
