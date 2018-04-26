@@ -7,14 +7,15 @@ include_once 'TableVars.php';
 
 class SecurityFunctions
 {
+    /** @var PDO */
     protected $connection;
 
-    function __construct(PDO $con)
+    public function __construct(PDO $con)
     {
         $this->connection = $con;
     }
 
-    public function call_service($service, $postData)
+    public function callService($service, $postData)
     {
         switch ($service) {
             case "refreshToken": {

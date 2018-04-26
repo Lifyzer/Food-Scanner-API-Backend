@@ -13,7 +13,7 @@ class ProductFunctions
         $this->connection = $con;
     }
 
-    public function call_service($service, $postData)
+    public function callService($service, $postData)
     {
         switch ($service) {
 

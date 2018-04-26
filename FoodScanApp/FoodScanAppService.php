@@ -84,7 +84,7 @@ switch ($_REQUEST['Service']) {
         } else {
             include_once 'ProductFunctions.php';
             $user = new ProductFunctions($connection);
-            $data = $user->call_service($_REQUEST['Service'], $postData);
+            $data = $user->callService($_REQUEST['Service'], $postData);
             if ($isSecure != 'yes' || $isSecure != 'yes') {
                 if ($isSecure['key'] == "Temp") {
                     $data['TempToken'] = $isSecure['value'];
@@ -101,7 +101,7 @@ switch ($_REQUEST['Service']) {
     case "refreshToken": {
         $connection = $GLOBALS['con'];
         $security = new SecurityFunctions($connection);
-        $data = $security->call_service($_REQUEST['Service'], $postData);
+        $data = $security->callService($_REQUEST['Service'], $postData);
     }
         break;
 

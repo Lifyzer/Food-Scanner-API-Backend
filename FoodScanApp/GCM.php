@@ -8,7 +8,7 @@ class GCM
     const IOS_PUSH_NOTIFICATION = 'sendPushIOS';
     const ANDROID_PUSH_NOTIFICATION = 'send_notification';
 
-     public function call_service($service,$deviceToken,$Notifsubject,$pushMessage,$isReject)
+     public function callService($service,$deviceToken,$Notifsubject,$pushMessage,$isReject)
      {
         switch($service) {
             case self::IOS_PUSH_NOTIFICATION:
