@@ -298,7 +298,7 @@ class UserFunctions
     private function updateGuidForUser($user_id)
     {
         $connection = $this->connection;
-        $is_delete=DELETE_STATUS::NOT_DELETE;
+        $is_delete = DELETE_STATUS::NOT_DELETE;
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,guid", "", array('id' => $user_id, 'is_delete' => $is_delete));
         if (!empty($objUser)) {
             $security = new SecurityFunctions($connection);
@@ -347,16 +347,14 @@ class UserFunctions
 
                 $result = $sendEmail->sendEmail(SENDER_EMAIL_ID, $message, "Forgot Password", $email_id);
                 $status = SUCCESS;
-                $message = "Password is sent successfully.";
-            }
-            else{
+                $message = 'Password is sent successfully.';
+            } else{
                $status=FAILED;
                $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
             }
-        }
-        else{
-            $status=FAILED;
-            $message=NO_DATA_AVAILABLE;
+        } else{
+            $status = FAILED;
+            $message = NO_DATA_AVAILABLE;
         }
         $data['status'] = $status;
         $data['message'] = $message;
