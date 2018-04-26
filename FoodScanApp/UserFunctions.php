@@ -307,9 +307,9 @@ class UserFunctions
         return "";
     }
 
-    function forgotPassword($userData)
+    private function forgotPassword($userData)
     {
-        $connection = $GLOBALS['con'];
+        $connection = $this->connection;
 
         $email_id = validateObject($userData, 'email_id', "");
         $email_id = addslashes($email_id);
