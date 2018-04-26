@@ -31,7 +31,7 @@ class UserFunctions
                 return $this->registration($postData);
 
             case self::CHANGE_PASSWORD_ACTION: {
-                return $this->ChangePassword($postData);
+                return $this->changePassword($postData);
             }
                 break;
 
