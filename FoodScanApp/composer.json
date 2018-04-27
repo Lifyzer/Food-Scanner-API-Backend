@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "phpfastcache/phpfastcache": "^6.1"
+        "phpfastcache/phpfastcache": "^6.1",
+        "swiftmailer/swiftmailer": "^6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0"
