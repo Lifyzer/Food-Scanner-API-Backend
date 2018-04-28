@@ -309,7 +309,8 @@ class UserFunctions
                     return $generate_guid;
                 }
         }
-        return "";
+
+        return '';
     }
 
     private function forgotPassword($userData)
