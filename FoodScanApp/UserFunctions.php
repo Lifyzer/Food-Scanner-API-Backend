@@ -14,6 +14,8 @@ class UserFunctions
     public const DELETE_ACCOUNT_ACTION = 'DeleteAccount';
     public const DATA_TAKEOUT = 'TakeOut';
 
+    private const CSV_TAKEOUT_HEADER = 'user id,email,name,profile created date,profile modified date,terms acceptance date';
+
     /** @var PDO */
     protected $connection;
 
@@ -414,7 +416,8 @@ QUERY;
         $stmt->bindValue(':emailId', $email_id);
         $stmt->execute();
 
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $dbData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $data = $this->buildCsvDataFormat($dbData);
 
         if (!empty($data)) {
             $status = SUCCESS;
@@ -428,5 +431,18 @@ QUERY;
         $data['message'] = $message;
 
         return $data;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string
+     */
+    private function buildCsvDataFormat(array $data)
+    {
+        $csvData = self::CSV_TAKEOUT_HEADER;
+        $csvData .= implode(',', $data);
+
+        return $csvData;
     }
 }
