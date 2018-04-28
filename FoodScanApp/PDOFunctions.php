@@ -112,9 +112,9 @@ function editData(PDO $connection,$function_name="",$table_name,$dataArray,$cond
 
 function checkDataExist(PDO $connection,$table,$columns,$sql,$dataArray)
 {
-    try{
+    try {
         $numOfItems = count($dataArray);
-        $execute_array=array();
+        $execute_array = array();
         $cnt = 0;
         $condition="";
         foreach ($dataArray as $key => $value){
@@ -137,8 +137,7 @@ function checkDataExist(PDO $connection,$table,$columns,$sql,$dataArray)
         }
         $statement->execute();
         return $statement->rowCount();
-    }
-    catch (Exception $e){
+    } catch (Exception $e) {
         $message=$e->getMessage();
         if(is_array($message)){
             $error_message = implode(" , ", $message);
