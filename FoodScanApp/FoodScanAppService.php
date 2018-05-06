@@ -32,14 +32,13 @@ $logger->log($debug, 'Service :', $_REQUEST['Service']);
 
 switch ($_REQUEST['Service']) {
     /*********************  User Functions ******************************/
-
     case UserFunctions::REGISTRATION_ACTION:
     case UserFunctions::LOGIN_ACTION:
     case UserFunctions::CHANGE_PASSWORD_ACTION:
     case UserFunctions::EDIT_PROFILE_ACTION:
     case UserFunctions::FORGOT_PASSWORD_ACTION:
     case UserFunctions::DELETE_ACCOUNT_ACTION:
-    case UserFunctions::DATA_TAKEOUT: {
+    case UserFunctions::DATA_TAKEOUT:
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
 
@@ -68,15 +67,13 @@ switch ($_REQUEST['Service']) {
                 }
             }
         }
-    }
         break;
 
-    case "addToFavourite":
-    case "getAllUserFavourite":
-    case "getProductDetails":
-    case "getUserHistory":
-    case "removeProductFromHistory":
-    {
+    case 'addToFavourite':
+    case 'getAllUserFavourite':
+    case 'getProductDetails':
+    case 'getUserHistory':
+    case 'removeProductFromHistory':
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
 
@@ -105,23 +102,20 @@ switch ($_REQUEST['Service']) {
                 }
             }
         }
-    }
         break;
 
     case SecurityFunctions::UPDATE_USER_TOKEN:
     case SecurityFunctions::TEST_ENCRYPTION:
-    case SecurityFunctions::REFRESH_TOKEN: {
+    case SecurityFunctions::REFRESH_TOKEN:
+    case SecurityFunctions::TOKEN_DATA:
         $connection = $GLOBALS['con'];
         $security = new SecurityFunctions($connection);
         $data = $security->callService($_REQUEST['Service'], $postData);
-    }
         break;
 
-    default: {
+    default:
         $data['data'] = 'No Service Found';
         $data['message'] = $_REQUEST['Service'];
-    }
-        break;
 }
 
 //(new AllowCors)->init(); // Set CORS headers
