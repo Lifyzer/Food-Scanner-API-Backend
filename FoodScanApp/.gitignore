@@ -4,6 +4,8 @@ node_modules
 composer.lock
 composer.phar
 .env
+cache/*
+!cache/.gitkeep
 
 # Log files
 *.log
@@ -23,7 +25,6 @@ coverage
 # Linux
 *~
 *.swp
-# KDE
 .directory
 
 # Windows
