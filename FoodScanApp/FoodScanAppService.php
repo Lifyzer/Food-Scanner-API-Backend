@@ -1,23 +1,14 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-use Dotenv\Dotenv;
-use phpFastCache\CacheManager;
-
-(new Dotenv(__DIR__))->load();
-
-include_once 'config.php';
+include_once 'Logger.php';
+require_once'config.php';
 include_once 'HelperFunctions.php';
 include_once 'TableVars.php';
 include_once 'ConstantValues.php';
 include_once 'SecurityFunctions.php';
 include_once 'PDOFunctions.php';
-
-// Setup cache config
-CacheManager::setDefaultConfig([
-    'path' => __DIR__ . '/cache',
-]);
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));

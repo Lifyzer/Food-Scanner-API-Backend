@@ -1,6 +1,14 @@
 <?php
 
-include_once 'Logger.php';
+use Dotenv\Dotenv;
+use phpFastCache\CacheManager;
+
+// Setup cache config
+CacheManager::setDefaultConfig([
+    'path' => __DIR__ . '/cache',
+]);
+
+(new Dotenv(__DIR__))->load();
 
 // First, convert "true/false" string from phpdotenv to boolean
 $debugMode = filter_var(getenv('DEBUG_MODE'), FILTER_VALIDATE_BOOLEAN);
