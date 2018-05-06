@@ -20,7 +20,6 @@ try {
     # MySQL with PDO_MYSQL
     $con = new PDO("mysql:host=$server;dbname=$dbname;charset=utf8mb4", $user, $password);
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    //file_put_contents('LogFile/error.txt', $con);
     $con->exec('SET NAMES UTF8');
 }
 catch(PDOException $e) {

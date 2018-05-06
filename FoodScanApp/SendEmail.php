@@ -1,8 +1,6 @@
 <?php
 
-//include 'config.php';
 include 'class.phpmailer.php';
-//include 'ConstantValues.php';
 
 class SendEmail
 {
