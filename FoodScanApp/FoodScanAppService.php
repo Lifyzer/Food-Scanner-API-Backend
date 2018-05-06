@@ -12,6 +12,11 @@ include_once 'ConstantValues.php';
 include_once 'SecurityFunctions.php';
 include_once 'PDOFunctions.php';
 
+// Setup cache config
+CacheManager::setDefaultConfig([
+    'path' => __DIR__ . '/cache',
+]);
+
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $reqData[] = json_decode($post_body);
