@@ -11,7 +11,6 @@ class SecurityFunctions
     public const TEST_ENCRYPTION = 'testEncryption';
     public const UPDATE_USER_TOKEN = 'updateTokenForUser';
     public const EXPIRED_ALL_USER_TOKEN = 'expiredAllTokenofUser';
-    public const TOKEN_DATA = 'GetTokenData';
 
     /** @var PDO */
     protected $connection;
@@ -29,16 +28,12 @@ class SecurityFunctions
 
             case self::TEST_ENCRYPTION:
                 return $this->testEncryption($postData);
-//                return $this->test($postData);
 
             case self::UPDATE_USER_TOKEN:
                 return $this->updateTokenForUser($postData);
 
             case self::EXPIRED_ALL_USER_TOKEN:
                 return $this->expiredAllTokenofUser($postData);
-
-            case self::TOKEN_DATA:
-                return $this->getTokenData($postData);
 
             default:
                 return null;
@@ -424,8 +419,6 @@ class SecurityFunctions
                                     }
                                 }
                             } else {
-//                                                        echo "acces=>".$accessvalue;
-//                                                        echo "\nsec=>".$secretvalue;
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
                                 return $this->checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken);
                             }
@@ -465,28 +458,5 @@ class SecurityFunctions
             }
         }
         return $data;
-    }
-
-    private function getTokenData($userData)
-    {
-        $user_id = $userData->id;
-        $connection = $this->connection;
-        $select_user_favourite_query = "SELECT *  FROM " . TABLE_APP_TOKENS . "
-                                        where userid=" . $user_id;
-
-
-        $select_user_favourite_stmt = $connection->prepare($select_user_favourite_query);
-        $select_user_favourite_stmt->execute();
-
-        if ($select_user_favourite_stmt->rowCount() > 0) {
-            while ($product = $select_user_favourite_stmt->fetch(PDO::FETCH_ASSOC)) {
-                $posts[] = $product;
-            }
-            print_r($posts);
-            $status = SUCCESS;
-            $message = DATA_FETCHED_SUCCESSFULLY;
-        } else {
-            echo 'no data';
-        }
     }
 }

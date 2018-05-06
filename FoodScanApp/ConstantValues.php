@@ -8,7 +8,6 @@ define('APPNAME', 'FoodScan App');
 //define('SENDER_EMAIL_ID', 'demo.narola@gmail.com');
 define('SENDER_EMAIL_ID', 'pra@narola.email');
 define('SENDER_EMAIL_PASSWORD', 'jUVAO8ufUmaucHM');
-//define('SENDER_EMAIL_PASSWORD', 'narola21');
 
 define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 
