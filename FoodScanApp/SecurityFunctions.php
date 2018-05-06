@@ -146,8 +146,6 @@ class SecurityFunctions
 
     private function testEncryption($userData)
     {
-//        echo '  Current PHP version: ' . phpversion();
-//        error_reporting(E_ALL & ~E_NOTICE);
         $guid = validateValue($userData->guid, "");
         $global_pwd_value = "_$(Skill)!_square@#$%_23_06_2017";
         $security = new Security();
