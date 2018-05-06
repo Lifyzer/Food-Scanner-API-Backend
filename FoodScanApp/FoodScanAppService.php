@@ -25,7 +25,7 @@ $postData = json_decode($post_body)[0];
 
 $debug = 0;
 $logger->log($debug, 'POST DATA :', $postData);
-$status = "";
+$status = '';
 $logger->log($debug, 'Service :', $_REQUEST['Service']);
 
 switch ($_REQUEST['Service']) {
@@ -37,10 +37,10 @@ switch ($_REQUEST['Service']) {
     case UserFunctions::FORGOT_PASSWORD_ACTION:
     case UserFunctions::DELETE_ACCOUNT_ACTION:
     case UserFunctions::DATA_TAKEOUT:
-        $access_key = validateObject($postData, 'access_key', "");
+        $access_key = validateObject($postData, 'access_key', '');
         $access_key = addslashes($access_key);
 
-        $secret_key = validateObject($postData, 'secret_key', "");
+        $secret_key = validateObject($postData, 'secret_key', '');
         $secret_key = addslashes($secret_key);
 
         $connection = $GLOBALS['con'];
@@ -58,7 +58,7 @@ switch ($_REQUEST['Service']) {
             $data = $user->callService($_REQUEST['Service'], $postData);
 
             if ($isSecure != 'yes' || $isSecure != 'yes') {
-                if ($isSecure['key'] == "Temp") {
+                if ($isSecure['key'] == 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
                     $data['UserToken'] = $isSecure['value'];
@@ -72,10 +72,10 @@ switch ($_REQUEST['Service']) {
     case 'getProductDetails':
     case 'getUserHistory':
     case 'removeProductFromHistory':
-        $access_key = validateObject($postData, 'access_key', "");
+        $access_key = validateObject($postData, 'access_key', '');
         $access_key = addslashes($access_key);
 
-        $secret_key = validateObject($postData, 'secret_key', "");
+        $secret_key = validateObject($postData, 'secret_key', '');
         $secret_key = addslashes($secret_key);
 
         $connection = $GLOBALS['con'];
@@ -93,7 +93,7 @@ switch ($_REQUEST['Service']) {
             $user = new ProductFunctions($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
             if ($isSecure != 'yes' || $isSecure != 'yes') {
-                if ($isSecure['key'] == "Temp") {
+                if ($isSecure['key'] == 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
                     $data['UserToken'] = $isSecure['value'];
