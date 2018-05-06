@@ -1,5 +1,10 @@
 <?php
 
+use Dotenv\Dotenv;
+use phpFastCache\CacheManager;
+
+(new Dotenv(__DIR__))->load();
+
 include_once 'config.php';
 include_once 'HelperFunctions.php';
 include_once 'TableVars.php';
