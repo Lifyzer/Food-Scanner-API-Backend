@@ -24,13 +24,10 @@ $dbname = getenv('DB_NAME');
 global $con;
 
 try {
-    # MS SQL Server and Sybase with PDO_DBLIB
-    # MySQL with PDO_MYSQL
     $con = new PDO("mysql:host=$server;dbname=$dbname;charset=utf8mb4", $user, $password);
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $con->exec('SET NAMES UTF8');
-}
-catch(PDOException $e) {
+} catch(PDOException $e) {
     if (DEBUG_MODE) {
         echo $e->getMessage();
     }
