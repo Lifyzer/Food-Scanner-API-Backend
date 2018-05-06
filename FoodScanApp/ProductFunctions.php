@@ -4,7 +4,8 @@ use phpFastCache\Helper\Psr16Adapter;
 
 class ProductFunctions
 {
-    const CACHE_LIFETIME = 3600*24;
+    private const CACHE_LIFETIME = 3600*24;
+    private const CACHE_DRIVER = 'Files';
 
     protected $connection;
 
@@ -68,7 +69,7 @@ class ProductFunctions
         $is_delete = IS_DELETE;
         $current_date = getDefaultDate();
 
-        $cacher = new Psr16Adapter('files');
+        $cacher = new Psr16Adapter(self::CACHE_DRIVER);
         $cacheKey = 'productdetails' . $product_name;
         if (!$cacher->has($cacheKey)) {
             $select_product_details_stmt = getMultipleTableData($connection,TABLE_PRODUCT,"","*",
