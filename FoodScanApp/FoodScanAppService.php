@@ -105,7 +105,6 @@ switch ($_REQUEST['Service']) {
     case SecurityFunctions::UPDATE_USER_TOKEN:
     case SecurityFunctions::TEST_ENCRYPTION:
     case SecurityFunctions::REFRESH_TOKEN:
-    case SecurityFunctions::TOKEN_DATA:
         $connection = $GLOBALS['con'];
         $security = new SecurityFunctions($connection);
         $data = $security->callService($_REQUEST['Service'], $postData);
