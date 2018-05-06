@@ -21,9 +21,7 @@ CacheManager::setDefaultConfig([
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
-$reqData[] = json_decode($post_body);
-error_reporting(0);
-$postData = $reqData[0];
+$postData = json_decode($post_body)[0];
 
 $debug = 0;
 $logger->log($debug, 'POST DATA :', $postData);
