@@ -1,5 +1,4 @@
 vendor
-node_modules
 composer.lock
 composer.phar
 .env
@@ -8,15 +7,13 @@ cache/*
 logs/*
 !logs/.gitkeep
 
+# PHPUnit coverage
+coverage
+
 # Log files
 *.log
 *.tmp
 
-# Gettext
-*.mo
-
-# PHPUnit coverage
-coverage
 
 # PhpStorm
 .idea
