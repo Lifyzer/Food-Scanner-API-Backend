@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-require 'Logger.php';
 require 'config.php';
 require 'HelperFunctions.php';
 require 'TableVars.php';
@@ -16,6 +15,7 @@ $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $postData = json_decode($post_body);
 
 if (DEBUG_MODE) {
+    require 'Logger.php';
     $logger = new Logger();
     $logger->log('POST DATA :', $postData);
     $logger->log('Service :', $_REQUEST['Service']);
