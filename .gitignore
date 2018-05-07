@@ -1,11 +1,12 @@
 vendor
-LogFile
 node_modules
 composer.lock
 composer.phar
 .env
 cache/*
 !cache/.gitkeep
+logs/*
+!logs/.gitkeep
 
 # Log files
 *.log
