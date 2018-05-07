@@ -1,9 +1,6 @@
 <?php
 
 include_once 'ApiCrypter.php';
-include_once 'HelperFunctions.php';
-include_once 'ConstantValues.php';
-include_once 'TableVars.php';
 
 class SecurityFunctions
 {

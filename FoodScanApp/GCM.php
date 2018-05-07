@@ -110,9 +110,6 @@ class GCM
     }
 
     public function send_notification($registatoin_ids, $message,$key,$isReject) {
-        // include config
-        //include_once './config.php';
-
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';
 

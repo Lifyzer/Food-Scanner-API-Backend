@@ -2,19 +2,19 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-include_once 'Logger.php';
-require_once'config.php';
-include_once 'HelperFunctions.php';
-include_once 'TableVars.php';
-include_once 'ConstantValues.php';
-include_once 'SecurityFunctions.php';
-include_once 'PDOFunctions.php';
+require 'Logger.php';
+require 'config.php';
+require 'HelperFunctions.php';
+require 'TableVars.php';
+require 'ConstantValues.php';
+require 'SecurityFunctions.php';
+require 'PDOFunctions.php';
+require 'UserFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
-$postData = json_decode($post_body)[0];
+$postData = json_decode($post_body);
 
-$debug = 0;
 $logger->log($debug, 'POST DATA :', $postData);
 $status = '';
 $logger->log($debug, 'Service :', $_REQUEST['Service']);
@@ -43,8 +43,6 @@ switch ($_REQUEST['Service']) {
             $data['status'] = FAILED;
             $data['message'] = TOKEN_ERROR;
         } else {
-
-            include_once 'UserFunctions.php';
             $user = new UserFunctions($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
 

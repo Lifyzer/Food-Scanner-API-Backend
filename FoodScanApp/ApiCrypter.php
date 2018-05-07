@@ -1,7 +1,5 @@
 <?php
 
-include_once 'ConstantValues.php';
-
 class Security
 {
     public static function encrypt($input, $key) {

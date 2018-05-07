@@ -1,7 +1,5 @@
 <?php
- 
-include_once 'TableVars.php';
-include_once 'ConstantValues.php';
+
 include_once 'SendEmail.php';
 
 class UserFunctions

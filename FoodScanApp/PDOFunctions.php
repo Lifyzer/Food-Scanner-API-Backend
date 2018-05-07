@@ -1,5 +1,4 @@
 <?php
-include_once "ConstantValues.php";
 
 function addData(PDO $connection,$function_name="",$table_name,$dataArray)
 {
