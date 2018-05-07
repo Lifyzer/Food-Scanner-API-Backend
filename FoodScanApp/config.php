@@ -14,7 +14,6 @@ CacheManager::setDefaultConfig([
 $debugMode = filter_var(getenv('DEBUG_MODE'), FILTER_VALIDATE_BOOLEAN);
 define('DEBUG_MODE', $debugMode);
 
-$logger = new Logger();
 date_default_timezone_set('UTC');
 $server = getenv('DB_HOST');
 $user = getenv('DB_USER');
