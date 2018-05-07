@@ -109,4 +109,4 @@ switch ($_REQUEST['Service']) {
 //(new AllowCors)->init(); // Set CORS headers
 header('Content-type: application/json');
 echo json_encode($data);
-$GLOBALS['con']=null;
+$GLOBALS['con'] = null;
