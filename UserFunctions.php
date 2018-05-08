@@ -1,5 +1,10 @@
 <?php
 
+namespace Lifyzer\Api;
+
+use PDO;
+use stdClass;
+
 include_once 'SendEmail.php';
 
 class UserFunctions
@@ -17,7 +22,8 @@ class UserFunctions
     /** @var PDO */
     protected $connection;
 
-    public function __construct(PDO $con) {
+    public function __construct(PDO $con)
+    {
         $this->connection = $con;
     }
 
@@ -30,9 +36,10 @@ class UserFunctions
             case self::REGISTRATION_ACTION:
                 return $this->registration($postData);
 
-            case self::CHANGE_PASSWORD_ACTION: {
-                return $this->changePassword($postData);
-            }
+            case self::CHANGE_PASSWORD_ACTION:
+                {
+                    return $this->changePassword($postData);
+                }
                 break;
 
             case self::EDIT_PROFILE_ACTION:

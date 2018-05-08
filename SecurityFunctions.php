@@ -1,6 +1,8 @@
 <?php
 
-include_once 'ApiCrypter.php';
+namespace Lifyzer\Api;
+
+use PDO;
 
 class SecurityFunctions
 {
@@ -145,7 +147,7 @@ class SecurityFunctions
     {
         $guid = validateValue($userData->guid, "");
         $global_pwd_value = "_$(Skill)!_square@#$%_23_06_2017";
-        $security = new Security();
+        $security = new ApiCrypter();
         $encrpt_acesskey = $security->encrypt($guid, $global_pwd_value);
         $data['encrypted_value'] = $encrpt_acesskey;
         $data['decrypted_value'] = $security->decrypt($encrpt_acesskey, $global_pwd_value);
@@ -187,7 +189,7 @@ class SecurityFunctions
                     if ($stmt->execute($token_array)) {
                         $stmt->closeCursor();
                         $uuid = validateValue($userData->GUID, '');
-                        $security = new Security();
+                        $security = new ApiCrypter();
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
@@ -273,8 +275,8 @@ class SecurityFunctions
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
-                            $security = new Security();
-                            if ($accessvalue == "nousername") {
+                            $security = new ApiCrypter();
+                            if ($accessvalue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
                                 if ($secretvalue == NULL) {
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
@@ -315,7 +317,7 @@ class SecurityFunctions
         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
         if (!empty($objGlobalPassword)) {
             $masterKey = $objGlobalPassword['config_value'];
-            $security = new Security();
+            $security = new ApiCrypter();
             $decrypted_access_key = $security->decrypt($accessvalue, $masterKey);
             $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", array('guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE));
             if (!empty($objUser)) {
@@ -391,8 +393,8 @@ class SecurityFunctions
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
-                            $security = new Security();
-                            if ($accessvalue == "nousername") {
+                            $security = new ApiCrypter();
+                            if ($accessvalue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
 
                                 if ($secretvalue == NULL) {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Lifyzer\Api;
+
 class Logger
 {
     public function log($identifer, $content)

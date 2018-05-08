@@ -1,6 +1,8 @@
 <?php
 
-class Security
+namespace Lifyzer\Api;
+
+class ApiCrypter
 {
     public static function encrypt($input, $key) {
         $iv = ENCRYPTION_KEY_IV;

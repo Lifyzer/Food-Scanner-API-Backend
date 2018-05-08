@@ -1,5 +1,7 @@
 <?php
 
+namespace Lifyzer\Api;
+
 define('ENCRYPTION_KEY', 'niplframework');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS','success');

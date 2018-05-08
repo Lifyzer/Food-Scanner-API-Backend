@@ -1,5 +1,8 @@
 <?php
 
+namespace Lifyzer\Api;
+
+use PDO;
 use phpFastCache\Helper\Psr16Adapter;
 
 class ProductFunctions

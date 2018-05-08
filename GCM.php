@@ -1,4 +1,7 @@
 <?php
+
+namespace Lifyzer\Api;
+
 // TODO: FILE UNUSED (for the moment)
 
 class GCM

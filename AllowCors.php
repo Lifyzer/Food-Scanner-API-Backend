@@ -5,6 +5,8 @@
  * @link             http://pierrehenry.be
  */
 
+namespace Lifyzer\Api;
+
 class AllowCors
 {
     const ALLOW_CORS_ORIGIN_KEY = 'Access-Control-Allow-Origin';

@@ -1,21 +1,20 @@
 <?php
 
+namespace Lifyzer\Api;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 require 'config.php';
 require 'HelperFunctions.php';
 require 'TableVars.php';
 require 'ConstantValues.php';
-require 'SecurityFunctions.php';
 require 'PDOFunctions.php';
-require 'UserFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $postData = json_decode($post_body);
 
 if (DEBUG_MODE) {
-    require 'Logger.php';
     $logger = new Logger();
     $logger->log('POST DATA :', $postData);
     $logger->log('Service :', $_REQUEST['Service']);
@@ -80,7 +79,6 @@ switch ($_REQUEST['Service']) {
             $data['status'] = FAILED;
             $data['message'] = TOKEN_ERROR;
         } else {
-            include_once 'ProductFunctions.php';
             $user = new ProductFunctions($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
             if ($isSecure != 'yes' || $isSecure != 'yes') {

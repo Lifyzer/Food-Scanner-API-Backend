@@ -1,6 +1,10 @@
 <?php
 
+namespace Lifyzer\Api;
+
 use Dotenv\Dotenv;
+use PDO;
+use PDOException;
 use phpFastCache\CacheManager;
 
 // Setup cache config

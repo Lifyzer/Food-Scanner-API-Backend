@@ -1,5 +1,7 @@
 <?php
 
+namespace Lifyzer\Api;
+
 define('TABLE_USER', 'user');
 define('TABLE_PRODUCT', 'product');
 define('TABLE_HISTORY', 'history');
