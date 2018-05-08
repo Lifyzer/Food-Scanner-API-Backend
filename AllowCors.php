@@ -21,7 +21,7 @@ class AllowCors
      *
      * @link https://en.wikipedia.org/wiki/Cross-origin_resource_sharing More info concerning CORS headers.
      */
-    public function init()
+    public function init(): void
     {
         $this->set(self::ALLOW_CORS_ORIGIN_KEY, self::ALLOW_CORS_ORIGIN_VALUE);
         $this->set(self::ALLOW_CORS_METHOD_KEY, self::ALLOW_CORS_METHOD_VALUE);
@@ -33,7 +33,7 @@ class AllowCors
      * @param string $sKey The data key.
      * @param string $sValue The data value.
      */
-    private function set($sKey, $sValue)
+    private function set($sKey, $sValue): void
     {
         header($sKey . ':' . $sValue);
     }
