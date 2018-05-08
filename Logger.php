@@ -4,7 +4,7 @@ namespace Lifyzer\Api;
 
 class Logger
 {
-    public function log($identifer, $content)
+    public function log($identifer, $content): void
     {
         echo '<pre>';
         echo $identifer;
@@ -14,7 +14,7 @@ class Logger
         echo '<pre>';
     }
 
-    public function writetoFile($identifer, $content, $filename)
+    public function writetoFile($identifer, $content, $filename): void
     {
         $logtime  = date('m/d/Y h:i:s a', time());
 
