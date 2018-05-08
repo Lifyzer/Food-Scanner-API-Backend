@@ -1,10 +1,15 @@
 <?php
 
-function addData(PDO $connection,$function_name="",$table_name,$dataArray)
+namespace Lifyzer\Api;
+
+use PDO;
+use PDOException;
+
+function addData(PDO $connection, $function_name="", $table_name, $dataArray)
 {
     $status=FAILED;
     $message=NO_ERROR;
-    $sql="";
+    $sql='';
     $data=array();
     try {
         $numItems = count($dataArray);

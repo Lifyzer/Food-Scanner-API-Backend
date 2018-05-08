@@ -90,14 +90,13 @@ class UserFunctions
         if (!empty($objUser)) {
             $status = FAILED;
             $message = EMAIL_ALREADY_EXISTS;
-        }
-        else {
+        } else {
 
             //****  INSERT USER ****//
             $security = new SecurityFunctions($connection);
             $generate_guid = $security->gen_uuid();
             $user_array = array('email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
-                'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token,'created_date' => $created_date, 'guid' => $generate_guid);
+                'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token, 'created_date' => $created_date, 'guid' => $generate_guid);
             $user_response = addData($connection, "Registration", TABLE_USER, $user_array);
             if ($user_response[STATUS_KEY] == SUCCESS) {
                 $user_inserted_id = $user_response[MESSAGE_KEY];
@@ -113,13 +112,11 @@ class UserFunctions
                     $posts[] = $getUser;
                     $status = SUCCESS;
                     $message = REGISTRATION_SUCCESSFULLY_DONE;
-                }
-                else {
+                } else {
                     $status = FAILED;
                     $message = DEFAULT_NO_RECORD;
                 }
-            }
-            else {
+            } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
             }
@@ -149,24 +146,22 @@ class UserFunctions
 
         $objUserEmail = getSingleTableData($connection, TABLE_USER, "", "*", " id != $user_id ", array('email' => $email_id, 'is_delete' => $is_delete));
         if (!empty($objUserEmail)) {
-                $created_date=getDefaultDate();
-                $update_array=array('first_name'=>$first_name,'email'=>$email_id,'modified_date'=>$created_date);
+            $created_date = getDefaultDate();
+            $update_array = array('first_name' => $first_name, 'email' => $email_id, 'modified_date' => $created_date);
 
             $edit_response = editData($connection, "UpdateProfile", TABLE_USER, $update_array, array('id' => $user_id));
-                if ($edit_response[STATUS_KEY] == SUCCESS) {
-                    $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
-                    if (!empty($getUser)) {
-                        $posts[] = $getUser;
-                    }
-                    $status = SUCCESS;
-                    $message = PROFILE_UPDATED_SUCCESSFULLY;
+            if ($edit_response[STATUS_KEY] == SUCCESS) {
+                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
+                if (!empty($getUser)) {
+                    $posts[] = $getUser;
                 }
-                else {
-                    $status = FAILED;
-                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                }
-        }
-        else {
+                $status = SUCCESS;
+                $message = PROFILE_UPDATED_SUCCESSFULLY;
+            } else {
+                $status = FAILED;
+                $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+            }
+        } else {
             $status = FAILED;
             $message = EMAIL_ALREADY_EXISTS;
         }
@@ -197,33 +192,29 @@ class UserFunctions
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,password", "", array('id' => $user_id, 'is_delete' => $is_delete));
         if (!empty($objUser)) {
             if ($password === $objUser['password']) {
-                $created_date=getDefaultDate();
-                $edit_response = editData($connection, "Login", TABLE_USER, array('password' => $new_password,'modified_date'=>$created_date), array('id' => $user_id));
+                $created_date = getDefaultDate();
+                $edit_response = editData($connection, "Login", TABLE_USER, array('password' => $new_password, 'modified_date' => $created_date), array('id' => $user_id));
                 if ($edit_response[STATUS_KEY] == SUCCESS) {
                     $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
                     if (!empty($getUser)) {
                         $posts[] = $getUser;
-                        $status=SUCCESS;
-                        $message=PASSWORD_CHANGED_SUCCESSFULLY;
-                    }
-                    else {
+                        $status = SUCCESS;
+                        $message = PASSWORD_CHANGED_SUCCESSFULLY;
+                    } else {
                         $status = FAILED;
                         $message = DEFAULT_NO_RECORD;
                     }
+                } else {
+                    $status = FAILED;
+                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                 }
-                else{
-                    $status=FAILED;
-                    $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                }
+            } else {
+                $status = FAILED;
+                $message = CHNG_WRONG_PASSWORD_MESSAGE;
             }
-            else{
-                $status=FAILED;
-                $message=CHNG_WRONG_PASSWORD_MESSAGE;
-            }
-        }
-        else{
-            $status=FAILED;
-            $message=NO_DATA_AVAILABLE;
+        } else {
+            $status = FAILED;
+            $message = NO_DATA_AVAILABLE;
         }
         $data['status'] = $status;
         $data['message'] = $message;
@@ -255,13 +246,12 @@ class UserFunctions
             if (encryptPassword($password) === $objUser['password']) {
 
                 $user_id = $objUser['id'];
-                $created_date=getDefaultDate();
-                $edit_response = editData($connection, "Login", TABLE_USER, array('device_type' => $device_type,'modified_date'=>$created_date), array('id' => $user_id));
+                $created_date = getDefaultDate();
+                $edit_response = editData($connection, "Login", TABLE_USER, array('device_type' => $device_type, 'modified_date' => $created_date), array('id' => $user_id));
                 if ($edit_response[STATUS_KEY] == SUCCESS) {
                     if ($objUser['guid'] == null || $objUser['guid'] == "") {
                         $generate_user_guid = $this->updateGuidForUser($user_id);
-                    }
-                    else {
+                    } else {
                         $generate_user_guid = $objUser['guid'];
                     }
                     $tokenData = new stdClass;
@@ -273,24 +263,21 @@ class UserFunctions
                     if ($user_token[STATUS_KEY] == SUCCESS) {
                         $token = $user_token[USERTOKEN];
                     }
-                    $objUser['device_type']=$device_type;
-                    $objUser['modified_date']=$created_date;
+                    $objUser['device_type'] = $device_type;
+                    $objUser['modified_date'] = $created_date;
                     $posts[] = $objUser;
                     $status = SUCCESS;
                     $message = USER_LOGIN_SUCCESSFULLY;
                     $data[USERTOKEN] = $token;
-                }
-                else {
+                } else {
                     $status = FAILED;
                     $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                 }
-            }
-            else {
+            } else {
                 $status = FAILED;
                 $message = WRONG_PASSWORD_MESSAGE;
             }
-        }
-        else {
+        } else {
             $status = FAILED;
             $message = NO_EMAIL_AND_PASSOWRD_AVAILABLE;
         }
@@ -309,10 +296,10 @@ class UserFunctions
         if (!empty($objUser)) {
             $security = new SecurityFunctions($connection);
             $generate_guid = $security->gen_uuid();
-                $edit_response = editData($connection, "UpdateGuid", TABLE_USER, array('guid' => $generate_guid), array('id' => $user_id));
-                if ($edit_response[STATUS_KEY] == SUCCESS) {
-                    return $generate_guid;
-                }
+            $edit_response = editData($connection, "UpdateGuid", TABLE_USER, array('guid' => $generate_guid), array('id' => $user_id));
+            if ($edit_response[STATUS_KEY] == SUCCESS) {
+                return $generate_guid;
+            }
         }
 
         return '';
@@ -326,20 +313,20 @@ class UserFunctions
         $email_id = addslashes($email_id);
 
         $is_delete = IS_DELETE;
-        
+
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", array('email' => $email_id, 'is_delete' => $is_delete));
-        
-    
-        if(!empty($objUser)){
+
+
+        if (!empty($objUser)) {
             $sendEmail = new SendEmail();
             $randomString = generateRandomString(10);
             $userPassword = $randomString;
             $dbPassword = encryptPassword($userPassword);
-            $created_date=getDefaultDate();
-                        
-            $edit_response = editData($connection, "Forgot Password", TABLE_USER, array('password' => $dbPassword,'modified_date'=>$created_date), array('email' => $email_id));
+            $created_date = getDefaultDate();
+
+            $edit_response = editData($connection, "Forgot Password", TABLE_USER, array('password' => $dbPassword, 'modified_date' => $created_date), array('email' => $email_id));
             if ($edit_response[STATUS_KEY] == SUCCESS) {
-        
+
                 $appname = APPNAME;
                 $firstname = $objUser['first_name'];
                 $lastname = "";
@@ -355,11 +342,11 @@ class UserFunctions
                 $result = $sendEmail->sendEmail(SENDER_EMAIL_ID, $message, "Forgot Password", $email_id);
                 $status = SUCCESS;
                 $message = 'Password is sent successfully.';
-            } else{
-               $status=FAILED;
-               $message=SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+            } else {
+                $status = FAILED;
+                $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
             }
-        } else{
+        } else {
             $status = FAILED;
             $message = NO_DATA_AVAILABLE;
         }

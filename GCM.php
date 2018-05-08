@@ -112,7 +112,8 @@ class GCM
 		return $status;
     }
 
-    public function send_notification($registatoin_ids, $message,$key,$isReject) {
+    public function send_notification($registatoin_ids, $message,$key,$isReject)
+    {
         // Set POST variables
         $url = 'https://android.googleapis.com/gcm/send';
 
