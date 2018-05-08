@@ -12,7 +12,7 @@ CREATE TABLE admin_config (
   created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete tinyint(1) NOT NULL DEFAULT '0',
-  is_testdata varchar(3) NOT NULL DEFAULT 'yes' COMMENT 'dev means non garbaged dummy data',
+  is_testdata varchar(3) NOT NULL DEFAULT 'no' COMMENT 'dev means non garbaged dummy data',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -37,7 +37,7 @@ CREATE TABLE app_tokens (
   created_date datetime DEFAULT '0000-00-00 00:00:00',
   modified_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete enum('0','1') DEFAULT '0',
-  is_testdata varchar(10) NOT NULL DEFAULT 'yes',
+  is_testdata varchar(10) NOT NULL DEFAULT 'no',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -50,7 +50,7 @@ CREATE TABLE category (
   created_date datetime NOT NULL,
   modified_date datetime DEFAULT NULL,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '1',
+  is_test enum('0','1') NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -63,7 +63,7 @@ CREATE TABLE favourite (
   created_date datetime NOT NULL,
   modified_date datetime DEFAULT NULL,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '1',
+  is_test enum('0','1') NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
