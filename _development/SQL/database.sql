@@ -101,6 +101,27 @@ CREATE TABLE IF NOT EXISTS product (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
+CREATE TABLE IF NOT EXISTS pending_product (
+    id int(10) unsigned NOT NULL AUTO_INCREMENT,
+    barcode_id varchar(150) DEFAULT NULL,
+    product_name varchar(255) NOT NULL,
+    ingredients text NOT NULL,
+    product_image varchar(255) NOT NULL,
+    saturated_fats float NOT NULL,
+    carbohydrate float NOT NULL,
+    sugar float NOT NULL,
+    dietary_fiber float NOT NULL,
+    protein float NOT NULL,
+    salt float NOT NULL,
+    sodium float NOT NULL,
+    alcohol float NOT NULL,
+    is_organic enum('1','0') NOT NULL DEFAULT '0',
+    is_healthy enum('1','0') NOT NULL DEFAULT '0',
+    PRIMARY KEY (id),
+    UNIQUE KEY (barcode_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+
 CREATE TABLE user (
   id int(11) UNSIGNED NOT NULL,
   email varchar(100) DEFAULT NULL,
