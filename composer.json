@@ -1,26 +1,26 @@
 {
-    "name": "lifyzer/api",
-    "description": "Lifyzer REST API for its Android/iOS apps",
-    "type": "project",
-    "authors": [
-        {
-            "name": "Pierre-Henry Soria",
-            "email": "hi@ph7.me",
-            "homepage": "http://ph7.me"
-        }
-    ],
-    "require": {
-        "php": ">=7.1.0",
-        "phpfastcache/phpfastcache": "^6.1",
-        "swiftmailer/swiftmailer": "^6.0",
-        "vlucas/phpdotenv": "^2.4"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Lifyzer\\Api\\": "/"
-        }
+  "name": "lifyzer/api",
+  "description": "Lifyzer REST API for its Android/iOS apps",
+  "type": "project",
+  "authors": [
+    {
+      "name": "Pierre-Henry Soria",
+      "email": "hi@ph7.me",
+      "homepage": "http://ph7.me"
     }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "phpfastcache/phpfastcache": "^6.1",
+    "swiftmailer/swiftmailer": "^6.0",
+    "vlucas/phpdotenv": "^2.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lifyzer\\Api\\": "/"
+    }
+  }
 }
