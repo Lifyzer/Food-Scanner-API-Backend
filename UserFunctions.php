@@ -17,6 +17,7 @@ class UserFunctions
     public const DELETE_ACCOUNT_ACTION = 'DeleteAccount';
     public const DATA_TAKEOUT = 'TakeOut';
 
+    private const DATETIME_FORMAT = 'Y-m-d H:i:s';
     private const CSV_TAKEOUT_HEADER = 'user id,email,name,profile created date,profile modified date,terms acceptance date';
 
     /** @var PDO */
@@ -81,7 +82,7 @@ class UserFunctions
 
         $posts = array();
         $is_delete = IS_DELETE;
-        $created_date = date("Y-m-d H:i:s");
+        $created_date = date(self::DATETIME_FORMAT);
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", array('email' => $email_id, 'is_delete' => $is_delete));
         if (!empty($objUser)) {
