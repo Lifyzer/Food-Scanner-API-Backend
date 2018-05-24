@@ -20,40 +20,23 @@ class ProductFunctions
     public function callService($service, $postData)
     {
         switch ($service) {
+            case 'addToFavourite':
+                return $this->addToFavourite($postData);
 
-            case "addToFavourite":
-                {
-                    return $this->addToFavourite($postData);
-                }
-                break;
+            case 'getAllUserFavourite':
+                return $this->getAllUserFavourite($postData);
 
-            case "getAllUserFavourite":
-                {
-                    return $this->getAllUserFavourite($postData);
-                }
-                break;
+            case 'getProductDetails':
+                return $this->getProductDetails($postData);
 
-            case "getProductDetails":
-                {
-                    return $this->getProductDetails($postData);
-                }
-                break;
+            case 'getUserHistory':
+                return $this->getUserHistory($postData);
 
-            case "getUserHistory":
-                {
-                    return $this->getUserHistory($postData);
-                }
-                break;
-
-            case "removeProductFromHistory":
-                {
-                    return $this->removeProductFromHistory($postData);
-                }
-                break;
+            case 'removeProductFromHistory':
+                return $this->removeProductFromHistory($postData);
 
             default:
                 return null;
-                break;
         }
     }
 

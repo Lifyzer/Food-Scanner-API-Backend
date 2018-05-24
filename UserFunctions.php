@@ -37,10 +37,7 @@ class UserFunctions
                 return $this->registration($postData);
 
             case self::CHANGE_PASSWORD_ACTION:
-                {
-                    return $this->changePassword($postData);
-                }
-                break;
+                return $this->changePassword($postData);
 
             case self::EDIT_PROFILE_ACTION:
                 return $this->editProfile($postData);
@@ -124,6 +121,7 @@ class UserFunctions
         $data['status'] = $status;
         $data['message'] = $message;
         $data['User'] = $posts;
+
         return $data;
     }
 
@@ -219,6 +217,7 @@ class UserFunctions
         $data['status'] = $status;
         $data['message'] = $message;
         $data['User'] = $posts;
+
         return $data;
     }
 
@@ -239,7 +238,7 @@ class UserFunctions
 
         $is_delete = IS_DELETE;
 
-        $token = "";
+        $token = '';
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('email' => $email_id, 'is_delete' => $is_delete));
         if (!empty($objUser)) {
@@ -285,6 +284,7 @@ class UserFunctions
         $data['status'] = $status;
         $data['message'] = $message;
         $data['User'] = $posts;
+
         return $data;
     }
 
@@ -315,8 +315,6 @@ class UserFunctions
         $is_delete = IS_DELETE;
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", array('email' => $email_id, 'is_delete' => $is_delete));
-
-
         if (!empty($objUser)) {
             $sendEmail = new SendEmail();
             $randomString = generateRandomString(10);
