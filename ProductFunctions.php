@@ -55,7 +55,7 @@ class ProductFunctions
         $user_id = addslashes($user_id);
 
         $product_name = validateObject($userData, 'product_name', "");
-        $posts = array();
+        $posts = [];
 
         $is_delete = IS_DELETE;
         $current_date = getDefaultDate();

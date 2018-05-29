@@ -10,7 +10,7 @@ function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
     $status = FAILED;
     $message = NO_ERROR;
     $sql = '';
-    $data = array();
+    $data = [];
     try {
         $numItems = count($dataArray);
         $cnt = 0;
@@ -53,7 +53,7 @@ function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
 function editData(PDO $connection, $function_name = "", $table_name, $dataArray, $conditionArray, $query = "")
 {
     $sql = "";
-    $data = array();
+    $data = [];
     try {
         $numOfItems = count($dataArray);
         $numOfItemsForCondition = count($conditionArray);
@@ -61,7 +61,7 @@ function editData(PDO $connection, $function_name = "", $table_name, $dataArray,
         $cntForCondition = 0;
         $values = "";
         $conditionValue = "";
-        $execute_arr = array();
+        $execute_arr = [];
 
         foreach ($dataArray as $key => $value) {
             if (empty($query)) {
@@ -113,7 +113,7 @@ function checkDataExist(PDO $connection, $table, $columns, $sql, $dataArray)
 {
     try {
         $numOfItems = count($dataArray);
-        $execute_array = array();
+        $execute_array = [];
         $cnt = 0;
         $condition = "";
         foreach ($dataArray as $key => $value) {
@@ -151,7 +151,7 @@ function getSingleTableData(PDO $connection, $table, $sql, $columns, $customCond
     try {
         $numOfItems = count($dataArray);
         $cnt = 0;
-        $execute_array = array();
+        $execute_array = [];
         $condition = "";
 
         if (!empty($dataArray)) {
@@ -201,7 +201,7 @@ function getSingleTableDataLastDate(PDO $connection, $table, $sql, $columns, $cu
     try {
         $numOfItems = count($dataArray);
         $cnt = 0;
-        $execute_array = array();
+        $execute_array = [];
         $condition = "";
         $statement = "";
         if (!empty($dataArray)) {
@@ -236,7 +236,7 @@ function getSingleTableDataLastDate(PDO $connection, $table, $sql, $columns, $cu
             }
         }
         $statement->execute();
-        $result = array();
+        $result = [];
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $statement->closeCursor();
     } catch (PDOException $e) {
@@ -253,7 +253,7 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
     try {
         $numOfItems = count($dataArray);
         $cnt = 0;
-        $execute_array = array();
+        $execute_array = [];
         $condition = "";
         $check_conditions = "";
         if (!empty($dataArray)) {
@@ -308,12 +308,12 @@ function editDataWithCustomCondition(PDO $connection, $function_name = "", $tabl
     $status = FAILED;
     $message = NO_ERROR;
     $sql = "";
-    $data = array();
+    $data = [];
     try {
         $numOfItemsForCondition = count($conditionArray);
         $cntForCondition = 0;
         $conditionValue = "";
-        $execute_arr = array();
+        $execute_arr = [];
 
         foreach ($dataArray as $key => $value) {
             $execute_arr[":$key"] = $value;
