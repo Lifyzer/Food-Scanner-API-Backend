@@ -31,11 +31,11 @@ class GCM
         $passphrase = 'password';
 
 
-        $payload = array();
+        $payload = [];
         if ($isReject == 0) {
-            $payload['aps'] = array('alert' => $message, 'badge' => intval($badge), 'sound' => $sound);
+            $payload['aps'] = ['alert' => $message, 'badge' => intval($badge), 'sound' => $sound];
         } else {
-            $payload['aps'] = array('alert' => "", 'badge' => intval($badge), 'sound' => "", 'content-available' => 1);
+            $payload['aps'] = ['alert' => "", 'badge' => intval($badge), 'sound' => "", 'content-available' => 1];
             //print_r($payload['aps']);
             //exit;
         }
@@ -44,8 +44,8 @@ class GCM
         $payload['custom'] = $message;
         $payload = json_encode($payload);
 
-        $apns_url = NULL;
-        $apns_cert = NULL;
+        $apns_url = null;
+        $apns_cert = null;
         $apns_port = 2195;
 
         if ($development) {
@@ -112,15 +112,15 @@ class GCM
         $data['message'] = $message;
         $data['isReject'] = $isReject;
         $data['key'] = $key;
-        $fields = array(
+        $fields = [
             'registration_ids' => $registatoin_ids,
             'data' => $data,
-        );
+        ];
 
-        $headers = array(
+        $headers = [
             'Authorization: key=' . self::GOOGLE_API_KEY,
             'Content-Type: application/json'
-        );
+        ];
         // Open connection
         $ch = curl_init();
 
@@ -136,7 +136,7 @@ class GCM
 
         // Execute post
         $result = curl_exec($ch);
-        if ($result === FALSE) {
+        if ($result === false) {
             exit('Curl failed: ' . curl_error($ch));
         }
 

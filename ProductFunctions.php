@@ -74,7 +74,7 @@ class ProductFunctions
             while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
                 //******************* get user favourite ****************//
                 $is_favourite = 1;
-                $conditional_array = array('product_id' => $product['id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete);
+                $conditional_array = ['product_id' => $product['id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete];
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
 //                echo $product['id']."-2-".$user_id."-3-".$is_favourite."-4-".$is_delete;
                 if (!empty($objFavourite)) {
@@ -86,13 +86,13 @@ class ProductFunctions
 
                 //**** Product found in database insert data into history table ****//
                 $product_id = $product['id'];
-                $conditional_array = array('product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete);
+                $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
                 $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
 
                 if (!empty($objHistory)) {
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
-                    $edit_history_response = editData($connection, "getProductDetails", TABLE_HISTORY, array('created_date' => $current_date), array('id' => $history_id), "");
+                    $edit_history_response = editData($connection, "getProductDetails", TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
                     } else {
@@ -102,7 +102,7 @@ class ProductFunctions
                     }
                 } else {
                     //******** Insert data into history ********//
-                    $history_array = array('user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date);
+                    $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
                     $add_history_response = addData($connection, "getProductDetails", TABLE_HISTORY, $history_array);
                     if ($add_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
@@ -132,12 +132,12 @@ class ProductFunctions
         $history_id = validateObject($userData, 'history_id', "");
         $history_id = addslashes($history_id);
         $is_delete = DELETE_STATUS::IS_DELETE;
-        $edit_history_response = editData($connection, "removeProductFromHistory", TABLE_HISTORY, array('is_delete' => $is_delete), array('id' => $history_id), "");
+        $edit_history_response = editData($connection, "removeProductFromHistory", TABLE_HISTORY, ['is_delete' => $is_delete], ['id' => $history_id], "");
         if ($edit_history_response[STATUS_KEY] == SUCCESS) {
-            $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "*", "", array('id' => $history_id));
+            $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "*", "", ['id' => $history_id]);
             if (!empty($objHistory)) {
-                $conditional_array = array('product_id' => $objHistory['product_id'], 'user_id' => $objHistory['user_id'], 'is_delete' => $is_delete);
-                editData($connection, "addToFavourite", TABLE_FAVOURITE, array('is_favourite' => $is_favourite = '0'), $conditional_array, "");
+                $conditional_array = ['product_id' => $objHistory['product_id'], 'user_id' => $objHistory['user_id'], 'is_delete' => $is_delete];
+                editData($connection, "addToFavourite", TABLE_FAVOURITE, ['is_favourite' => $is_favourite = '0'], $conditional_array, "");
             }
             $message = HISTORY_REMOVED_SUCCESSFULLY;
             $status = SUCCESS;
@@ -164,18 +164,18 @@ class ProductFunctions
         $from_index = validateObject($userData, 'from_index', "");
         $from_index = addslashes($from_index);
 
-        $posts = array();
+        $posts = [];
         $is_delete = IS_DELETE;
         $select_user_history_query = "select h.id as history_id, h.user_id, h.product_id, h.created_date as history_created_date , p.* from history as h
                                       left JOIN product as p on p.id = h.product_id
                                       WHERE h.user_id = :user_id and h.is_delete = :is_delete ORDER BY h.created_date DESC limit $from_index,$to_index ";
-        $conditional_array = array('user_id' => $user_id, 'is_delete' => $is_delete);
+        $conditional_array = ['user_id' => $user_id, 'is_delete' => $is_delete];
         $select_user_history_stmt = getMultipleTableData($connection, "", $select_user_history_query, "", "", $conditional_array);
         if ($select_user_history_stmt->rowCount() > 0) {
             while ($history = $select_user_history_stmt->fetch(PDO::FETCH_ASSOC)) {
                 //******************* get user favourite ****************//
                 $is_favourite = 1;
-                $conditional_array = array('product_id' => $history['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete);
+                $conditional_array = ['product_id' => $history['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete];
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
                 if (!empty($objFavourite)) {
                     $history['is_favourite'] = 1;
@@ -209,7 +209,7 @@ class ProductFunctions
         $from_index = validateObject($userData, 'from_index', "");
         $from_index = addslashes($from_index);
 
-        $posts = array();
+        $posts = [];
 
         $is_delete = IS_DELETE;
         $is_favourite = "1";
@@ -218,7 +218,7 @@ class ProductFunctions
                                         left join " . TABLE_PRODUCT . " as p on p.id = f.product_id
                                         where f.user_id = :user_id and f.is_favourite = :is_favourite and f.is_delete = :is_delete ORDER BY f.created_date DESC limit $from_index,$to_index  ";
 
-        $select_user_favourite_stmt = getMultipleTableData($connection, "", $select_user_favourite_query, "", "", array('user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete));
+        $select_user_favourite_stmt = getMultipleTableData($connection, "", $select_user_favourite_query, "", "", ['user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete]);
 
         if ($select_user_favourite_stmt->rowCount() > 0) {
             while ($product = $select_user_favourite_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -252,10 +252,10 @@ class ProductFunctions
         $is_delete = IS_DELETE;
         $current_date = date("Y-m-d H:i:s");
 
-        $conditional_array = array('product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete);
+        $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
         $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id,is_favourite", "", $conditional_array);
         if (!empty($objFavourite)) {
-            $edit_response = editData($connection, "addToFavourite", TABLE_FAVOURITE, array('is_favourite' => $is_favourite, 'created_date' => $current_date), array('id' => $objFavourite['id']), "");
+            $edit_response = editData($connection, "addToFavourite", TABLE_FAVOURITE, ['is_favourite' => $is_favourite, 'created_date' => $current_date], ['id' => $objFavourite['id']], "");
 
             if ($edit_response[STATUS_KEY] == SUCCESS) {
                 $status = SUCCESS;
@@ -265,7 +265,7 @@ class ProductFunctions
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
             }
         } else {
-            $favourite_product_array = array('user_id' => $user_id, 'product_id' => $product_id, 'is_favourite' => $is_favourite, 'created_date' => $current_date);
+            $favourite_product_array = ['user_id' => $user_id, 'product_id' => $product_id, 'is_favourite' => $is_favourite, 'created_date' => $current_date];
             $favourite_response = addData($connection, "addToFavourite", TABLE_FAVOURITE, $favourite_product_array);
             if ($favourite_response[STATUS_KEY] == SUCCESS) {
                 $status = SUCCESS;

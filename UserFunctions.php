@@ -80,11 +80,11 @@ class UserFunctions
         $device_token = validateObject($userData, 'device_token', "");
         $device_token = addslashes($device_token);
 
-        $posts = array();
+        $posts = [];
         $is_delete = IS_DELETE;
         $created_date = date(self::DATETIME_FORMAT);
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", array('email' => $email_id, 'is_delete' => $is_delete));
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             $status = FAILED;
             $message = EMAIL_ALREADY_EXISTS;
@@ -93,12 +93,12 @@ class UserFunctions
             //****  INSERT USER ****//
             $security = new SecurityFunctions($connection);
             $generate_guid = $security->gen_uuid();
-            $user_array = array('email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
-                'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token, 'created_date' => $created_date, 'guid' => $generate_guid);
+            $user_array = ['email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
+                'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token, 'created_date' => $created_date, 'guid' => $generate_guid];
             $user_response = addData($connection, "Registration", TABLE_USER, $user_array);
             if ($user_response[STATUS_KEY] == SUCCESS) {
                 $user_inserted_id = $user_response[MESSAGE_KEY];
-                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_inserted_id, 'is_delete' => $is_delete));
+                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_inserted_id, 'is_delete' => $is_delete]);
                 if (!empty($getUser)) {
                     $tokenData = new stdClass;
                     $tokenData->GUID = $getUser['guid'];
@@ -141,16 +141,16 @@ class UserFunctions
 
         $is_delete = IS_DELETE;
 
-        $posts = array();
+        $posts = [];
 
-        $objUserEmail = getSingleTableData($connection, TABLE_USER, "", "*", " id != $user_id ", array('email' => $email_id, 'is_delete' => $is_delete));
+        $objUserEmail = getSingleTableData($connection, TABLE_USER, "", "*", " id != $user_id ", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUserEmail)) {
             $created_date = getDefaultDate();
-            $update_array = array('first_name' => $first_name, 'email' => $email_id, 'modified_date' => $created_date);
+            $update_array = ['first_name' => $first_name, 'email' => $email_id, 'modified_date' => $created_date];
 
-            $edit_response = editData($connection, "UpdateProfile", TABLE_USER, $update_array, array('id' => $user_id));
+            $edit_response = editData($connection, "UpdateProfile", TABLE_USER, $update_array, ['id' => $user_id]);
             if ($edit_response[STATUS_KEY] == SUCCESS) {
-                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
+                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_id, 'is_delete' => $is_delete]);
                 if (!empty($getUser)) {
                     $posts[] = $getUser;
                 }
@@ -186,15 +186,15 @@ class UserFunctions
         $new_password = encryptPassword($new_password);
 
         $is_delete = IS_DELETE;
-        $posts = array();
+        $posts = [];
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,password", "", array('id' => $user_id, 'is_delete' => $is_delete));
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,password", "", ['id' => $user_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             if ($password === $objUser['password']) {
                 $created_date = getDefaultDate();
-                $edit_response = editData($connection, "Login", TABLE_USER, array('password' => $new_password, 'modified_date' => $created_date), array('id' => $user_id));
+                $edit_response = editData($connection, "Login", TABLE_USER, ['password' => $new_password, 'modified_date' => $created_date], ['id' => $user_id]);
                 if ($edit_response[STATUS_KEY] == SUCCESS) {
-                    $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('id' => $user_id, 'is_delete' => $is_delete));
+                    $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_id, 'is_delete' => $is_delete]);
                     if (!empty($getUser)) {
                         $posts[] = $getUser;
                         $status = SUCCESS;
@@ -235,19 +235,19 @@ class UserFunctions
         $device_type = validateObject($userData, 'device_type', "");
         $device_type = addslashes($device_type);
 
-        $posts = array();
+        $posts = [];
 
         $is_delete = IS_DELETE;
 
         $token = '';
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "*", "", array('email' => $email_id, 'is_delete' => $is_delete));
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             if (encryptPassword($password) === $objUser['password']) {
 
                 $user_id = $objUser['id'];
                 $created_date = getDefaultDate();
-                $edit_response = editData($connection, "Login", TABLE_USER, array('device_type' => $device_type, 'modified_date' => $created_date), array('id' => $user_id));
+                $edit_response = editData($connection, "Login", TABLE_USER, ['device_type' => $device_type, 'modified_date' => $created_date], ['id' => $user_id]);
                 if ($edit_response[STATUS_KEY] == SUCCESS) {
                     if ($objUser['guid'] == null || $objUser['guid'] == "") {
                         $generate_user_guid = $this->updateGuidForUser($user_id);
@@ -293,11 +293,11 @@ class UserFunctions
     {
         $connection = $this->connection;
         $is_delete = DELETE_STATUS::NOT_DELETE;
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,guid", "", array('id' => $user_id, 'is_delete' => $is_delete));
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,guid", "", ['id' => $user_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             $security = new SecurityFunctions($connection);
             $generate_guid = $security->gen_uuid();
-            $edit_response = editData($connection, "UpdateGuid", TABLE_USER, array('guid' => $generate_guid), array('id' => $user_id));
+            $edit_response = editData($connection, "UpdateGuid", TABLE_USER, ['guid' => $generate_guid], ['id' => $user_id]);
             if ($edit_response[STATUS_KEY] == SUCCESS) {
                 return $generate_guid;
             }
@@ -315,7 +315,7 @@ class UserFunctions
 
         $is_delete = IS_DELETE;
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", array('email' => $email_id, 'is_delete' => $is_delete));
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             $sendEmail = new SendEmail();
             $randomString = generateRandomString(10);
@@ -323,7 +323,7 @@ class UserFunctions
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
 
-            $edit_response = editData($connection, "Forgot Password", TABLE_USER, array('password' => $dbPassword, 'modified_date' => $created_date), array('email' => $email_id));
+            $edit_response = editData($connection, "Forgot Password", TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
             if ($edit_response[STATUS_KEY] == SUCCESS) {
 
                 $appname = APPNAME;

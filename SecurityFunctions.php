@@ -161,7 +161,7 @@ class SecurityFunctions
         if ($user_id != '') {
 
             $modifiedDate = date('Y-m-d H:i:s', time());
-            editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, array('modified_date' => $modifiedDate), array('userid' => $user_id), "");
+            editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
             return YES;
         }
         return NO;
@@ -175,12 +175,12 @@ class SecurityFunctions
         if ($user_id != '') {
             $modifiedDate = date('Y-m-d H:i:s', time());
             $generateToken = $this->generateToken(8);
-            $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+            $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objExpiryDate)) {
                 $expiryDuration = $objExpiryDate['config_value'];
                 $currentdate = date("dmyHis", time() + $expiryDuration);
-                $token_array = array(':userid' => $user_id, ':token' => $generateToken,
-                    ':expiry' => $currentdate, ':token1' => $generateToken, ':expiry1' => $currentdate, ':created_date' => $modifiedDate);
+                $token_array = [':userid' => $user_id, ':token' => $generateToken,
+                    ':expiry' => $currentdate, ':token1' => $generateToken, ':expiry1' => $currentdate, ':created_date' => $modifiedDate];
                 error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
@@ -190,7 +190,7 @@ class SecurityFunctions
                         $stmt->closeCursor();
                         $uuid = validateValue($userData->GUID, '');
                         $security = new ApiCrypter();
-                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $data['GUID'] = $userData->GUID;
@@ -259,7 +259,7 @@ class SecurityFunctions
             return ERROR;
         } else {
             // get user-agent from database
-            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
 
             if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
@@ -269,18 +269,18 @@ class SecurityFunctions
                 if ((strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[0]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[1]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[2]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[3]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[4]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[5]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[6]) !== false)) {
                     // get temporary token for user.
 
-                    $getTempToken = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'tempToken', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                    $getTempToken = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'tempToken', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                     if (!empty($getTempToken)) {
                         $tempToken = $getTempToken['config_value'];
-                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $security = new ApiCrypter();
                             if ($accessvalue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
-                                if ($secretvalue == NULL) {
+                                if ($secretvalue == null) {
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
-                                    $response = array();
+                                    $response = [];
                                     $response['key'] = "Temp";// return temporary token
                                     $response['value'] = $secretvalue;
                                     return $response;
@@ -314,14 +314,14 @@ class SecurityFunctions
     public function checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken)
     {
         $connection = $this->connection;
-        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
         if (!empty($objGlobalPassword)) {
             $masterKey = $objGlobalPassword['config_value'];
             $security = new ApiCrypter();
             $decrypted_access_key = $security->decrypt($accessvalue, $masterKey);
-            $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", array('guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE));
+            $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", ['guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objUser)) {
-                $row_token = getSingleTableDataLastDate($connection, TABLE_APP_TOKENS, "", "token,expiry", "", array('userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                $row_token = getSingleTableDataLastDate($connection, TABLE_APP_TOKENS, "", "token,expiry", "", ['userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                 if (!empty($row_token)) {
                     $tokenName = $row_token['token'];
                     $currentdate = $row_token['expiry'];
@@ -333,17 +333,17 @@ class SecurityFunctions
 //                                                 echo ' current date encrpt=> '.$currentdateEncrypt;
 //                                                 echo ' token name encrpt=> '.$tokenNameEncrypt;
                         $tokenName = $tokenNameEncrypt . "_" . $currentdateEncrypt;
-                        $response = array();
+                        $response = [];
                         $response['key'] = "User"; // return user's private token
                         $response['value'] = $tokenName;
 
                         // echo ' secret=access scenario my token=> '.$tokenName;
                         return $response;
-                    } else if ($secretvalue == NULL) {
+                    } elseif ($secretvalue == null) {
                         $currentdateEncrypt = $security->encrypt($currentdate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
                         $tokenName = $tokenNameEncrypt . "_" . $currentdateEncrypt;
-                        $response = array();
+                        $response = [];
                         $response['key'] = "User";// return user's private token
                         $response['value'] = $tokenName;
                         return $response;
@@ -379,7 +379,7 @@ class SecurityFunctions
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
-            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
                 $separateKey = (explode(',', $user_agent));
@@ -387,22 +387,22 @@ class SecurityFunctions
                 if ((strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[0]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[1]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[2]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[3]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[4]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[5]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[6]) !== false)) {
                     // get temporary token for user.
 
-                    $getTempToken = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'tempToken', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                    $getTempToken = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'tempToken', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                     if (!empty($getTempToken)) {
                         $tempToken = $getTempToken['config_value'];
-                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", array('config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE));
+                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $security = new ApiCrypter();
                             if ($accessvalue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
 
-                                if ($secretvalue == NULL) {
+                                if ($secretvalue == null) {
 //                                    echo "\n temp=>".$tempToken;
 //                                    echo "\n master=>".$masterKey;
 //                                    echo "\n new serc==> ".
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
-                                    $response = array();
+                                    $response = [];
                                     $response['key'] = "Temp";// return temporary token
                                     $response['value'] = $secretvalue;
                                     return $response;
@@ -430,7 +430,7 @@ class SecurityFunctions
     // USED METHODS
     public function getAdminConfigWithToken($postData)
     {
-        $data = array();
+        $data = [];
         $connection = $this->connection;
         $secret_key = validateObject($postData, 'secret_key', "");
         $secret_key = addslashes($secret_key);
@@ -443,7 +443,7 @@ class SecurityFunctions
         } else {
             $isSecure = $this->checkForSecurityNew($access_key, $secret_key);
             if ($isSecure != NO) {
-                $stmt_get_admin_config = getMultipleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_key,config_value", " config_key IN('globalPassword','userAgent','tempToken')", array('is_delete' => DELETE_STATUS::NOT_DELETE));
+                $stmt_get_admin_config = getMultipleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_key,config_value", " config_key IN('globalPassword','userAgent','tempToken')", ['is_delete' => DELETE_STATUS::NOT_DELETE]);
                 if ($stmt_get_admin_config->rowCount() > 0) {
                     while ($objAdminConfig = $stmt_get_admin_config->fetch(PDO::FETCH_ASSOC)) {
                         $data[$objAdminConfig['config_key']] = $objAdminConfig['config_value'];
