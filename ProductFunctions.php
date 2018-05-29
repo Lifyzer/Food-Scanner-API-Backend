@@ -113,8 +113,6 @@ class ProductFunctions
                     }
                 }
             }
-//            $message = DATA_FETCHED_SUCCESSFULLY;
-//            $status = SUCCESS;
         } else {
             $status = SUCCESS;
             $message = NO_PRODUCT_FOUND_IN_DATABASE;
