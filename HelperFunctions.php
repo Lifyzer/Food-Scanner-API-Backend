@@ -13,7 +13,7 @@ function errorLogFunction($error_message)
     $current .= $error_message;
     $current .= (microtime(true)) - time() . " seconds elapsed\n\n";
     // Write the contents back to the file
-    file_put_contents(dirname(__FILE__) . '/LogFile/' . $file, $current, FILE_APPEND);
+    file_put_contents(__DIR__ . '/LogFile/' . $file, $current, FILE_APPEND);
 }
 
 function validateValue($value, $placeHolder)
