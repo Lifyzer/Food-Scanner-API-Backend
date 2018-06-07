@@ -78,7 +78,6 @@ class ProductFunctions
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
 //                echo $product['id']."-2-".$user_id."-3-".$is_favourite."-4-".$is_delete;
                 if (!empty($objFavourite)) {
-
                     $product['is_favourite'] = 1;
                 } else {
                     $product['is_favourite'] = 0;
@@ -92,7 +91,7 @@ class ProductFunctions
                 if (!empty($objHistory)) {
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
-                    $edit_history_response = editData($connection, "getProductDetails", TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
+                    $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
                     } else {
@@ -103,7 +102,7 @@ class ProductFunctions
                 } else {
                     //******** Insert data into history ********//
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
-                    $add_history_response = addData($connection, "getProductDetails", TABLE_HISTORY, $history_array);
+                    $add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
                     if ($add_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
                     } else {
@@ -166,9 +165,9 @@ class ProductFunctions
 
         $posts = [];
         $is_delete = IS_DELETE;
-        $select_user_history_query = "select h.id as history_id, h.user_id, h.product_id, h.created_date as history_created_date , p.* from history as h
-                                      left JOIN product as p on p.id = h.product_id
-                                      WHERE h.user_id = :user_id and h.is_delete = :is_delete ORDER BY h.created_date DESC limit $from_index,$to_index ";
+        $select_user_history_query = "SELECT h.id as history_id, h.user_id, h.product_id, h.created_date AS history_created_date , p.* FROM history AS h
+                                      LEFT JOIN product AS p ON p.id = h.product_id
+                                      WHERE h.user_id = :user_id AND h.is_delete = :is_delete ORDER BY h.created_date DESC limit $from_index,$to_index ";
         $conditional_array = ['user_id' => $user_id, 'is_delete' => $is_delete];
         $select_user_history_stmt = getMultipleTableData($connection, "", $select_user_history_query, "", "", $conditional_array);
         if ($select_user_history_stmt->rowCount() > 0) {
@@ -214,9 +213,9 @@ class ProductFunctions
         $is_delete = IS_DELETE;
         $is_favourite = "1";
 
-        $select_user_favourite_query = "SELECT f.id as favourite_id , f.user_id, f.product_id, f.is_favourite, f.created_date as favourite_created_date , p.*FROM " . TABLE_FAVOURITE . " as f
-                                        left join " . TABLE_PRODUCT . " as p on p.id = f.product_id
-                                        where f.user_id = :user_id and f.is_favourite = :is_favourite and f.is_delete = :is_delete ORDER BY f.created_date DESC limit $from_index,$to_index  ";
+        $select_user_favourite_query = "SELECT f.id as favourite_id , f.user_id, f.product_id, f.is_favourite, f.created_date AS favourite_created_date , p.* FROM " . TABLE_FAVOURITE . " AS f
+                                        LEFT JOIN " . TABLE_PRODUCT . " AS p ON p.id = f.product_id
+                                        WHERE f.user_id = :user_id AND f.is_favourite = :is_favourite AND f.is_delete = :is_delete ORDER BY f.created_date DESC limit $from_index,$to_index ";
 
         $select_user_favourite_stmt = getMultipleTableData($connection, "", $select_user_favourite_query, "", "", ['user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete]);
 
