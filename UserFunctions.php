@@ -198,7 +198,7 @@ class UserFunctions
                     if (!empty($getUser)) {
                         $posts[] = $getUser;
                         $status = SUCCESS;
-                        $message = PASSWORD_CHANGED_SUCCESSFULLY;
+                        $message = PASSWORD_CHANGED;
                     } else {
                         $status = FAILED;
                         $message = DEFAULT_NO_RECORD;
@@ -279,7 +279,7 @@ class UserFunctions
             }
         } else {
             $status = FAILED;
-            $message = NO_EMAIL_AND_PASSOWRD_AVAILABLE;
+            $message = NO_EMAIL_AND_PASSWORD_AVAILABLE;
         }
 
         $data['status'] = $status;
