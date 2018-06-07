@@ -8,7 +8,7 @@ require 'class.phpmailer.php';
 
 class Email
 {
-    public function sendEmail($sender_email_id, $message, $Mailsubject, $userEmailId)
+    public function send($sender_email_id, $message, $Mailsubject, $userEmailId)
     {
         date_default_timezone_set('Asia/Calcutta');
         $headers = 'MIME-Version: 1.0' . "\r\n";
