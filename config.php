@@ -36,5 +36,7 @@ try {
 } catch (PDOException $e) {
     if (DEBUG_MODE) {
         echo $e->getMessage();
+    } else {
+        echo 'Error establishing a database connection.';
     }
 }
