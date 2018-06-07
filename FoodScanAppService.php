@@ -21,7 +21,7 @@ if (DEBUG_MODE) {
 }
 
 switch ($_REQUEST['Service']) {
-    /*********************  User Functions ******************************/
+    /*********************  User Functions *********************/
     case UserFunctions::REGISTRATION_ACTION:
     case UserFunctions::LOGIN_ACTION:
     case UserFunctions::CHANGE_PASSWORD_ACTION:

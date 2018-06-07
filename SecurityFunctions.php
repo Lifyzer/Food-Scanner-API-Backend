@@ -382,7 +382,7 @@ class SecurityFunctions
             $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
-                $separateKey = (explode(',', $user_agent));
+                $separateKey = explode(',', $user_agent);
                 // check user-agent is valid
                 if ((strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[0]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[1]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[2]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[3]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[4]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[5]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[6]) !== false)) {
                     // get temporary token for user.
