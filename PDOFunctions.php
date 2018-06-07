@@ -170,11 +170,11 @@ function getSingleTableData(PDO $connection, $table, $sql, $columns, $customCond
             }
         }
 
+        $check_conditions = $customCondition;
         if (empty($customCondition)) {
             $check_conditions = $condition;
-        } else {
-            $check_conditions = $customCondition;
         }
+
         if (empty($sql)) {
             $sql = "SELECT " . $columns . " FROM " . $table . " WHERE " . $check_conditions;
         }

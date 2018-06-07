@@ -411,9 +411,9 @@ class SecurityFunctions
                                     // match token is valid or not
                                     if ($secretvalue == $tempToken) {
                                         return YES;
-                                    } else {
-                                        return NO;
                                     }
+
+                                    return NO;
                                 }
                             } else {
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
