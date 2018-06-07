@@ -81,8 +81,8 @@ switch ($_REQUEST['Service']) {
         } else {
             $user = new ProductFunctions($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
-            if ($isSecure != 'yes' || $isSecure != 'yes') {
-                if ($isSecure['key'] == 'Temp') {
+            if ($isSecure !== 'yes' || $isSecure !== 'yes') {
+                if ($isSecure['key'] === 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
                     $data['UserToken'] = $isSecure['value'];
