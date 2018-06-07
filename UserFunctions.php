@@ -338,9 +338,9 @@ class UserFunctions
                               ' . $appname . ' Team</p>
                               </body></html>';
 
-                $result = $sendEmail->sendEmail(SENDER_EMAIL_ID, $message, "Forgot Password", $email_id);
+                $email->sendEmail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
                 $status = SUCCESS;
-                $message = 'Password is sent successfully.';
+                $message = PASSWORD_SENT;
             } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
