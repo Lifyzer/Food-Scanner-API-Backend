@@ -44,8 +44,6 @@ define('HISTORY_REMOVED_SUCCESSFULLY', 'History deleted successfully');
 define('FAVOURITE_SUCCESSFULLY', ' Add / Removed to favourite Successfully');
 define('PROFILE_UPDATED_SUCCESSFULLY', 'Profile Updated Successfully');
 
-
-//define('NOT_DELETE',0);
 abstract class DELETE_STATUS
 {
     const IS_DELETE = '1';
