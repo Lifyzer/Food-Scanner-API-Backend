@@ -6,7 +6,7 @@ use PHPMailer;
 
 require 'class.phpmailer.php';
 
-class SendEmail
+class Email
 {
     public function sendEmail($sender_email_id, $message, $Mailsubject, $userEmailId)
     {

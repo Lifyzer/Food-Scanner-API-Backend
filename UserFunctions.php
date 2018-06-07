@@ -5,8 +5,6 @@ namespace Lifyzer\Api;
 use PDO;
 use stdClass;
 
-include_once 'SendEmail.php';
-
 class UserFunctions
 {
     public const LOGIN_ACTION = 'Login';
@@ -317,18 +315,18 @@ class UserFunctions
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
-            $sendEmail = new SendEmail();
+            $email = new Email();
             $randomString = generateRandomString(10);
             $userPassword = $randomString;
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
 
-            $edit_response = editData($connection, "Forgot Password", TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
+            $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
             if ($edit_response[STATUS_KEY] == SUCCESS) {
 
                 $appname = APPNAME;
                 $firstname = $objUser['first_name'];
-                $lastname = "";
+                $lastname = '';
 
                 $message = '<html><body>
                               <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
