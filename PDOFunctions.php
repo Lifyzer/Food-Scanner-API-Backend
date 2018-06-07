@@ -237,7 +237,7 @@ function getSingleTableDataLastDate(PDO $connection, $table, $sql, $columns, $cu
             }
         }
         $statement->execute();
-        $result = [];
+
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $statement->closeCursor();
     } catch (PDOException $e) {
