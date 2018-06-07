@@ -132,8 +132,8 @@ class ProductFunctions
         $history_id = addslashes($history_id);
         $is_delete = DELETE_STATUS::IS_DELETE;
         $edit_history_response = editData($connection, "removeProductFromHistory", TABLE_HISTORY, ['is_delete' => $is_delete], ['id' => $history_id], "");
-        if ($edit_history_response[STATUS_KEY] == SUCCESS) {
-            $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "*", "", ['id' => $history_id]);
+        if ($edit_history_response[STATUS_KEY] === SUCCESS) {
+            $objHistory = getSingleTableData($connection, TABLE_HISTORY, '', '*', '', ['id' => $history_id]);
             if (!empty($objHistory)) {
                 $conditional_array = ['product_id' => $objHistory['product_id'], 'user_id' => $objHistory['user_id'], 'is_delete' => $is_delete];
                 editData($connection, "addToFavourite", TABLE_FAVOURITE, ['is_favourite' => $is_favourite = '0'], $conditional_array, "");
@@ -192,6 +192,7 @@ class ProductFunctions
         $data['status'] = $status;
         $data['message'] = $message;
         $data['history'] = $posts;
+
         return $data;
     }
 
@@ -249,14 +250,14 @@ class ProductFunctions
         $is_favourite = addslashes($is_favourite);
 
         $is_delete = IS_DELETE;
-        $current_date = date("Y-m-d H:i:s");
+        $current_date = date('Y-m-d H:i:s');
 
         $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
         $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id,is_favourite", "", $conditional_array);
         if (!empty($objFavourite)) {
             $edit_response = editData($connection, "addToFavourite", TABLE_FAVOURITE, ['is_favourite' => $is_favourite, 'created_date' => $current_date], ['id' => $objFavourite['id']], "");
 
-            if ($edit_response[STATUS_KEY] == SUCCESS) {
+            if ($edit_response[STATUS_KEY] === SUCCESS) {
                 $status = SUCCESS;
                 $message = $is_favourite == 1 ? 'Product added in favourite.' : 'Product remove from favourite.';
             } else {
