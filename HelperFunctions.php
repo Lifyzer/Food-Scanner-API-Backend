@@ -11,7 +11,7 @@ function errorLogFunction($error_message): void
     $current = @file_get_contents($file);
     $current = "\n----------------------------\n";
     $current .= basename(__FILE__) . '/logs/' . "\n----------------------------\n";
-    $current .= "Date := " . date("Y-m-d H:i:s") . "\n----------------------------\n";
+    $current .= "Date := " . date(DATETIME_FORMAT) . "\n----------------------------\n";
     $current .= $error_message;
     $current .= (microtime(true)) - time() . " seconds elapsed\n\n";
     // Write the contents back to the file

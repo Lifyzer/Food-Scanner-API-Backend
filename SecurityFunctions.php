@@ -160,7 +160,7 @@ class SecurityFunctions
 
         if ($user_id != '') {
 
-            $modifiedDate = date('Y-m-d H:i:s', time());
+            $modifiedDate = date(DATETIME_FORMAT, time());
             editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
             return YES;
         }
@@ -173,7 +173,7 @@ class SecurityFunctions
         $connection = $this->connection;
         $user_id = validateValue($userData->userId, '');
         if ($user_id != '') {
-            $modifiedDate = date('Y-m-d H:i:s', time());
+            $modifiedDate = date(DATETIME_FORMAT, time());
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objExpiryDate)) {

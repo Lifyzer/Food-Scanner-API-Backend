@@ -250,7 +250,7 @@ class ProductFunctions
         $is_favourite = addslashes($is_favourite);
 
         $is_delete = IS_DELETE;
-        $current_date = date('Y-m-d H:i:s');
+        $current_date = date(DATETIME_FORMAT);
 
         $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
         $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id,is_favourite", "", $conditional_array);
