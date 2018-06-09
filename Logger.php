@@ -39,7 +39,7 @@ class Logger
         echo '<pre>';
     }
 
-    public function writetoFile($identifer, $content, $filename): void
+    public function writeToFile($identifer, $content, $filename): void
     {
         $logtime = date('m/d/Y h:i:s a', time());
 
