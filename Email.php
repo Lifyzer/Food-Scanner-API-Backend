@@ -48,7 +48,5 @@ class Email
 
         $mail->AddAddress($address);
         $mail->Send();
-
-        //echo "EMAIL SENDED YOOOO!!!";
     }
 }
