@@ -8,14 +8,12 @@ require 'class.phpmailer.php';
 
 class Email
 {
-    public function send($sender_email_id, $message, $Mailsubject, $userEmailId)
+    public function send($sender_email_id, $message, $subject, $userEmailId)
     {
         date_default_timezone_set('Asia/Calcutta');
         $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
         $headers .= 'From: NIPL App' . "\r\n";
-
-        $subject = $Mailsubject; //'Welcome from NextDoorMenu App';
 
         $mail = new PHPMailer();
         $mail->IsSMTP(); // telling the class to use SMTP
