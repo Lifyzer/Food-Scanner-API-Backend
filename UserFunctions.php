@@ -406,8 +406,9 @@ QUERY;
         $stmt->bindValue(':emailId', $email_id);
         $stmt->execute();
 
+        $data = [];
         $dbData = $stmt->fetch(PDO::FETCH_ASSOC);
-        $data = $this->buildCsvDataFormat($dbData);
+        $data['data'] = $this->buildCsvDataFormat($dbData);
 
         if (!empty($data)) {
             $status = SUCCESS;
