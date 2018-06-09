@@ -4,6 +4,31 @@ namespace Lifyzer\Api;
 
 class Logger
 {
+    public function __construct()
+    {
+        ini_set('log_errors', 'On');
+        ini_set('error_log', __DIR__ . '/logs/php_error.log');
+        ini_set('ignore_repeated_errors', 'On');
+    }
+
+    public function showErrors()
+    {
+        error_reporting(E_ALL); // Since PHP 5.4 E_STRICT became part of E_ALL
+        ini_set('display_errors', 'On');
+        ini_set('display_startup_errors', 'On');
+        ini_set('track_errors', 'On');
+        ini_set('html_errors', 'On');
+    }
+
+    public function hideErrors()
+    {
+        error_reporting(0);
+        ini_set('display_errors', 'Off');
+        ini_set('display_startup_errors', 'Off');
+        ini_set('track_errors', 'Off');
+        ini_set('html_errors', 'Off');
+    }
+
     public function log($identifer, $content): void
     {
         echo '<pre>';
