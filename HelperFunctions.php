@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lifyzer\Api;
 
-function errorLogFunction($error_message)
+function errorLogFunction($error_message): void
 {
     $log_file = date("F_j_Y") . '_log.txt';
     $file = 'error_log_' . date("Ymd") . '.txt';
@@ -32,27 +34,27 @@ function validateObject($object, $key, $placeHolder)
     return $placeHolder;
 }
 
-function json_validate($string)
+function json_validate($string): bool
 {
     if (is_string($string)) {
         @json_decode($string);
-        return (json_last_error() === JSON_ERROR_NONE);
+        return json_last_error() === JSON_ERROR_NONE;
     }
 
     return false;
 }
 
-function getDefaultDate()
+function getDefaultDate(): string
 {
-    return date('Y-m-d H:i:s');
+    return date(DATETIME_FORMAT);
 }
 
-function encryptPassword($str)
+function encryptPassword($str): string
 {
     return sha1($str);
 }
 
-function generateRandomString($length = 10)
+function generateRandomString($length = 10): string
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';

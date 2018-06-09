@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Lifyzer\Api;
 
 class Logger
@@ -11,7 +13,7 @@ class Logger
         ini_set('ignore_repeated_errors', 'On');
     }
 
-    public function showErrors()
+    public function showErrors(): void
     {
         error_reporting(E_ALL); // Since PHP 5.4 E_STRICT became part of E_ALL
         ini_set('display_errors', 'On');
@@ -20,7 +22,7 @@ class Logger
         ini_set('html_errors', 'On');
     }
 
-    public function hideErrors()
+    public function hideErrors(): void
     {
         error_reporting(0);
         ini_set('display_errors', 'Off');
