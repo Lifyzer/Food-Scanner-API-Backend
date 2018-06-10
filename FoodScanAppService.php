@@ -5,19 +5,22 @@ namespace Lifyzer\Api;
 require_once __DIR__ . '/vendor/autoload.php';
 
 require 'config.php';
-require 'HelperFunctions.php';
 require 'TableVars.php';
 require 'ConstantValues.php';
+require 'HelperFunctions.php';
 require 'PDOFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $postData = json_decode($post_body);
 
+$logger = new Logger();
 if (DEBUG_MODE) {
-    $logger = new Logger();
+    $logger->showErrors();
     $logger->log('POST DATA :', $postData);
     $logger->log('Service :', $_REQUEST['Service']);
+} else {
+    $logger->hideErrors();
 }
 
 switch ($_REQUEST['Service']) {
