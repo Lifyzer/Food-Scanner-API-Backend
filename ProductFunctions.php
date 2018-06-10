@@ -146,6 +146,7 @@ class ProductFunctions
         }
         $data['status'] = $status;
         $data['message'] = $message;
+
         return $data;
     }
 

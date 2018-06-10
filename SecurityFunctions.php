@@ -71,103 +71,6 @@ class SecurityFunctions
         return $token;
     }
 
-    // USED METHODS
-    private function refreshToken($userData)
-    {
-        $access_key = validateObject($userData, 'access_key', "");
-        $access_key = addslashes($access_key);
-
-        $isSecure = $this->checkForSecurityForRefreshToken($access_key, "");
-
-        if ($isSecure == NO) {
-            $status = FAILED;
-            $message = MALICIOUS_SOURCE;
-        } elseif ($isSecure == ERROR) {
-            $status = FAILED;
-            $message = TOKEN_ERROR;
-        } else {
-            //print_r($isSecure);
-            if ($isSecure != YES) {
-                if ($isSecure['key'] == "Temp") {
-                    $data['data']['tempToken'] = $isSecure['value'];
-                } else {
-                    $data['data']['userToken'] = $isSecure['value'];
-                }
-            }
-            $status = SUCCESS;
-            $message = "Token is generated.";
-        }
-
-        $data[STATUS_KEY] = $status;
-        $data[MESSAGE_KEY] = $message;
-
-        $arr_adminconfig = $this->getAdminConfigWithToken($userData);
-        $arr_adminconfig['key_iv'] = ENCRYPTION_KEY_IV;
-        $data['data']['adminConfig'] = $arr_adminconfig;
-
-        return $data;
-    }
-
-    public function getUserAgent()
-    {
-        $string = $_SERVER ['HTTP_USER_AGENT'];
-        $data['User_agent'] = $string;
-        return $data;
-    }
-
-    private function test($userData)
-    {
-        $plaintext = validateValue($userData->guid, "");
-        $key = "_$(Skill)!_square@#$%_23_06_2017";
-        //$key previously generated safely, ie: openssl_random_pseudo_bytes
-        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
-        $iv = openssl_random_pseudo_bytes($ivlen);
-        $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
-        $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
-        $ciphertext = base64_encode($iv . $hmac . $ciphertext_raw);
-
-        //decrypt later....
-        $c = base64_decode($ciphertext);
-        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
-        $iv = substr($c, 0, $ivlen);
-        $hmac = substr($c, $ivlen, $sha2len = 32);
-        $ciphertext_raw = substr($c, $ivlen + $sha2len);
-        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
-        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
-        if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
-        {
-            $decode = $original_plaintext;
-        }
-        $data['encode'] = $ciphertext;
-        $data['decode'] = $decode;
-        return $data;
-    }
-
-    private function testEncryption($userData)
-    {
-        $guid = validateValue($userData->guid, "");
-        $global_pwd_value = "_$(Skill)!_square@#$%_23_06_2017";
-        $security = new ApiCrypter();
-        $encrpt_acesskey = $security->encrypt($guid, $global_pwd_value);
-        $data['encrypted_value'] = $encrpt_acesskey;
-        $data['decrypted_value'] = $security->decrypt($encrpt_acesskey, $global_pwd_value);
-        return $data;
-    }
-
-    private function expiredAllTokenofUser($userData)
-    {
-        $user_id = validateValue($userData['userId'], '');
-
-        if ($user_id != '') {
-
-            $modifiedDate = date(DATETIME_FORMAT, time());
-            editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
-            return YES;
-        }
-        return NO;
-    }
-
-    // USED METHODS
     public function updateTokenForUser($userData)
     {
         $connection = $this->connection;
@@ -221,10 +124,10 @@ class SecurityFunctions
         }
         $data[STATUS_KEY] = FAILED;
         $data[USERTOKEN] = NO;
+
         return $data;
     }
 
-    // USED METHODS
     public function gen_uuid()
     {
         // return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -250,8 +153,6 @@ class SecurityFunctions
         );
     }
 
-
-    // USED METHODS
     public function checkForSecurityNew($accessvalue, $secretvalue)
     {
         $connection = $this->connection;
@@ -310,7 +211,6 @@ class SecurityFunctions
         return NO;
     }
 
-    // USED METHODS
     public function checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken)
     {
         $connection = $this->connection;
@@ -371,7 +271,6 @@ class SecurityFunctions
         return NO;
     }
 
-    // USED METHODS
     public function checkForSecurityForRefreshToken($accessvalue, $secretvalue)
     {
         $connection = $this->connection;
@@ -427,7 +326,6 @@ class SecurityFunctions
         return NO;
     }
 
-    // USED METHODS
     public function getAdminConfigWithToken($postData)
     {
         $data = [];
@@ -454,6 +352,103 @@ class SecurityFunctions
                 $data = '';
             }
         }
+
         return $data;
+    }
+
+    public function getUserAgent()
+    {
+        $string = $_SERVER ['HTTP_USER_AGENT'];
+        $data['User_agent'] = $string;
+
+        return $data;
+    }
+
+    private function refreshToken($userData)
+    {
+        $access_key = validateObject($userData, 'access_key', "");
+        $access_key = addslashes($access_key);
+
+        $isSecure = $this->checkForSecurityForRefreshToken($access_key, "");
+
+        if ($isSecure == NO) {
+            $status = FAILED;
+            $message = MALICIOUS_SOURCE;
+        } elseif ($isSecure == ERROR) {
+            $status = FAILED;
+            $message = TOKEN_ERROR;
+        } else {
+            //print_r($isSecure);
+            if ($isSecure != YES) {
+                if ($isSecure['key'] == "Temp") {
+                    $data['data']['tempToken'] = $isSecure['value'];
+                } else {
+                    $data['data']['userToken'] = $isSecure['value'];
+                }
+            }
+            $status = SUCCESS;
+            $message = "Token is generated.";
+        }
+
+        $data[STATUS_KEY] = $status;
+        $data[MESSAGE_KEY] = $message;
+
+        $arr_adminconfig = $this->getAdminConfigWithToken($userData);
+        $arr_adminconfig['key_iv'] = ENCRYPTION_KEY_IV;
+        $data['data']['adminConfig'] = $arr_adminconfig;
+
+        return $data;
+    }
+
+    private function test($userData)
+    {
+        $plaintext = validateValue($userData->guid, "");
+        $key = "_$(Skill)!_square@#$%_23_06_2017";
+        //$key previously generated safely, ie: openssl_random_pseudo_bytes
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $iv = openssl_random_pseudo_bytes($ivlen);
+        $ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
+        $hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+        $ciphertext = base64_encode($iv . $hmac . $ciphertext_raw);
+
+        //decrypt later....
+        $c = base64_decode($ciphertext);
+        $ivlen = openssl_cipher_iv_length($cipher = "AES-128-CBC");
+        $iv = substr($c, 0, $ivlen);
+        $hmac = substr($c, $ivlen, $sha2len = 32);
+        $ciphertext_raw = substr($c, $ivlen + $sha2len);
+        $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
+        $calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary = true);
+        if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
+        {
+            $decode = $original_plaintext;
+        }
+        $data['encode'] = $ciphertext;
+        $data['decode'] = $decode;
+        return $data;
+    }
+
+    private function testEncryption($userData)
+    {
+        $guid = validateValue($userData->guid, "");
+        $global_pwd_value = "_$(Skill)!_square@#$%_23_06_2017";
+        $security = new ApiCrypter();
+        $encrpt_acesskey = $security->encrypt($guid, $global_pwd_value);
+        $data['encrypted_value'] = $encrpt_acesskey;
+        $data['decrypted_value'] = $security->decrypt($encrpt_acesskey, $global_pwd_value);
+        return $data;
+    }
+
+    private function expiredAllTokenofUser($userData)
+    {
+        $user_id = validateValue($userData['userId'], '');
+
+        if ($user_id != '') {
+
+            $modifiedDate = date(DATETIME_FORMAT, time());
+            editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
+            return YES;
+        }
+        return NO;
     }
 }
