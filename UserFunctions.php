@@ -353,6 +353,11 @@ class UserFunctions
         return $data;
     }
 
+    /**
+     * @param array $userData
+     *
+     * @return array
+     */
     private function deleteAccount($userData)
     {
         $email_id = validateObject($userData, 'email_id', '');
