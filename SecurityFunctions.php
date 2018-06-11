@@ -39,7 +39,7 @@ class SecurityFunctions
         }
     }
 
-    //============================================== Generate Random Unique Token Number =============================
+    //========== Generate Random Unique Token Number ==========
 
     public function crypto_random_secure($min, $max)
     {
@@ -208,6 +208,7 @@ class SecurityFunctions
                 }
             }
         }
+
         return NO;
     }
 
@@ -234,7 +235,7 @@ class SecurityFunctions
 //                                                 echo ' token name encrpt=> '.$tokenNameEncrypt;
                         $tokenName = $tokenNameEncrypt . "_" . $currentdateEncrypt;
                         $response = [];
-                        $response['key'] = "User"; // return user's private token
+                        $response['key'] = 'User'; // return user's private token
                         $response['value'] = $tokenName;
 
                         // echo ' secret=access scenario my token=> '.$tokenName;
@@ -425,6 +426,7 @@ class SecurityFunctions
         }
         $data['encode'] = $ciphertext;
         $data['decode'] = $decode;
+
         return $data;
     }
 
@@ -436,6 +438,7 @@ class SecurityFunctions
         $encrpt_acesskey = $security->encrypt($guid, $global_pwd_value);
         $data['encrypted_value'] = $encrpt_acesskey;
         $data['decrypted_value'] = $security->decrypt($encrpt_acesskey, $global_pwd_value);
+
         return $data;
     }
 
@@ -444,11 +447,12 @@ class SecurityFunctions
         $user_id = validateValue($userData['userId'], '');
 
         if ($user_id != '') {
-
             $modifiedDate = date(DATETIME_FORMAT, time());
-            editData($this->connection, "ExpireToken", TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
+            editData($this->connection, 'ExpireToken', TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
+
             return YES;
         }
+
         return NO;
     }
 }

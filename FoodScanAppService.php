@@ -40,17 +40,17 @@ switch ($_REQUEST['Service']) {
 
         $connection = $GLOBALS['con'];
         $isSecure = (new SecurityFunctions($connection))->checkForSecurityNew($access_key, $secret_key);
-        if ($isSecure == NO) {
+        if ($isSecure === NO) {
             $data['status'] = FAILED;
             $data['message'] = MALICIOUS_SOURCE;
-        } elseif ($isSecure == ERROR) {
+        } elseif ($isSecure === ERROR) {
             $data['status'] = FAILED;
             $data['message'] = TOKEN_ERROR;
         } else {
             $user = new UserFunctions($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
 
-            if ($isSecure != 'yes' || $isSecure != 'yes') {
+            if ($isSecure !== YES || $isSecure !== YES) {
                 if ($isSecure['key'] == 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
@@ -72,7 +72,6 @@ switch ($_REQUEST['Service']) {
         $secret_key = addslashes($secret_key);
 
         $connection = $GLOBALS['con'];
-
         $isSecure = (new SecurityFunctions($connection))->checkForSecurityNew($access_key, $secret_key);
 
         if ($isSecure === NO) {
@@ -84,7 +83,7 @@ switch ($_REQUEST['Service']) {
         } else {
             $user = new ProductFunctions($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
-            if ($isSecure !== 'yes' || $isSecure !== 'yes') {
+            if ($isSecure !== YES || $isSecure !== YES) {
                 if ($isSecure['key'] === 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
