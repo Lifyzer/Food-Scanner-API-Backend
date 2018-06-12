@@ -38,23 +38,14 @@ class Email
         $mail->Username = SENDER_EMAIL_ID; // GMAIL username
         $mail->Password = SENDER_EMAIL_PASSWORD; // GMAIL password
 
-        $from = $sender_email_id; //'demo.narola@gmail.com';
-        $to = $userEmailId;
-        $mail->SetFrom($from, APPNAME . 'Team');
+        $mail->SetFrom($sender_email_id, APPNAME . 'Team');
         $mail->Subject = $subject;
         //$mail->MsgHTML($content);
         $mail->IsHTML(true);
         $mail->Body = $message;
 
-        /*$mail->Body = '<html>
-        <body style=\"font-family:Arial; font-size:12px; color:#666666;\">
-          "'.$message.'"
-        </body>
-      </html>';*/
+        $mail->AddAddress($userEmailId);
 
-        $address = $to;
-
-        $mail->AddAddress($address);
-        $mail->Send();
+        return $mail->Send();
     }
 }
