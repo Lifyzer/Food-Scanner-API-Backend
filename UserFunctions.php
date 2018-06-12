@@ -353,12 +353,7 @@ class UserFunctions
         return $data;
     }
 
-    /**
-     * @param array $userData
-     *
-     * @return array
-     */
-    private function deleteAccount($userData)
+    private function deleteAccount(array $userData): array
     {
         $email_id = validateObject($userData, 'email_id', '');
 
@@ -389,7 +384,7 @@ class UserFunctions
      *
      * @return array
      */
-    private function dataTakeOut($userData)
+    private function dataTakeOut(array $userData): array
     {
         $email_id = validateObject($userData, 'email_id', '');
 
@@ -429,12 +424,7 @@ QUERY;
         return $data;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return string
-     */
-    private function buildCsvDataFormat(array $data)
+    private function buildCsvDataFormat(array $data): string
     {
         $csvData = self::CSV_TAKEOUT_HEADER;
         $csvData .= implode(',', $data);
