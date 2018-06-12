@@ -8,9 +8,17 @@ require 'class.phpmailer.php';
 
 class Email
 {
-    public function send($sender_email_id, $message, $subject, $userEmailId)
+    /**
+     * @param string $sender_email_id
+     * @param string $message
+     * @param string $subject
+     * @param string $userEmailId
+     *
+     * @return bool
+     * @throws \phpmailerException
+     */
+    public function send(string $sender_email_id, string $message, string $subject, string $userEmailId): bool
     {
-        date_default_timezone_set('Asia/Calcutta');
         $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
         $headers .= 'From: NIPL App' . "\r\n";
