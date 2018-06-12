@@ -137,14 +137,13 @@ function checkDataExist(PDO $connection, $table, $columns, $sql, $dataArray)
         $statement->execute();
         return $statement->rowCount();
     } catch (PDOException $e) {
-        $message = $e->getMessage();
+        $errorMessage = $e->getMessage();
 
-        $error_message = $message;
-        if (is_array($message)) {
-            $error_message = implode(' , ', $message);
+        if (is_array($errorMessage)) {
+            $errorMessage = implode(' , ', $errorMessage);
         }
 
-        return $error_message;
+        return $errorMessage;
     }
 }
 

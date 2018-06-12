@@ -6,10 +6,9 @@ namespace Lifyzer\Api;
 
 function errorLogFunction($error_message): void
 {
-    $log_file = date("F_j_Y") . '_log.txt';
-    $file = 'error_log_' . date("Ymd") . '.txt';
+    $file = date('F-j-Y') . '_log.txt';
     $current = @file_get_contents($file);
-    $current = "\n----------------------------\n";
+    $current .= "\n----------------------------\n";
     $current .= basename(__FILE__) . '/logs/' . "\n----------------------------\n";
     $current .= "Date := " . date(DATETIME_FORMAT) . "\n----------------------------\n";
     $current .= $error_message;
