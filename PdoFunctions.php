@@ -14,15 +14,15 @@ function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
     try {
         $numItems = count($dataArray);
         $cnt = 0;
-        $fields = "";
-        $values = "";
+        $fields = '';
+        $values = '';
         foreach ($dataArray as $key => $value) {
             if (++$cnt == $numItems) {
                 $fields .= $key;
-                $values .= ":" . $key;
+                $values .= ':' . $key;
             } else {
-                $fields .= $key . ",";
-                $values .= ":" . $key . " , ";
+                $fields .= $key . ',';
+                $values .= ':' . $key . ' , ';
             }
         }
         $sql = 'INSERT INTO ' . $table_name . ' (' . $fields . ' ) VALUES (' . $values . ') ';
@@ -47,10 +47,11 @@ function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
     $data['status'] = $status;
     $data['message'] = $message;
     $data['sql'] = $sql;
+
     return $data;
 }
 
-function editData(PDO $connection, $function_name = '', $table_name, $dataArray, $conditionArray, $query = "")
+function editData(PDO $connection, $function_name = '', $table_name, $dataArray, $conditionArray, $query = '')
 {
     $sql = '';
     $data = [];
@@ -86,6 +87,7 @@ function editData(PDO $connection, $function_name = '', $table_name, $dataArray,
         } else {
             $sql = $query;
         }
+
         $stmt = $connection->prepare($sql);
         foreach ($dataArray as $key => $value) {
             $stmt->bindValue(":$key", $value);
@@ -106,6 +108,7 @@ function editData(PDO $connection, $function_name = '', $table_name, $dataArray,
     $data['status'] = $status;
     $data['message'] = $message;
     $data['sql'] = $sql;
+
     return $data;
 }
 
@@ -193,6 +196,7 @@ function getSingleTableData(PDO $connection, $table, $sql, $columns, $customCond
         $err_msg = "\nFunction=> " . " Query=> " . $sql . "  Error message= " . $message;
         errorLogFunction($err_msg);
     }
+
     return $result;
 }
 
@@ -203,7 +207,7 @@ function getSingleTableDataLastDate(PDO $connection, $table, $sql, $columns, $cu
         $cnt = 0;
         $execute_array = [];
         $condition = '';
-        $statement = '';
+
         if (!empty($dataArray)) {
             foreach ($dataArray as $key => $value) {
                 if (empty($sql)) {
@@ -255,7 +259,7 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
         $cnt = 0;
         $execute_array = [];
         $condition = '';
-        $check_conditions = '';
+
         if (!empty($dataArray)) {
             foreach ($dataArray as $key => $value) {
                 if (empty($sql)) {
@@ -305,14 +309,13 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
 
 function editDataWithCustomCondition(PDO $connection, $function_name = "", $table_name, $dataArray, $conditionArray, $setValues)
 {
-    $status = FAILED;
-    $message = NO_ERROR;
     $sql = '';
     $data = [];
+
     try {
         $numOfItemsForCondition = count($conditionArray);
         $cntForCondition = 0;
-        $conditionValue = "";
+        $conditionValue = '';
         $execute_arr = [];
 
         foreach ($dataArray as $key => $value) {
@@ -343,6 +346,7 @@ function editDataWithCustomCondition(PDO $connection, $function_name = "", $tabl
             $message = $statement->errorInfo();
         }
     } catch (PDOException $exception) {
+        $status = FAILED;
         $message = $exception->getMessage();
         $err_msg = "\nFunction=> " . $function_name . " Query=> " . $sql . "  Error message= " . $message;
         errorLogFunction($err_msg);
