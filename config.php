@@ -34,9 +34,11 @@ try {
     $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $con->exec('SET NAMES UTF8');
 } catch (PDOException $e) {
+    /**
     if (DEBUG_MODE) {
         echo $e->getMessage();
     } else {
         echo 'Error establishing a database connection.';
     }
+    //*/
 }
