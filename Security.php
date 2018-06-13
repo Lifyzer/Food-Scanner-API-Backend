@@ -32,7 +32,7 @@ class Security
                 return $this->updateTokenForUser($postData);
 
             case self::EXPIRED_ALL_USER_TOKEN:
-                return $this->expiredAllTokenofUser($postData);
+                return $this->expiredAllTokenOfUser($postData);
 
             default:
                 return null;
@@ -442,7 +442,7 @@ class Security
         return $data;
     }
 
-    private function expiredAllTokenofUser($userData)
+    private function expiredAllTokenOfUser($userData)
     {
         $user_id = validateValue($userData['userId'], '');
 
