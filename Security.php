@@ -57,20 +57,6 @@ class Security
         return $min + $rnd;
     }
 
-    public function generateToken($length)
-    {
-        $token = "";
-        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        $codeAlphabet .= "abcdefghijklmnopqrstuvwxyz";
-        $codeAlphabet .= "0123456789";
-        $max = strlen($codeAlphabet) - 1;
-        for ($i = 0; $i < $length; $i++) {
-            $token .= $codeAlphabet[$this->crypto_random_secure(0, $max)];
-        }
-
-        return $token;
-    }
-
     public function updateTokenForUser($userData)
     {
         $connection = $this->connection;
@@ -128,7 +114,7 @@ class Security
         return $data;
     }
 
-    public function gen_uuid()
+    public function generateUniqueId()
     {
         // return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
         //Remove last 4 charcter from above string to make string of 32 characters long.
@@ -363,6 +349,20 @@ class Security
         $data['User_agent'] = $string;
 
         return $data;
+    }
+
+    private function generateToken($length)
+    {
+        $token = "";
+        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $codeAlphabet .= "abcdefghijklmnopqrstuvwxyz";
+        $codeAlphabet .= "0123456789";
+        $max = strlen($codeAlphabet) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $token .= $codeAlphabet[$this->crypto_random_secure(0, $max)];
+        }
+
+        return $token;
     }
 
     private function refreshToken($userData)

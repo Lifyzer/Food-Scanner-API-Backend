@@ -91,18 +91,19 @@ class User
 
             //****  INSERT USER ****//
             $security = new Security($connection);
-            $generate_guid = $security->gen_uuid();
+            $generate_guid = $security->generateUniqueId();
             $user_array = ['email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
                 'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token, 'created_date' => $created_date, 'guid' => $generate_guid];
             $user_response = addData($connection, "Registration", TABLE_USER, $user_array);
-            if ($user_response[STATUS_KEY] == SUCCESS) {
+
+            if ($user_response[STATUS_KEY] === SUCCESS) {
                 $user_inserted_id = $user_response[MESSAGE_KEY];
                 $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_inserted_id, 'is_delete' => $is_delete]);
                 if (!empty($getUser)) {
                     $tokenData = new stdClass;
                     $tokenData->GUID = $getUser['guid'];
                     $tokenData->userId = $getUser['id'];
-                    $user_token = $security->updateTokenforUser($tokenData);
+                    $user_token = $security->updateTokenForUser($tokenData);
                     if ($user_token[STATUS_KEY] == SUCCESS) {
                         $data[USERTOKEN] = $user_token[USERTOKEN];
                     }
@@ -148,7 +149,7 @@ class User
             $update_array = ['first_name' => $first_name, 'email' => $email_id, 'modified_date' => $created_date];
 
             $edit_response = editData($connection, "UpdateProfile", TABLE_USER, $update_array, ['id' => $user_id]);
-            if ($edit_response[STATUS_KEY] == SUCCESS) {
+            if ($edit_response[STATUS_KEY] === SUCCESS) {
                 $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_id, 'is_delete' => $is_delete]);
                 if (!empty($getUser)) {
                     $posts[] = $getUser;
@@ -192,7 +193,7 @@ class User
             if ($password === $objUser['password']) {
                 $created_date = getDefaultDate();
                 $edit_response = editData($connection, "Login", TABLE_USER, ['password' => $new_password, 'modified_date' => $created_date], ['id' => $user_id]);
-                if ($edit_response[STATUS_KEY] == SUCCESS) {
+                if ($edit_response[STATUS_KEY] === SUCCESS) {
                     $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_id, 'is_delete' => $is_delete]);
                     if (!empty($getUser)) {
                         $posts[] = $getUser;
@@ -240,7 +241,7 @@ class User
 
         $token = '';
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['email' => $email_id, 'is_delete' => $is_delete]);
+        $objUser = getSingleTableData($connection, TABLE_USER, '', "*", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             if (encryptPassword($password) === $objUser['password']) {
 
@@ -259,7 +260,7 @@ class User
                     $security = new Security($connection);
                     $user_token = $security->updateTokenforUser($tokenData);
 
-                    if ($user_token[STATUS_KEY] == SUCCESS) {
+                    if ($user_token[STATUS_KEY] === SUCCESS) {
                         $token = $user_token[USERTOKEN];
                     }
                     $objUser['device_type'] = $device_type;
@@ -295,9 +296,9 @@ class User
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,guid", "", ['id' => $user_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             $security = new Security($connection);
-            $generate_guid = $security->gen_uuid();
-            $edit_response = editData($connection, "UpdateGuid", TABLE_USER, ['guid' => $generate_guid], ['id' => $user_id]);
-            if ($edit_response[STATUS_KEY] == SUCCESS) {
+            $generate_guid = $security->generateUniqueId();
+            $edit_response = editData($connection, 'UpdateGuid', TABLE_USER, ['guid' => $generate_guid], ['id' => $user_id]);
+            if ($edit_response[STATUS_KEY] === SUCCESS) {
                 return $generate_guid;
             }
         }
@@ -322,7 +323,7 @@ class User
             $created_date = getDefaultDate();
 
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
-            if ($edit_response[STATUS_KEY] == SUCCESS) {
+            if ($edit_response[STATUS_KEY] === SUCCESS) {
 
                 $appname = APPNAME;
                 $firstname = $objUser['first_name'];
