@@ -24,13 +24,13 @@ unset($logger);
 
 switch ($_REQUEST['Service']) {
     /*********************  User Functions *********************/
-    case UserFunctions::REGISTRATION_ACTION:
-    case UserFunctions::LOGIN_ACTION:
-    case UserFunctions::CHANGE_PASSWORD_ACTION:
-    case UserFunctions::EDIT_PROFILE_ACTION:
-    case UserFunctions::FORGOT_PASSWORD_ACTION:
-    case UserFunctions::DELETE_ACCOUNT_ACTION:
-    case UserFunctions::DATA_TAKEOUT:
+    case User::REGISTRATION_ACTION:
+    case User::LOGIN_ACTION:
+    case User::CHANGE_PASSWORD_ACTION:
+    case User::EDIT_PROFILE_ACTION:
+    case User::FORGOT_PASSWORD_ACTION:
+    case User::DELETE_ACCOUNT_ACTION:
+    case User::DATA_TAKEOUT:
         $access_key = validateObject($postData, 'access_key', '');
         $access_key = addslashes($access_key);
 
@@ -38,7 +38,7 @@ switch ($_REQUEST['Service']) {
         $secret_key = addslashes($secret_key);
 
         $connection = $GLOBALS['con'];
-        $isSecure = (new SecurityFunctions($connection))->checkForSecurityNew($access_key, $secret_key);
+        $isSecure = (new Security($connection))->checkForSecurityNew($access_key, $secret_key);
         if ($isSecure === NO) {
             $data['status'] = FAILED;
             $data['message'] = MALICIOUS_SOURCE;
@@ -46,7 +46,7 @@ switch ($_REQUEST['Service']) {
             $data['status'] = FAILED;
             $data['message'] = TOKEN_ERROR;
         } else {
-            $user = new UserFunctions($connection);
+            $user = new User($connection);
             $data = $user->callService($_REQUEST['Service'], $postData);
 
             if ($isSecure !== YES || $isSecure !== YES) {
@@ -71,7 +71,7 @@ switch ($_REQUEST['Service']) {
         $secret_key = addslashes($secret_key);
 
         $connection = $GLOBALS['con'];
-        $isSecure = (new SecurityFunctions($connection))->checkForSecurityNew($access_key, $secret_key);
+        $isSecure = (new Security($connection))->checkForSecurityNew($access_key, $secret_key);
 
         if ($isSecure === NO) {
             $data['status'] = FAILED;
@@ -80,8 +80,8 @@ switch ($_REQUEST['Service']) {
             $data['status'] = FAILED;
             $data['message'] = TOKEN_ERROR;
         } else {
-            $user = new ProductFunctions($connection);
-            $data = $user->callService($_REQUEST['Service'], $postData);
+            $product = new Product($connection);
+            $data = $product->callService($_REQUEST['Service'], $postData);
             if ($isSecure !== YES || $isSecure !== YES) {
                 if ($isSecure['key'] === 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
@@ -92,11 +92,11 @@ switch ($_REQUEST['Service']) {
         }
         break;
 
-    case SecurityFunctions::UPDATE_USER_TOKEN:
-    case SecurityFunctions::TEST_ENCRYPTION:
-    case SecurityFunctions::REFRESH_TOKEN:
+    case Security::UPDATE_USER_TOKEN:
+    case Security::TEST_ENCRYPTION:
+    case Security::REFRESH_TOKEN:
         $connection = $GLOBALS['con'];
-        $security = new SecurityFunctions($connection);
+        $security = new Security($connection);
         $data = $security->callService($_REQUEST['Service'], $postData);
         break;
 

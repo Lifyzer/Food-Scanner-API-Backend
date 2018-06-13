@@ -5,7 +5,7 @@ namespace Lifyzer\Api;
 use PDO;
 use stdClass;
 
-class UserFunctions
+class User
 {
     public const LOGIN_ACTION = 'Login';
     public const REGISTRATION_ACTION = 'Registration';
@@ -17,6 +17,7 @@ class UserFunctions
 
     private const DATETIME_FORMAT = 'Y-m-d H:i:s';
     private const CSV_TAKEOUT_HEADER = 'user id,email,name,profile created date,profile modified date,terms acceptance date';
+    private const FORGOT_PASSWORD_LENGTH = 10;
 
     /** @var PDO */
     protected $connection;
@@ -89,7 +90,7 @@ class UserFunctions
         } else {
 
             //****  INSERT USER ****//
-            $security = new SecurityFunctions($connection);
+            $security = new Security($connection);
             $generate_guid = $security->gen_uuid();
             $user_array = ['email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
                 'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token, 'created_date' => $created_date, 'guid' => $generate_guid];
@@ -255,7 +256,7 @@ class UserFunctions
                     $tokenData = new stdClass;
                     $tokenData->GUID = $generate_user_guid;
                     $tokenData->userId = $user_id;
-                    $security = new SecurityFunctions($connection);
+                    $security = new Security($connection);
                     $user_token = $security->updateTokenforUser($tokenData);
 
                     if ($user_token[STATUS_KEY] == SUCCESS) {
@@ -293,7 +294,7 @@ class UserFunctions
         $is_delete = DELETE_STATUS::NOT_DELETE;
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,guid", "", ['id' => $user_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
-            $security = new SecurityFunctions($connection);
+            $security = new Security($connection);
             $generate_guid = $security->gen_uuid();
             $edit_response = editData($connection, "UpdateGuid", TABLE_USER, ['guid' => $generate_guid], ['id' => $user_id]);
             if ($edit_response[STATUS_KEY] == SUCCESS) {
@@ -316,8 +317,7 @@ class UserFunctions
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
             $email = new Email();
-            $randomString = generateRandomString(10);
-            $userPassword = $randomString;
+            $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
 

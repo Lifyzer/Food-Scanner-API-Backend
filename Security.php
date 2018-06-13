@@ -4,7 +4,7 @@ namespace Lifyzer\Api;
 
 use PDO;
 
-class SecurityFunctions
+class Security
 {
     public const REFRESH_TOKEN = 'refreshToken';
     public const TEST_ENCRYPTION = 'testEncryption';

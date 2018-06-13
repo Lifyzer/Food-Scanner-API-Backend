@@ -5,7 +5,7 @@ namespace Lifyzer\Api;
 use PDO;
 use phpFastCache\Helper\Psr16Adapter;
 
-class ProductFunctions
+class Product
 {
     private const CACHE_LIFETIME = 3600 * 24;
     private const CACHE_DRIVER = 'Files';
