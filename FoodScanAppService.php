@@ -17,11 +17,10 @@ $postData = json_decode($post_body);
 $logger = new Logger();
 if (DEBUG_MODE) {
     $logger->showErrors();
-    $logger->log('POST DATA :', $postData);
-    $logger->log('Service :', $_REQUEST['Service']);
 } else {
     $logger->hideErrors();
 }
+unset($logger);
 
 switch ($_REQUEST['Service']) {
     /*********************  User Functions *********************/
