@@ -8,7 +8,7 @@ require 'config.php';
 require 'TableVars.php';
 require 'ConstantValues.php';
 require 'HelperFunctions.php';
-require 'PDOFunctions.php';
+require 'PdoFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
