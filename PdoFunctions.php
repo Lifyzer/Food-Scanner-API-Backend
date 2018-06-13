@@ -2,7 +2,6 @@
 
 namespace Lifyzer\Api;
 
-use Exception;
 use PDO;
 use PDOException;
 
