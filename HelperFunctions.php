@@ -53,7 +53,7 @@ function encryptPassword($str): string
     return sha1($str);
 }
 
-function generateRandomString($length = 10): string
+function generateRandomString(int $length = 10): string
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';
