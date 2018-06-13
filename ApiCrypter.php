@@ -6,7 +6,7 @@ namespace Lifyzer\Api;
 
 class ApiCrypter
 {
-    public static function encrypt($input, $key): string
+    public function encrypt($input, $key): string
     {
         $iv = ENCRYPTION_KEY_IV;
         $plaintext = $input;
@@ -19,7 +19,7 @@ class ApiCrypter
         return $data;
     }
 
-    public static function decrypt($crypt, $sKey): string
+    public function decrypt($crypt, $sKey): string
     {
         $iv = ENCRYPTION_KEY_IV;
         $method = 'aes-256-cbc';
