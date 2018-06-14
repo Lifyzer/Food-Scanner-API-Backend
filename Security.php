@@ -226,7 +226,7 @@ class Security
 
                         // echo ' secret=access scenario my token=> '.$tokenName;
                         return $response;
-                    } elseif ($secretvalue == null) {
+                    } elseif ($secretvalue === null) {
                         $currentdateEncrypt = $security->encrypt($currentdate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
                         $tokenName = $tokenNameEncrypt . "_" . $currentdateEncrypt;
