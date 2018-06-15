@@ -235,7 +235,6 @@ class Security
                         $response['value'] = $tokenName;
                         return $response;
                     } else {
-
                         $secretvalue = explode("_", $secretvalue);
                         $decrypted_secret_key = $security->decrypt($secretvalue[0], $decrypted_access_key);
 //                                                echo $decrypted_secret_key;
@@ -310,6 +309,7 @@ class Security
                 }
             }
         }
+
         return NO;
     }
 
