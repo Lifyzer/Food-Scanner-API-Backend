@@ -6,8 +6,8 @@ namespace Lifyzer\Api;
 
 class Logger
 {
-    private const LOG_PATH = __DIR__ . '/../logs/';
-    private const LOG_FILENAME = 'php_error.log';
+    public const LOG_PATH = __DIR__ . '/../logs/';
+    public const LOG_FILENAME = 'php_error.log';
 
     public function __construct()
     {
