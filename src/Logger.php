@@ -12,7 +12,7 @@ class Logger
     public function __construct()
     {
         ini_set('log_errors', 'On');
-        ini_set('error_log', LOG_PATH . LOG_FILENAME);
+        ini_set('error_log', self::LOG_PATH . self::LOG_FILENAME);
         ini_set('ignore_repeated_errors', 'On');
     }
 
