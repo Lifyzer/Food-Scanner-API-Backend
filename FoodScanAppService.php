@@ -5,10 +5,10 @@ namespace Lifyzer\Api;
 require_once __DIR__ . '/vendor/autoload.php';
 
 require 'config.php';
-require 'TableVars.php';
-require 'ConstantValues.php';
-require 'HelperFunctions.php';
-require 'PdoFunctions.php';
+require 'src/TableVars.php';
+require 'src/ConstantValues.php';
+require 'src/HelperFunctions.php';
+require 'src/PdoFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));

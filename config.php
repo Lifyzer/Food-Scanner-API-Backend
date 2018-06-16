@@ -7,7 +7,7 @@ use phpFastCache\CacheManager;
 
 // Setup cache config
 CacheManager::setDefaultConfig([
-    'path' => __DIR__ . '/cache',
+    'path' => dirname(__DIR__) . '/cache',
 ]);
 
 (new Dotenv(__DIR__))->load();
