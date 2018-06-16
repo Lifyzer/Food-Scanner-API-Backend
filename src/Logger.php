@@ -6,10 +6,13 @@ namespace Lifyzer\Api;
 
 class Logger
 {
+    private const LOG_PATH = __DIR__ . '/../logs/';
+    private const LOG_FILENAME = 'php_error.log';
+
     public function __construct()
     {
         ini_set('log_errors', 'On');
-        ini_set('error_log', __DIR__ . '/logs/php_error.log');
+        ini_set('error_log', LOG_PATH . LOG_FILENAME);
         ini_set('ignore_repeated_errors', 'On');
     }
 
