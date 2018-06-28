@@ -2,6 +2,8 @@
 
 namespace Lifyzer\Api;
 
+use PDOException;
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 require 'config.php';
@@ -24,7 +26,15 @@ unset($logger);
 
 
 if (!empty($_REQUEST['Service'])) {
-    $db = new Database();
+    try {
+        $db = new Database();
+    } catch (PDOException $except) {
+        if (DEBUG_MODE) {
+            echo $except->getMessage();
+        } else {
+            exit('An unexpected database error occured.');
+        }
+    }
 
     switch ($_REQUEST['Service']) {
         /*********************  User Functions *********************/
