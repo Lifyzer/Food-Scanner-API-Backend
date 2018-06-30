@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS product (
     is_organic enum('1','0') NOT NULL DEFAULT '0',
     is_healthy enum('1','0') NOT NULL DEFAULT '0',
     PRIMARY KEY (id),
-    UNIQUE KEY (barcode_id, product_name)
+    UNIQUE KEY (barcode_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 
