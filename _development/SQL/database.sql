@@ -75,7 +75,7 @@ CREATE TABLE history (
   created_date datetime DEFAULT NULL,
   modified_date datetime DEFAULT NULL,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '1',
+  is_test enum('0','1') NOT NULL DEFAULT '0',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
