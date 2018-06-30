@@ -38,7 +38,10 @@ CREATE TABLE app_tokens (
   modified_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete enum('0','1') DEFAULT '0',
   is_testdata varchar(10) NOT NULL DEFAULT 'no',
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE KEY userid_3 (userid),
+  KEY userid (userid),
+  KEY userid_2 (userid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
