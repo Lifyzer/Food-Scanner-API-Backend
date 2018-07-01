@@ -190,7 +190,7 @@ class User
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,password", "", ['id' => $user_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
-            if ($password === $objUser['password']) {
+            if (hash_equals($objUser['password'], $password)) {
                 $created_date = getDefaultDate();
                 $edit_response = editData($connection, "Login", TABLE_USER, ['password' => $new_password, 'modified_date' => $created_date], ['id' => $user_id]);
                 if ($edit_response[STATUS_KEY] === SUCCESS) {
@@ -231,6 +231,7 @@ class User
 
         $password = validateObject($userData, 'password', "");
         $password = addslashes($password);
+        $password = encryptPassword($password);
 
         $device_type = validateObject($userData, 'device_type', "");
         $device_type = addslashes($device_type);
@@ -243,8 +244,7 @@ class User
 
         $objUser = getSingleTableData($connection, TABLE_USER, '', "*", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
-            if (encryptPassword($password) === $objUser['password']) {
-
+            if (hash_equals($objUser['password'], $password)) {
                 $user_id = $objUser['id'];
                 $created_date = getDefaultDate();
                 $edit_response = editData($connection, "Login", TABLE_USER, ['device_type' => $device_type, 'modified_date' => $created_date], ['id' => $user_id]);
