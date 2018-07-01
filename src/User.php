@@ -390,8 +390,8 @@ class User
         $email_id = validateObject($userData, 'email_id', '');
 
         $sqlQuery = <<<QUERY
-SELECT u.email, u.first_name, u.user_image, u.created_date, u.modified_date, h.*, f.* 
-FROM %s AS u INNER JOIN %s AS h ON u.id = h.user_id 
+SELECT u.email, u.first_name, u.user_image, u.created_date, u.modified_date, h.*, f.*
+FROM %s AS u INNER JOIN %s AS h ON u.id = h.user_id
 INNER JOIN %s AS f ON u.id = f.user_id
 WHERE u.email = :emailId
 QUERY;
