@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Lifyzer\Api;
 
-function errorLogFunction($error_message): void
+function errorLogFunction(string $errorMessage): void
 {
     $file = date('F-j-Y') . '_log.txt';
     $current = @file_get_contents($file);
@@ -12,7 +12,7 @@ function errorLogFunction($error_message): void
     $current .= basename(dirname(__DIR__)) . '/logs/' .
     $current .= "\n----------------------------\n";
     $current .= "Date := " . date(DATETIME_FORMAT) . "\n----------------------------\n";
-    $current .= $error_message;
+    $current .= $errorMessage;
     $current .= (microtime(true)) - time() . " seconds elapsed\n\n";
     // Write the contents back to the file
     file_put_contents(Logger::LOG_PATH . $file, $current, FILE_APPEND);
@@ -49,9 +49,9 @@ function getDefaultDate(): string
     return date(DATETIME_FORMAT);
 }
 
-function encryptPassword($str): string
+function encryptPassword(string $password): string
 {
-    return sha1($str);
+    return sha1($password);
 }
 
 function generateRandomString(int $length = 10): string
