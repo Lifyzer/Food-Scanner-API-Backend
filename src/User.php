@@ -354,7 +354,7 @@ class User
         return $data;
     }
 
-    private function deleteAccount(array $userData): array
+    private function deleteAccount(stdClass $userData): array
     {
         $email_id = validateObject($userData, 'email_id', '');
 
@@ -385,7 +385,7 @@ class User
      *
      * @return array
      */
-    private function dataTakeOut(array $userData): array
+    private function dataTakeOut(stdClass $userData): array
     {
         $email_id = validateObject($userData, 'email_id', '');
 
