@@ -254,6 +254,7 @@ function getSingleTableDataLastDate(PDO $connection, $table, $sql, $columns, $cu
 
 function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCondition, array $dataArray = null)
 {
+
     try {
         $numOfItems = count($dataArray);
         $cnt = 0;
@@ -285,6 +286,7 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
                 $sql = 'SELECT ' . $columns . ' FROM ' . $table . ' WHERE ' . $check_conditions;
             }
         }
+    
         $statement = $connection->prepare($sql);
         if (!empty($dataArray)) {
             foreach ($dataArray as $key => $value) {

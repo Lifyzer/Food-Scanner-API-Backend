@@ -48,7 +48,9 @@ class Product
      * @throws \phpFastCache\Exceptions\phpFastCacheSimpleCacheException
      */
     public function getProductDetails($userData)
-    {
+    { 
+    error_reporting(E_ALL);
+    
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', "");
@@ -62,16 +64,35 @@ class Product
 
         $cacher = new Psr16Adapter(self::CACHE_DRIVER);
         $cacheKey = 'productdetails' . $product_name;
+          
         if (!$cacher->has($cacheKey)) {
-            $select_product_details_stmt = getMultipleTableData($connection, TABLE_PRODUCT, "", "*",
-                "LOWER(product_name) = LOWER('" . $product_name . "') AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1", "");
-            $cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
+        
+           $select_product_details_stmt = 
+           getMultipleTableData($connection, TABLE_PRODUCT, "", "*",
+           "(LOWER(product_name) = LOWER('" . $product_name . "') OR barcode_id = '" . $product_name. "' ) AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1");
+           
+//                      $select_product_details_stmt = 
+//           getMultipleTableData($connection, TABLE_PRODUCT, "", "*",
+//           "LOWER(product_name) = LOWER('" . $product_name . "') AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1");
+           
+            //$cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
+            
+            //echo "Row count : " .$select_product_details_stmt->rowCount() > 0;
+            
         } else {
+        
             $select_product_details_stmt = $cacher->get($cacheKey);
+            
         }
 
+        
         if ($select_product_details_stmt->rowCount() > 0) {
+        
+           $status = SUCCESS;
+        
             while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
+            	
+            
                 //******************* get user favourite ****************//
                 $is_favourite = 1;
                 $conditional_array = ['product_id' => $product['id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete];
@@ -82,13 +103,14 @@ class Product
                 } else {
                     $product['is_favourite'] = 0;
                 }
-
+				
                 //**** Product found in database insert data into history table ****//
                 $product_id = $product['id'];
                 $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
                 $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
-
+				
                 if (!empty($objHistory)) {
+
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
                     $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
@@ -100,6 +122,7 @@ class Product
                         break;
                     }
                 } else {
+
                     //******** Insert data into history ********//
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
                     $add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
@@ -113,6 +136,7 @@ class Product
                 }
             }
         } else {
+
             $status = SUCCESS;
             $message = NO_PRODUCT_FOUND_IN_DATABASE;
         }

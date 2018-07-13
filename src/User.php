@@ -255,10 +255,13 @@ class User
                         $generate_user_guid = $objUser['guid'];
                     }
                     $tokenData = new stdClass;
-                    $tokenData->GUID = $generate_user_guid;
+                    
+                    $tokenData-> GUID = $generate_user_guid;
+//					$tokenData["GUID"] = $generate_user_guid;
+//					$tokenData["userId"] = $user_id;					
                     $tokenData->userId = $user_id;
                     $security = new Security($connection);
-                    $user_token = $security->updateTokenforUser($tokenData);
+                    $user_token = $security->updateTokenForUser_Login($tokenData);
 
                     if ($user_token[STATUS_KEY] === SUCCESS) {
                         $token = $user_token[USERTOKEN];
@@ -354,7 +357,7 @@ class User
         return $data;
     }
 
-    private function deleteAccount(stdClass $userData): array
+    private function deleteAccount(array $userData): array
     {
         $email_id = validateObject($userData, 'email_id', '');
 
@@ -385,7 +388,7 @@ class User
      *
      * @return array
      */
-    private function dataTakeOut(stdClass $userData): array
+    private function dataTakeOut(array $userData): array
     {
         $email_id = validateObject($userData, 'email_id', '');
 
