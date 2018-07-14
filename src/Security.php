@@ -59,20 +59,20 @@ class Security
 
     public function updateTokenForUser($userData)
     {
-        
+
         $connection = $this->connection;
         //$user_id = validateValue($userData->userId, '');
-        
+
         $user_id = validateObject($userData, 'user_id', "");
         $user_id = addslashes($user_id);
-        
+
         if ($user_id != '') {
             $modifiedDate = date(DATETIME_FORMAT, time());
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objExpiryDate)) {
-            
-        
+
+
                 $expiryDuration = $objExpiryDate['config_value'];
                 $currentdate = date("dmyHis", time() + $expiryDuration);
                 $token_array = [':userid' => $user_id, ':token' => $generateToken,
@@ -80,21 +80,21 @@ class Security
                 error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
-            
+
                 if ($stmt = $connection->prepare($insertUpdateQuery)) {
-                
+
                     if ($stmt->execute($token_array)) {
-                                                                        
+
                         $stmt->closeCursor();
-                                        
+
                         $uuid = validateObject($userData, 'GUID', "");
                         $uuid = addslashes($uuid);
 
                         $security = new ApiCrypter();
-                    
+
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
-                                                
-                        if (!empty($objGlobalPassword)) {                        
+
+                        if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $data['GUID'] = $userData->GUID;
                             $data['masterKey'] = $masterKey;
@@ -124,26 +124,25 @@ class Security
         }
         $data[STATUS_KEY] = FAILED;
         $data[USERTOKEN] = NO;
-        
+
 //        print_r($data);
 
         return $data;
     }
-    
-    
-     public function updateTokenForUser_Login($userData)
+
+
+    public function updateTokenForUser_Login($userData)
     {
-        
-       $connection = $this->connection;
-       $user_id = validateValue($userData->userId, '');
-        
+        $connection = $this->connection;
+        $user_id = validateValue($userData->userId, '');
+
         if ($user_id != '') {
             $modifiedDate = date(DATETIME_FORMAT, time());
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objExpiryDate)) {
-            
-        
+
+
                 $expiryDuration = $objExpiryDate['config_value'];
                 $currentdate = date("dmyHis", time() + $expiryDuration);
                 $token_array = [':userid' => $user_id, ':token' => $generateToken,
@@ -151,23 +150,23 @@ class Security
                 error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
-            
+
                 if ($stmt = $connection->prepare($insertUpdateQuery)) {
-                
+
                     if ($stmt->execute($token_array)) {
-                                                                        
+
                         $stmt->closeCursor();
-                        
+
                         $uuid = validateValue($userData->GUID, '');
-                                        
+
 //                      $uuid = validateObject($userData, 'GUID', "");
 //                      $uuid = addslashes($uuid);
 
                         $security = new ApiCrypter();
-                    
+
                         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
-                                                
-                        if (!empty($objGlobalPassword)) {                        
+
+                        if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $data['GUID'] = $userData->GUID;
                             $data['masterKey'] = $masterKey;
@@ -197,7 +196,7 @@ class Security
         }
         $data[STATUS_KEY] = FAILED;
         $data[USERTOKEN] = NO;
-        
+
 //        print_r($data);
 
         return $data;
