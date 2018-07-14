@@ -71,20 +71,16 @@ class Security
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objExpiryDate)) {
-
-
                 $expiryDuration = $objExpiryDate['config_value'];
-                $currentdate = date("dmyHis", time() + $expiryDuration);
+                $currentDate = date("dmyHis", time() + $expiryDuration);
                 $token_array = [':userid' => $user_id, ':token' => $generateToken,
-                    ':expiry' => $currentdate, ':token1' => $generateToken, ':expiry1' => $currentdate, ':created_date' => $modifiedDate];
+                    ':expiry' => $currentDate, ':token1' => $generateToken, ':expiry1' => $currentDate, ':created_date' => $modifiedDate];
                 error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
 
                 if ($stmt = $connection->prepare($insertUpdateQuery)) {
-
                     if ($stmt->execute($token_array)) {
-
                         $stmt->closeCursor();
 
                         $uuid = validateObject($userData, 'GUID', "");
@@ -101,8 +97,8 @@ class Security
                             $data['acessKey'] = $security->encrypt($uuid, $masterKey);
                         }
                         $generateTokenEncrypted = $security->encrypt($generateToken, $uuid);
-                        $currentdateEncrypted = $security->encrypt($currentdate, $uuid);
-                        $encryptedTokenName = $generateTokenEncrypted . "_" . $currentdateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
+                        $currentDateEncrypted = $security->encrypt($currentDate, $uuid);
+                        $encryptedTokenName = $generateTokenEncrypted . "_" . $currentDateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
                         $data[USERTOKEN] = $encryptedTokenName;
                         $data['status'] = SUCCESS;
                         return $data;
@@ -141,20 +137,16 @@ class Security
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objExpiryDate)) {
-
-
                 $expiryDuration = $objExpiryDate['config_value'];
-                $currentdate = date("dmyHis", time() + $expiryDuration);
+                $currentDate = date("dmyHis", time() + $expiryDuration);
                 $token_array = [':userid' => $user_id, ':token' => $generateToken,
-                    ':expiry' => $currentdate, ':token1' => $generateToken, ':expiry1' => $currentdate, ':created_date' => $modifiedDate];
+                    ':expiry' => $currentDate, ':token1' => $generateToken, ':expiry1' => $currentDate, ':created_date' => $modifiedDate];
                 error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
 
                 if ($stmt = $connection->prepare($insertUpdateQuery)) {
-
                     if ($stmt->execute($token_array)) {
-
                         $stmt->closeCursor();
 
                         $uuid = validateValue($userData->GUID, '');
@@ -173,8 +165,8 @@ class Security
                             $data['acessKey'] = $security->encrypt($uuid, $masterKey);
                         }
                         $generateTokenEncrypted = $security->encrypt($generateToken, $uuid);
-                        $currentdateEncrypted = $security->encrypt($currentdate, $uuid);
-                        $encryptedTokenName = $generateTokenEncrypted . "_" . $currentdateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
+                        $currentDateEncrypted = $security->encrypt($currentDate, $uuid);
+                        $encryptedTokenName = $generateTokenEncrypted . "_" . $currentDateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
                         $data[USERTOKEN] = $encryptedTokenName;
                         $data['status'] = SUCCESS;
                         return $data;
@@ -299,15 +291,15 @@ class Security
                 $row_token = getSingleTableDataLastDate($connection, TABLE_APP_TOKENS, "", "token,expiry", "", ['userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                 if (!empty($row_token)) {
                     $tokenName = $row_token['token'];
-                    $currentdate = $row_token['expiry'];
+                    $currentDate = $row_token['expiry'];
                     if ($secretvalue == $tempToken) {
                         // we can return user's private access token here
-                        // $tokenName = $tokenName."_".$currentdate;
-                        $currentdateEncrypt = $security->encrypt($currentdate, $decrypted_access_key);
+                        // $tokenName = $tokenName."_".$currentDate;
+                        $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
-//                                                 echo ' current date encrpt=> '.$currentdateEncrypt;
+//                                                 echo ' current date encrpt=> '.$currentDateEncrypt;
 //                                                 echo ' token name encrpt=> '.$tokenNameEncrypt;
-                        $tokenName = $tokenNameEncrypt . "_" . $currentdateEncrypt;
+                        $tokenName = $tokenNameEncrypt . "_" . $currentDateEncrypt;
                         $response = [];
                         $response['key'] = 'User'; // return user's private token
                         $response['value'] = $tokenName;
@@ -315,9 +307,9 @@ class Security
                         // echo ' secret=access scenario my token=> '.$tokenName;
                         return $response;
                     } elseif ($secretvalue === null) {
-                        $currentdateEncrypt = $security->encrypt($currentdate, $decrypted_access_key);
+                        $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
-                        $tokenName = $tokenNameEncrypt . "_" . $currentdateEncrypt;
+                        $tokenName = $tokenNameEncrypt . "_" . $currentDateEncrypt;
                         $response = [];
                         $response['key'] = "User";// return user's private token
                         $response['value'] = $tokenName;
