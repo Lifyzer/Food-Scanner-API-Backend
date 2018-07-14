@@ -6,6 +6,6 @@ function save-project-to-repo() {
     git push
 }
 
-save-project-to-repo git@github.com:pH-7/Food-Scanner-API-Backend.git
 save-project-to-repo git@bitbucket.org:pH_7/lifyzer-api-backend.git
 save-project-to-repo git@gitlab.com:pH-7/lifyzer-api-backend.git
+save-project-to-repo git@github.com:pH-7/Food-Scanner-API-Backend.git
