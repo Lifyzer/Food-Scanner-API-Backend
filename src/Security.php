@@ -98,7 +98,7 @@ class Security
                         }
                         $generateTokenEncrypted = $security->encrypt($generateToken, $uuid);
                         $currentDateEncrypted = $security->encrypt($currentDate, $uuid);
-                        $encryptedTokenName = $generateTokenEncrypted . "_" . $currentDateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
+                        $encryptedTokenName = $generateTokenEncrypted . '_' . $currentDateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
                         $data[USERTOKEN] = $encryptedTokenName;
                         $data['status'] = SUCCESS;
                         return $data;
@@ -166,7 +166,7 @@ class Security
                         }
                         $generateTokenEncrypted = $security->encrypt($generateToken, $uuid);
                         $currentDateEncrypted = $security->encrypt($currentDate, $uuid);
-                        $encryptedTokenName = $generateTokenEncrypted . "_" . $currentDateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
+                        $encryptedTokenName = $generateTokenEncrypted . '_' . $currentDateEncrypted;//$security->encrypt($mixedToken, $uuid."_".$username);
                         $data[USERTOKEN] = $encryptedTokenName;
                         $data['status'] = SUCCESS;
                         return $data;
@@ -299,7 +299,7 @@ class Security
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
 //                                                 echo ' current date encrpt=> '.$currentDateEncrypt;
 //                                                 echo ' token name encrpt=> '.$tokenNameEncrypt;
-                        $tokenName = $tokenNameEncrypt . "_" . $currentDateEncrypt;
+                        $tokenName = $tokenNameEncrypt . '_' . $currentDateEncrypt;
                         $response = [];
                         $response['key'] = 'User'; // return user's private token
                         $response['value'] = $tokenName;
@@ -309,13 +309,13 @@ class Security
                     } elseif ($secretvalue === null) {
                         $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
-                        $tokenName = $tokenNameEncrypt . "_" . $currentDateEncrypt;
+                        $tokenName = $tokenNameEncrypt . '_' . $currentDateEncrypt;
                         $response = [];
                         $response['key'] = "User";// return user's private token
                         $response['value'] = $tokenName;
                         return $response;
                     } else {
-                        $secretvalue = explode("_", $secretvalue);
+                        $secretvalue = explode('_', $secretvalue);
                         $decrypted_secret_key = $security->decrypt($secretvalue[0], $decrypted_access_key);
 //                                                echo $decrypted_secret_key;
 //                                                $decrypted_secret_key1 = $security->decrypt($secretvalue[1], $decrypted_access_key);
