@@ -71,9 +71,9 @@ class Product
                     TABLE_PRODUCT,
                     '',
                     '*',
-                    '(LOWER(product_name) = LOWER(:product_name) OR barcode_id = :product_name) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
+                    '(LOWER(product_name) LIKE LOWER(:product_name) OR barcode_id = :product_name) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
                         [
-                            'product_name' => $product_name,
+                            'product_name' => '%' . $product_name . '%',
                             'barcode' => $product_name,
                             'is_delete' => $is_delete
                         ]
