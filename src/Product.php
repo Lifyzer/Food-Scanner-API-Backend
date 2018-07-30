@@ -49,14 +49,12 @@ class Product
      */
     public function getProductDetails($userData)
     {
-        error_reporting(E_ALL);
-
         $connection = $this->connection;
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        $product_name = validateObject($userData, 'product_name', "");
+        $product_name = validateObject($userData, 'product_name', '');
         $posts = [];
 
         $is_delete = IS_DELETE;
@@ -78,7 +76,6 @@ class Product
             //$cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
 
             //echo "Row count : " .$select_product_details_stmt->rowCount() > 0;
-
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
