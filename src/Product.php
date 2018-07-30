@@ -66,8 +66,18 @@ class Product
         if (!$cacher->has($cacheKey)) {
 
             $select_product_details_stmt =
-                getMultipleTableData($connection, TABLE_PRODUCT, "", "*",
-                    "(LOWER(product_name) = LOWER('" . $product_name . "') OR barcode_id = '" . $product_name . "' ) AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1");
+                getMultipleTableData(
+                    $connection,
+                    TABLE_PRODUCT,
+                    '',
+                    '*',
+                    '(LOWER(product_name) = LOWER(:product_name) OR barcode_id = :product_name) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
+                        [
+                            'product_name' => $product_name,
+                            'barcode' => $product_name,
+                            'is_delete' => $is_delete
+                        ]
+                    );
 
 //                      $select_product_details_stmt = 
 //           getMultipleTableData($connection, TABLE_PRODUCT, "", "*",
