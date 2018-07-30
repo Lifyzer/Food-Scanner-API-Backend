@@ -79,10 +79,6 @@ class Product
                         ]
                     );
 
-//                      $select_product_details_stmt = 
-//           getMultipleTableData($connection, TABLE_PRODUCT, "", "*",
-//           "LOWER(product_name) = LOWER('" . $product_name . "') AND is_delete ='" . $is_delete . "' ORDER BY created_date LIMIT 1");
-
             //$cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
 
             //echo "Row count : " .$select_product_details_stmt->rowCount() > 0;
