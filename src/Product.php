@@ -72,12 +72,12 @@ class Product
                     '',
                     '*',
                     '(LOWER(product_name) LIKE LOWER(:product_name) OR barcode_id = :barcode) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
-                        [
-                            'product_name' => '%' . $product_name . '%',
-                            'barcode' => $product_name,
-                            'is_delete' => $is_delete
-                        ]
-                    );
+                    [
+                        'product_name' => '%' . $product_name . '%',
+                        'barcode' => $product_name,
+                        'is_delete' => $is_delete
+                    ]
+                );
 
             //$cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
 

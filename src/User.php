@@ -255,8 +255,8 @@ class User
                         $generate_user_guid = $objUser['guid'];
                     }
                     $tokenData = new stdClass;
-                    
-                    $tokenData-> GUID = $generate_user_guid;
+
+                    $tokenData->GUID = $generate_user_guid;
 //					$tokenData["GUID"] = $generate_user_guid;
 //					$tokenData["userId"] = $user_id;					
                     $tokenData->userId = $user_id;
