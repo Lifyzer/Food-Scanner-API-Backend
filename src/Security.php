@@ -219,10 +219,10 @@ class Security
         );
     }
 
-    public function checkForSecurityNew($accessvalue, $secretvalue)
+    public function checkForSecurityNew($accessValue, $secretValue)
     {
         $connection = $this->connection;
-        if ($accessvalue == "" || $secretvalue == "") {
+        if ($accessValue == "" || $secretValue == "") {
             return ERROR;
         } else {
             // get user-agent from database
@@ -243,31 +243,31 @@ class Security
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $security = new ApiCrypter();
-                            if ($accessvalue === 'nousername') {
+                            if ($accessValue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
-                                if ($secretvalue == null) {
-                                    $secretvalue = $security->encrypt($tempToken, $masterKey);
+                                if ($secretValue == null) {
+                                    $secretValue = $security->encrypt($tempToken, $masterKey);
                                     $response = [];
                                     $response['key'] = "Temp";// return temporary token
-                                    $response['value'] = $secretvalue;
+                                    $response['value'] = $secretValue;
                                     return $response;
                                 } else {
                                     /*echo "\n temp=>".$tempToken;
                                     echo "\n master=>".$masterKey;
-                                    echo "\n secret=>".$secretvalue;
-                                    echo "\n new serc==> ". $secretvalue1 */
-                                    $secretvalue1 = $security->encrypt($tempToken, $masterKey);
-                                    if (trim($secretvalue1) == trim($secretvalue)) {
+                                    echo "\n secret=>".$secretValue;
+                                    echo "\n new serc==> ". $secretValue1 */
+                                    $secretValue1 = $security->encrypt($tempToken, $masterKey);
+                                    if (trim($secretValue1) == trim($secretValue)) {
                                         return YES;
                                     } else {
                                         return NO;
                                     }
                                 }
                             } else {
-//                                echo "\nacces=>".$accessvalue;
-//                                echo "\nsec=>".$secretvalue;
+//                                echo "\nacces=>".$accessValue;
+//                                echo "\nsec=>".$secretValue;
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
-                                return $this->checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken);
+                                return $this->checkCredentialsForSecurityNew($accessValue, $secretValue, $tempToken);
                             }
                         }
                     }
@@ -278,14 +278,14 @@ class Security
         return NO;
     }
 
-    public function checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken)
+    public function checkCredentialsForSecurityNew($accessValue, $secretValue, $tempToken)
     {
         $connection = $this->connection;
         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
         if (!empty($objGlobalPassword)) {
             $masterKey = $objGlobalPassword['config_value'];
             $security = new ApiCrypter();
-            $decrypted_access_key = $security->decrypt($accessvalue, $masterKey);
+            $decrypted_access_key = $security->decrypt($accessValue, $masterKey);
             $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", ['guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objUser)) {
                 $row_token = getSingleTableDataLastDate(
@@ -300,7 +300,7 @@ class Security
                 if (!empty($row_token)) {
                     $tokenName = $row_token['token'];
                     $currentDate = $row_token['expiry'];
-                    if ($secretvalue == $tempToken) {
+                    if ($secretValue == $tempToken) {
                         // we can return user's private access token here
                         // $tokenName = $tokenName."_".$currentDate;
                         $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
@@ -314,7 +314,7 @@ class Security
 
                         // echo ' secret=access scenario my token=> '.$tokenName;
                         return $response;
-                    } elseif ($secretvalue === null) {
+                    } elseif ($secretValue === null) {
                         $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
                         $tokenName = $tokenNameEncrypt . '_' . $currentDateEncrypt;
@@ -323,10 +323,10 @@ class Security
                         $response['value'] = $tokenName;
                         return $response;
                     } else {
-                        $secretvalue = explode('_', $secretvalue);
-                        $decrypted_secret_key = $security->decrypt($secretvalue[0], $decrypted_access_key);
+                        $secretValue = explode('_', $secretValue);
+                        $decrypted_secret_key = $security->decrypt($secretValue[0], $decrypted_access_key);
 //                                                echo $decrypted_secret_key;
-//                                                $decrypted_secret_key1 = $security->decrypt($secretvalue[1], $decrypted_access_key);
+//                                                $decrypted_secret_key1 = $security->decrypt($secretValue[1], $decrypted_access_key);
 //                                                echo $decrypted_secret_key1;
 //                                                echo $tokenName;
                         if ($decrypted_secret_key == $tokenName) {
@@ -345,10 +345,10 @@ class Security
         return NO;
     }
 
-    public function checkForSecurityForRefreshToken($accessvalue, $secretvalue)
+    public function checkForSecurityForRefreshToken($accessValue, $secretValue)
     {
         $connection = $this->connection;
-        if ($accessvalue == "") {
+        if ($accessValue == "") {
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
@@ -367,22 +367,22 @@ class Security
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $security = new ApiCrypter();
-                            if ($accessvalue === 'nousername') {
+                            if ($accessValue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
 
-                                if ($secretvalue == null) {
+                                if ($secretValue == null) {
 //                                    echo "\n temp=>".$tempToken;
 //                                    echo "\n master=>".$masterKey;
 //                                    echo "\n new serc==> ".
-                                    $secretvalue = $security->encrypt($tempToken, $masterKey);
+                                    $secretValue = $security->encrypt($tempToken, $masterKey);
                                     $response = [];
                                     $response['key'] = "Temp";// return temporary token
-                                    $response['value'] = $secretvalue;
+                                    $response['value'] = $secretValue;
                                     return $response;
                                 } else {
-                                    $secretvalue = $security->decrypt($secretvalue, $masterKey);
+                                    $secretValue = $security->decrypt($secretValue, $masterKey);
                                     // match token is valid or not
-                                    if ($secretvalue == $tempToken) {
+                                    if ($secretValue == $tempToken) {
                                         return YES;
                                     }
 
@@ -390,7 +390,7 @@ class Security
                                 }
                             } else {
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
-                                return $this->checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken);
+                                return $this->checkCredentialsForSecurityNew($accessValue, $secretValue, $tempToken);
                             }
                         }
                     }
