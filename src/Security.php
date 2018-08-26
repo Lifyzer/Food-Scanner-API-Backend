@@ -288,7 +288,15 @@ class Security
             $decrypted_access_key = $security->decrypt($accessvalue, $masterKey);
             $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", ['guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objUser)) {
-                $row_token = getSingleTableDataLastDate($connection, TABLE_APP_TOKENS, "", "token,expiry", "", ['userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE]);
+                $row_token = getSingleTableDataLastDate(
+                    $connection,
+                    TABLE_APP_TOKENS,
+                    '',
+                    'token,expiry',
+                    '',
+                    ['userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE]
+                );
+
                 if (!empty($row_token)) {
                     $tokenName = $row_token['token'];
                     $currentDate = $row_token['expiry'];
@@ -408,7 +416,15 @@ class Security
         } else {
             $isSecure = $this->checkForSecurityNew($access_key, $secret_key);
             if ($isSecure != NO) {
-                $stmt_get_admin_config = getMultipleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_key,config_value", " config_key IN('globalPassword','userAgent','tempToken')", ['is_delete' => DELETE_STATUS::NOT_DELETE]);
+                $stmt_get_admin_config = getMultipleTableData(
+                    $connection,
+                    TABLE_ADMIN_CONFIG,
+                    '',
+                    'config_key,config_value',
+                    " config_key IN('globalPassword','userAgent','tempToken')",
+                    ['is_delete' => DELETE_STATUS::NOT_DELETE]
+                );
+
                 if ($stmt_get_admin_config->rowCount() > 0) {
                     while ($objAdminConfig = $stmt_get_admin_config->fetch(PDO::FETCH_ASSOC)) {
                         $data[$objAdminConfig['config_key']] = $objAdminConfig['config_value'];

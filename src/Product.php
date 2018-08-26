@@ -193,7 +193,14 @@ class Product
                                       LEFT JOIN product AS p ON p.id = h.product_id
                                       WHERE h.user_id = :user_id AND h.is_delete = :is_delete ORDER BY h.created_date DESC limit $from_index,$to_index ";
         $conditional_array = ['user_id' => $user_id, 'is_delete' => $is_delete];
-        $select_user_history_stmt = getMultipleTableData($connection, "", $select_user_history_query, "", "", $conditional_array);
+        $select_user_history_stmt = getMultipleTableData(
+            $connection,
+            '',
+            $select_user_history_query,
+            '',
+            '',
+            $conditional_array
+        );
         if ($select_user_history_stmt->rowCount() > 0) {
             while ($history = $select_user_history_stmt->fetch(PDO::FETCH_ASSOC)) {
                 //******************* get user favourite ****************//
@@ -242,7 +249,18 @@ class Product
                                         LEFT JOIN " . TABLE_PRODUCT . " AS p ON p.id = f.product_id
                                         WHERE f.user_id = :user_id AND f.is_favourite = :is_favourite AND f.is_delete = :is_delete ORDER BY f.created_date DESC limit $from_index,$to_index ";
 
-        $select_user_favourite_stmt = getMultipleTableData($connection, "", $select_user_favourite_query, "", "", ['user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete]);
+        $select_user_favourite_stmt = getMultipleTableData(
+            $connection,
+            '',
+            $select_user_favourite_query,
+            '',
+            '',
+            [
+                'user_id' => $user_id,
+                'is_favourite' => $is_favourite,
+                'is_delete' => $is_delete
+            ]
+        );
 
         if ($select_user_favourite_stmt->rowCount() > 0) {
             while ($product = $select_user_favourite_stmt->fetch(PDO::FETCH_ASSOC)) {
