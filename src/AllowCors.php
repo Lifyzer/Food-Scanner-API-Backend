@@ -5,6 +5,8 @@
  * @link             http://pierrehenry.be
  */
 
+declare(strict_types=1);
+
 namespace Lifyzer\Api;
 
 class AllowCors
