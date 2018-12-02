@@ -7,7 +7,7 @@ use phpFastCache\Helper\Psr16Adapter;
 
 class Product
 {
-    private const OPEN_FOOD_FACTS_API_URL = 'https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1';
+    private const OPEN_FOOD_FACTS_API_URL = 'https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=%s&page=1';
     private const CACHE_LIFETIME = 3600 * 24;
     private const CACHE_DRIVER = 'Files';
 
@@ -53,7 +53,6 @@ class Product
      */
     public function getProductDetails($userData)
     {
-
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
@@ -113,7 +112,6 @@ class Product
                 $product['category_id'] = "0";
 
                 $newArr['product'][] = $product;
-
             }
 
             return $newArr;
@@ -198,7 +196,6 @@ class Product
                 }
             }
         } else {
-
             $status = SUCCESS;
             $message = NO_PRODUCT_FOUND_IN_DATABASE;
         }
@@ -213,7 +210,6 @@ class Product
 
     public function getProductDetails2($userData)
     {
-
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
@@ -310,12 +306,9 @@ class Product
                 }
             }
         } else {
-
-            //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
-            $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=" . $product_name . "&page=1";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_URL, self::OPEN_FOOD_FACTS_API_URL);
             $result = curl_exec($ch);
             curl_close($ch);
             $tempArr = json_decode($result, true);
