@@ -75,7 +75,6 @@ if (!empty($_REQUEST['Service'])) {
         case 'addToFavourite':
         case 'getAllUserFavourite':
         case 'getProductDetails':
-        case 'getProductDetails2':
         case 'getUserHistory':
         case 'removeProductFromHistory':
             $access_key = validateObject($postData, 'access_key', '');
@@ -85,17 +84,6 @@ if (!empty($_REQUEST['Service'])) {
             $secret_key = addslashes($secret_key);
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-
-
-//            $product = new Product($db);
-//            $data = $product->callService($_REQUEST['Service'], $postData);
-//            if ($isSecure !== YES || $isSecure !== YES) {
-//                if ($isSecure['key'] === 'Temp') {
-//                    $data['TempToken'] = $isSecure['value'];
-//                } else {
-//                    $data['UserToken'] = $isSecure['value'];
-//                }
-//            }
 
 
             if ($isSecure === NO) {
