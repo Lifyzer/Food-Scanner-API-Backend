@@ -330,7 +330,7 @@ class User
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 $message = '<html><body>
-                              <p>Hi ' .  $objUser['first_name'] . ',</p>
+                              <p>Hi ' . $objUser['first_name'] . ',</p>
                               <p>Your new password for ' . APPNAME . ' is:<br> ' . $userPassword . '</p>
                               <p>Best,<br>' . APPNAME . ' Team</p>
                               </body></html>';
