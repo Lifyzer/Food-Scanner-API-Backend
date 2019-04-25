@@ -331,14 +331,12 @@ class User
             if ($edit_response[STATUS_KEY] === SUCCESS) {
 
                 $appname = APPNAME;
-                $firstname = $objUser['first_name'];
-                $lastname = '';
+                $name = $objUser['first_name'];
 
                 $message = '<html><body>
-                              <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
-                              <p>Your new password for ' . $appname . ' account is :</br>
-                                  password: ' . $userPassword . '</p>
-                              <p>Regards,</br>
+                              <p>Hi ' . $firstname . ',</p>
+                              <p>Your new password for ' . $appname . ' is:<br> ' . $userPassword . '</p>
+                              <p>Best,<br>
                               ' . $appname . ' Team</p>
                               </body></html>';
 
