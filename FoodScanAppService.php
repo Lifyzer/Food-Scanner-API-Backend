@@ -105,7 +105,6 @@ if (!empty($_REQUEST['Service'])) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
             } else {
-
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
                 if ($isSecure !== YES || $isSecure !== YES) {
