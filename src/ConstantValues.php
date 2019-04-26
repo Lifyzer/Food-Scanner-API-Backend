@@ -27,7 +27,7 @@ define('USERTOKEN', 'UserToken');
 define('SOMETHING_WENT_WRONG_TRY_AGAIN_LATER', 'Something went wrong, Please try again later');
 define('EMAIL_ALREADY_EXISTS', 'Email ID already exists');
 define('REGISTRATION_SUCCESSFULLY_DONE', 'Registration successfully done');
-define('MALICIOUS_SOURCE', 'Malicious source detected');
+define('MALICIOUS_SOURCE', 'A problem with security token occurred. Please reopen the app');
 define('TOKEN_ERROR', 'Please ensure that security token is supplied in your request');
 define('DEFAULT_NO_RECORD', 'No record found');
 define('WRONG_PASSWORD_MESSAGE', 'You have entered a wrong password');
