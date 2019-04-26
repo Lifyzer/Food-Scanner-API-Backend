@@ -86,7 +86,6 @@ if (!empty($_REQUEST['Service'])) {
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
 
-
 //            $product = new Product($db);
 //            $data = $product->callService($_REQUEST['Service'], $postData);
 //            if ($isSecure !== YES || $isSecure !== YES) {

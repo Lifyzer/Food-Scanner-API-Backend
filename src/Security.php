@@ -65,10 +65,10 @@ class Security
         $connection = $this->connection;
         //$user_id = validateValue($userData->userId, '');
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        if ($user_id != '') {
+        if ($user_id !== '') {
             $modifiedDate = date(DATETIME_FORMAT, time());
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
@@ -85,12 +85,12 @@ class Security
                     if ($stmt->execute($token_array)) {
                         $stmt->closeCursor();
 
-                        $uuid = validateObject($userData, 'GUID', "");
+                        $uuid = validateObject($userData, 'GUID', '');
                         $uuid = addslashes($uuid);
 
                         $security = new ApiCrypter();
 
-                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
+                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, '', 'config_value', '', ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
 
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
@@ -224,7 +224,7 @@ class Security
     public function checkForSecurityNew($accessValue, $secretValue)
     {
         $connection = $this->connection;
-        if ($accessValue == "" || $secretValue == "") {
+        if ($accessValue === '' || $secretValue === '') {
             return ERROR;
         } else {
             // get user-agent from database
@@ -470,10 +470,10 @@ class Security
 
         $isSecure = $this->checkForSecurityForRefreshToken($access_key, "");
 
-        if ($isSecure == NO) {
+        if ($isSecure === NO) {
             $status = FAILED;
             $message = MALICIOUS_SOURCE;
-        } elseif ($isSecure == ERROR) {
+        } elseif ($isSecure === ERROR) {
             $status = FAILED;
             $message = TOKEN_ERROR;
         } else {
@@ -486,7 +486,7 @@ class Security
                 }
             }
             $status = SUCCESS;
-            $message = "Token is generated.";
+            $message = 'Token is generated.';
         }
 
         $data[STATUS_KEY] = $status;
