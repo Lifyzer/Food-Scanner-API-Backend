@@ -23,7 +23,7 @@ class Email
         $mail = new PHPMailer();
         $mail->isSMTP(); // telling the class to use SMTP
         //$mail->Host = "mail.yourdomain.com"; // SMTP server
-        $mail->SMTPDebug = false; // enables SMTP debug information (for testing)
+        $mail->SMTPDebug = DEBUG_MODE; // enables SMTP debug information (for testing)
         // 1 = errors and messages
         // 2 = messages only
         $mail->SMTPAuth = true; // enable SMTP authentication
