@@ -335,9 +335,14 @@ class User
                               <p>Best,<br>' . APPNAME . ' Team</p>
                               </body></html>';
 
-                $email->send(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
-                $status = SUCCESS;
-                $message = PASSWORD_SENT;
+                try {
+                    $email->send(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
+                    $status = SUCCESS;
+                    $message = PASSWORD_SENT;
+                } catch (\PHPMailer\PHPMailer\Exception $e) {
+                    $status = FAILED;
+                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                }
             } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;

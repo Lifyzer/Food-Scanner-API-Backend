@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Lifyzer\Api;
 
-use PHPMailer;
-
-require 'class.phpmailer.php';
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Email
 {
@@ -17,16 +16,12 @@ class Email
      * @param string $userEmailId
      *
      * @return bool
-     * @throws \phpmailerException
+     * @throws Exception
      */
     public function send(string $sender_email_id, string $message, string $subject, string $userEmailId): bool
     {
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'From: NIPL App' . "\r\n";
-
         $mail = new PHPMailer();
-        $mail->IsSMTP(); // telling the class to use SMTP
+        $mail->isSMTP(); // telling the class to use SMTP
         //$mail->Host = "mail.yourdomain.com"; // SMTP server
         $mail->SMTPDebug = false; // enables SMTP debug information (for testing)
         // 1 = errors and messages
@@ -40,14 +35,14 @@ class Email
         $mail->Username = SENDER_EMAIL_ID; // GMAIL username
         $mail->Password = SENDER_EMAIL_PASSWORD; // GMAIL password
 
-        $mail->SetFrom($sender_email_id, APPNAME . 'Team');
+        $mail->setFrom($sender_email_id, APPNAME . 'Team');
         $mail->Subject = $subject;
-        //$mail->MsgHTML($content);
-        $mail->IsHTML(true);
+        //$mail->msgHTML($content);
+        $mail->isHTML(true);
         $mail->Body = $message;
 
-        $mail->AddAddress($userEmailId);
+        $mail->addAddress($userEmailId);
 
-        return $mail->Send();
+        return $mail->send();
     }
 }
