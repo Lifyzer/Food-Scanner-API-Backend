@@ -9,6 +9,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Email
 {
+    private const SMTP_HOST_SERVER = 'smtp.gmail.com'; //sets GMAIL as the SMTP server
+    private const SMTP_PORT_SERVER = 465; // set the SMTP port for the GMAIL server
+
     /**
      * @param string $sender_email_id
      * @param string $message
@@ -28,14 +31,13 @@ class Email
         // 2 = messages only
         $mail->SMTPAuth = true; // enable SMTP authentication
         $mail->SMTPSecure = "ssl"; // sets the prefix to the servier
-        //$mail->Host = "smtp.gmail.com"; // sets GMAIL as the SMTP server
-        $mail->Host = "smtp.1and1.com"; // sets GMAIL as the SMTP server
-        $mail->Port = 465; // set the SMTP port for the GMAIL server
+        $mail->Host = self::SMTP_HOST_SERVER;
+        $mail->Port = self::SMTP_PORT_SERVER;
 
         $mail->Username = SENDER_EMAIL_ID; // GMAIL username
         $mail->Password = SENDER_EMAIL_PASSWORD; // GMAIL password
 
-        $mail->setFrom($sender_email_id, APPNAME . 'Team');
+        $mail->setFrom($sender_email_id, APPNAME . ' Team');
         $mail->Subject = $subject;
         //$mail->msgHTML($content);
         $mail->isHTML(true);
