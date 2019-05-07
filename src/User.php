@@ -1,11 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Lifyzer\Api;
 
 use PDO;
 use stdClass;
+
+include_once 'SendEmailFunction.php';
+//'Email.php';
 
 class User
 {
@@ -42,6 +43,7 @@ class User
                 return $this->changePassword($postData);
 
             case self::EDIT_PROFILE_ACTION:
+
                 return $this->editProfile($postData);
 
             case self::FORGOT_PASSWORD_ACTION:
@@ -105,7 +107,7 @@ class User
                     $tokenData = new stdClass;
                     $tokenData->GUID = $getUser['guid'];
                     $tokenData->userId = $getUser['id'];
-                    $user_token = $security->updateTokenForUser($tokenData);
+                    $user_token = $security->updateTokenForUser_Login($tokenData);
                     if ($user_token[STATUS_KEY] == SUCCESS) {
                         $data[USERTOKEN] = $user_token[USERTOKEN];
                     }
@@ -130,7 +132,9 @@ class User
 
     private function editProfile($userData)
     {
+    
         $connection = $this->connection;
+		//mysqli_set_charset($connection,'utf8');
 
         $user_id = validateObject($userData, 'user_id', "");
         $user_id = addslashes($user_id);
@@ -139,7 +143,14 @@ class User
         $email_id = addslashes($email_id);
 
         $first_name = validateObject($userData, 'first_name', "");
-        $first_name = addslashes($first_name);
+       	$first_name = utf8_decode($first_name);
+      /* echo "First1" .$first_name;
+		$first_name = mysqli_real_escape_string($connection,$first_name); //base64_encode($first_name);
+		echo "First2" .$first_name;
+		print_r($userData);
+				exit();*/
+
+
 
         $is_delete = IS_DELETE;
 
@@ -155,6 +166,7 @@ class User
                 $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_id, 'is_delete' => $is_delete]);
                 if (!empty($getUser)) {
                     $posts[] = $getUser;
+                    //$posts[0]['first_name'] = base64_decode($getUser['first_name']);
                 }
                 $status = SUCCESS;
                 $message = PROFILE_UPDATED_SUCCESSFULLY;
@@ -257,8 +269,8 @@ class User
                         $generate_user_guid = $objUser['guid'];
                     }
                     $tokenData = new stdClass;
-
-                    $tokenData->GUID = $generate_user_guid;
+                    
+                    $tokenData-> GUID = $generate_user_guid;
 //					$tokenData["GUID"] = $generate_user_guid;
 //					$tokenData["userId"] = $user_id;					
                     $tokenData->userId = $user_id;
@@ -311,6 +323,61 @@ class User
         return '';
     }
 
+  /* private function forgotPassword($userData)
+    {
+        $connection = $this->connection;
+
+        $email_id = validateObject($userData, 'email_id', "");
+        $email_id = addslashes($email_id);
+
+        $is_delete = IS_DELETE;
+
+        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
+        if (!empty($objUser)) {
+
+            //$email = new Email();
+            $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
+            $dbPassword = encryptPassword($userPassword);
+            $created_date = getDefaultDate();
+
+            $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
+            if ($edit_response[STATUS_KEY] === SUCCESS) {
+
+                $appname = APPNAME;
+                $firstname = $objUser['first_name'];
+                $lastname = '';
+
+  	 require_once 'SendEmailFunction.php';
+				$objMail = new SendEmailFunction();
+
+
+                $message = '<html><body>
+                              <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
+                              <p>Your new password for ' . $appname . ' account is :</br>
+                                  password: ' . $userPassword . '</p>
+                              <p>Regards,</br>
+                              ' . $appname . ' Team</p>
+                              </body></html>';
+                            //  mail("someone@example.com","My subject",$msg);
+			 $objMail->sendEmail($message, $email_id, 'djasdjn');
+
+                //$email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
+                $status = SUCCESS;
+                $message = PASSWORD_SENT;
+            } else {
+                $status = FAILED;
+                $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+            }
+        } else {
+            $status = FAILED;
+            $message = NO_DATA_AVAILABLE;
+        }
+        $data['status'] = $status;
+        $data['message'] = $message;
+
+        return $data;
+    } */
+
     private function forgotPassword($userData)
     {
         $connection = $this->connection;
@@ -322,6 +389,7 @@ class User
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
         if (!empty($objUser)) {
+
             $email = new Email();
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
@@ -329,20 +397,22 @@ class User
 
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
             if ($edit_response[STATUS_KEY] === SUCCESS) {
+
+                $appname = APPNAME;
+                $firstname = $objUser['first_name'];
+                $lastname = '';
+
                 $message = '<html><body>
-                              <p>Hi ' . $objUser['first_name'] . ',</p>
-                              <p>Your new password for ' . APPNAME . ' is:<br> ' . $userPassword . '</p>
-                              <p>Best,<br>' . APPNAME . ' Team</p>
+                              <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
+                              <p>Your new password for ' . $appname . ' account is :</br>
+                                  password: ' . $userPassword . '</p>
+                              <p>Regards,</br>
+                              ' . $appname . ' Team</p>
                               </body></html>';
 
-                try {
-                    $email->send(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
-                    $status = SUCCESS;
-                    $message = PASSWORD_SENT;
-                } catch (\PHPMailer\PHPMailer\Exception $e) {
-                    $status = FAILED;
-                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                }
+                $email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
+                $status = SUCCESS;
+                $message = PASSWORD_SENT;
             } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
