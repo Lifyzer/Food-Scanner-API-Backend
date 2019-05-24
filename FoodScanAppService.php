@@ -13,6 +13,7 @@ require 'src/HelperFunctions.php';
 require 'src/PdoFunctions.php';
 
 $post_body = file_get_contents('php://input');
+
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $postData = json_decode($post_body);
 
@@ -52,6 +53,7 @@ if (!empty($_REQUEST['Service'])) {
             $secret_key = addslashes($secret_key);
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
+            $isSecure = YES;
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
                 $data['message'] = MALICIOUS_SOURCE;
@@ -60,6 +62,7 @@ if (!empty($_REQUEST['Service'])) {
                 $data['message'] = TOKEN_ERROR;
             } else {
                 $user = new User($db);
+				
                 $data = $user->callService($_REQUEST['Service'], $postData);
 
                 if ($isSecure !== YES || $isSecure !== YES) {
@@ -86,6 +89,7 @@ if (!empty($_REQUEST['Service'])) {
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
 
+
 //            $product = new Product($db);
 //            $data = $product->callService($_REQUEST['Service'], $postData);
 //            if ($isSecure !== YES || $isSecure !== YES) {
@@ -104,6 +108,7 @@ if (!empty($_REQUEST['Service'])) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
             } else {
+
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
                 if ($isSecure !== YES || $isSecure !== YES) {

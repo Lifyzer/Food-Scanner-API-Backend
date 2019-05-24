@@ -4,8 +4,10 @@ namespace Lifyzer\Api;
 
 use PDO;
 use stdClass;
+use Email;
 
-include_once 'SendEmailFunction.php';
+//include_once 'SendEmailFunction.php';
+include_once 'Email.php';
 //'Email.php';
 
 class User
@@ -380,6 +382,7 @@ class User
 
     private function forgotPassword($userData)
     {
+
         $connection = $this->connection;
 
         $email_id = validateObject($userData, 'email_id', "");
@@ -388,19 +391,25 @@ class User
         $is_delete = IS_DELETE;
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
+
+
         if (!empty($objUser)) {
 
+
             $email = new Email();
+
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
 
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
+
             if ($edit_response[STATUS_KEY] === SUCCESS) {
 
                 $appname = APPNAME;
                 $firstname = $objUser['first_name'];
                 $lastname = '';
+
 
                 $message = '<html><body>
                               <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
@@ -411,6 +420,7 @@ class User
                               </body></html>';
 
                 $email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
+                
                 $status = SUCCESS;
                 $message = PASSWORD_SENT;
             } else {

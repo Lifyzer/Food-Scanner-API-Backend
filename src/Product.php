@@ -7,7 +7,6 @@ use phpFastCache\Helper\Psr16Adapter;
 
 class Product
 {
-    private const OPEN_FOOD_FACTS_API_URL = 'https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=%s&page=1';
     private const CACHE_LIFETIME = 3600 * 24;
     private const CACHE_DRIVER = 'Files';
 
@@ -53,6 +52,7 @@ class Product
      */
     public function getProductDetails($userData)
     {
+
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
@@ -65,10 +65,13 @@ class Product
 
         $posts = [];
 
-        if ($is_foodfact === '1') {
+        if ($is_foodfact == "1") {
+
+            //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
+            $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, self::OPEN_FOOD_FACTS_API_URL);
+            curl_setopt($ch, CURLOPT_URL, $url);
             $result = curl_exec($ch);
             curl_close($ch);
             $tempArr = json_decode($result, true);
@@ -79,6 +82,7 @@ class Product
             $newArr['message'] = "";
 
             foreach ($tempArr['products'] as $key => $value) {
+
                 // $product = [];
 
                 $product['id'] = null;
@@ -112,9 +116,11 @@ class Product
                 $product['category_id'] = "0";
 
                 $newArr['product'][] = $product;
+
             }
 
             return $newArr;
+
         }
 
 
@@ -196,6 +202,7 @@ class Product
                 }
             }
         } else {
+
             $status = SUCCESS;
             $message = NO_PRODUCT_FOUND_IN_DATABASE;
         }
@@ -210,13 +217,15 @@ class Product
 
     public function getProductDetails2($userData)
     {
+
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
         $product_name = validateObject($userData, 'product_name', '');
-
+		$product_name = utf8_decode($product_name);
+		
         $is_foodfact = validateObject($userData, 'is_foodfact', '');
         $is_foodfact = addslashes($is_foodfact);
 
@@ -233,6 +242,7 @@ class Product
 
         $cacher = new Psr16Adapter(self::CACHE_DRIVER);
         $cacheKey = 'productdetails' . $product_name;
+		
 
         if (!$cacher->has($cacheKey)) {
 
@@ -252,11 +262,12 @@ class Product
 
             //$cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
 
-            //echo "Row count : " .$select_product_details_stmt->rowCount() > 0;
+            
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
 
+	
         if ($select_product_details_stmt->rowCount() > 0) {
             $status = SUCCESS;
 
@@ -306,13 +317,18 @@ class Product
                 }
             }
         } else {
+
+            //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
+            $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=" . urlencode($product_name) . "&page=1";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, self::OPEN_FOOD_FACTS_API_URL);
+             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_URL, $url);
             $result = curl_exec($ch);
             curl_close($ch);
             $tempArr = json_decode($result, true);
-
+			
 //            $newArr = array();
 //            $newArr['status'] = SUCCESS;
 //            $newArr['message'] = "";
@@ -320,6 +336,8 @@ class Product
             $temp = -1;
             $skip = false;
             $selected_index = -1;
+           
+            if(!empty($tempArr)){
             foreach ($tempArr['products'] as $key => $value) {
 
                 $temp++;
@@ -328,6 +346,7 @@ class Product
                     $selected_index = $temp;
                     $skip = true;
                 }
+                
 
 //                $product['id'] = null;
 //                $product['barcode_id'] = null;
@@ -362,77 +381,122 @@ class Product
 //                $newArr['product'][] = $product;
 
             }
-
-
+			
             if ($selected_index >= 0) {
-
+				
                 $value = $tempArr['products'][$selected_index];
 
             } else {
+            
                 $value = $tempArr['products'][0];
+                
             }
 
-
-            $product_array = [
-                'product_name' => $value['product_name'],
-                'ingredients' => validateValue($value['ingredients_text'], ""),
-                'saturated_fats' => validateValue($value["nutriments"]["saturated-fat"], 0),
-                'protein' => $value["nutriments"]["proteins"],
-                'sugar' => $value["nutriments"]["sugars"],
-                'salt' => $value["nutriments"]["salt"],
-                'carbohydrate' => $value["nutriments"]["carbohydrates"],
-                'dietary_fiber' => $value["nutriments"]["fiber_value"],
-                'sodium' => $value["nutriments"]["sodium"],
-                'is_delete' => $is_delete,
-                'is_test' => $is_testdata,
-
+			//print_($product_array = ['product_name' => validateValue($value['product_name'], "")]);
+			
+/*$product_array[] =[
+                'product_name' => "",
+                'ingredients' => "",
+                'saturated_fats' => "123",
+                'protein' => "123",
+                'sugar' => "123",
+                'salt' => "123",
+                'carbohydrate' => "123",
+                'dietary_fiber' => "123",
+                'sodium' => "123",
+                'is_delete' => "0",
+                'is_test' => "1",
+            ];*/
+			
+			
+			if(count($value["nutriments"]) > 0)
+			{
+				 $product_array = [
+                'product_name' => ($value['product_name']?$value['product_name']:''),
+                'ingredients' => ($value['ingredients_text']?$value["nutriments"]["saturated-fat"]:''),
+                'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:''),
+                'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:''),
+                'sugar' => ($value["nutriments"]["sugars"]?$value["nutriments"]["sugars"]:''),
+                'salt' => ($value["nutriments"]["salt"]?$value["nutriments"]["salt"]:''),
+                'carbohydrate' => ($value["nutriments"]["carbohydrates"]?$value["nutriments"]["carbohydrates"]:''),
+                'dietary_fiber' => ($value["nutriments"]["fiber_value"]?$value["nutriments"]["fiber_value"]:''),
+                'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:''),
+                'is_delete' => ($is_delete?$is_delete:0),
+                'is_test' => ($is_testdata?$is_testdata:0),
             ];
+		
+			if(!empty($product_array))
+			{
+				
+				if (array_key_exists("image_url", $value)) 
+				{
+
+					$product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');//validateValue($value['image_url'], "");
+				}
+			
+				if (array_key_exists("fat_amount", $value)) {
+
+					$product_array['fat_amount'] = ($value["nutriments"]["fat_amount"]?$value["nutriments"]["fat_amount"]:'');//$value["nutriments"]["fat_amount"];
+				}
+
+			$insert_response = addData($connection, 'getProductDetails2', TABLE_PRODUCT, $product_array);
+				
+
+			if ($insert_response[STATUS_KEY] == SUCCESS) {
+				$last_inserted_id = $insert_response[MESSAGE_KEY];
 
 
-            if (array_key_exists("image_url", $value)) {
-
-                $product_array['product_image'] = validateValue($value['image_url'], "");
-            }
-
-            if (array_key_exists("fat_amount", $value)) {
-
-                $product_array['fat_amount'] = $value["nutriments"]["fat_amount"];
-            }
-
-
-            $insert_response = addData($connection, 'getProductDetails2', TABLE_PRODUCT, $product_array);
-
-            if ($insert_response[STATUS_KEY] == SUCCESS) {
-                $last_inserted_id = $insert_response[MESSAGE_KEY];
-
-
-                //******** Insert data into history ********//
-                $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
-                $add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
+				//******** Insert data into history ********//
+				$history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
+				$add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
 
 //                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
 //
 //                    }
 
-                $select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
-                if ($stmt = $this->connection->prepare($select)) {
-                    if ($stmt->execute()) {
-                        if ($stmt->rowCount() > 0) {
-                            $status = SUCCESS;
-                            while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
+				if ($stmt = $this->connection->prepare($select)) {
+					if ($stmt->execute()) {
+						if ($stmt->rowCount() > 0) {
+							$status = SUCCESS;
+							while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                                $product['is_favourite'] = 0;
-                                $posts[] = $product;
-                            }
-                        }
-                    }
-                    $stmt->closeCursor();
-                }
+								$product['is_favourite'] = 0;
+								$posts[] = $product;
+							}
+						}
+					
+					}
+					
+					$stmt->closeCursor();
+				}
+				
 
-            } else {
+			}
+			else {
 
-                $message = $insert_response[MESSAGE_KEY];
+				$message = $insert_response[MESSAGE_KEY];
+			}
+			}
+			else{
+			
+            	$message = "No Product Available1";
             }
+
+			}
+			else{
+			
+            	$message = "No Product Available2";
+            }
+			
+          
+           
+            }
+            else{
+            	$message = "No Products Available3";
+            }
+            
+            
 
             //======================================//
 

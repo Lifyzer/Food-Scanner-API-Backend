@@ -1,23 +1,28 @@
 <?php
 
-//namespace Lifyzer\Api;
-//
-//use PHPMailer;
-
+//include 'config.php';   
 include 'class.phpmailer.php';
-//include 'class.smtp.php';
+//include 'ConstantValues.php';
 
-class Email
+class SendEmail
 {
-    function sendMail($sender_email_id,$message, $Mailsubject, $userEmailId)
+    //put your code here
+    // constructor
+    function __construct()
     {
+		//echo "dbhs";
+    }
+
+    function sendemail($sender_email_id,$message, $Mailsubject, $userEmailId)
+    {
+       // date_default_timezone_set('Asia/Calcutta');
         $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";   //charset=iso-8859-1
         $headers .= 'From: Lifyzer App' . "\r\n";
         $mail = new PHPMailer();
         $mail->IsSMTP();
         $mail->CharSet = 'UTF-8';
-        $mail->Host = "smtp.webfaction.com";
+        $mail->Host = "smtp.gmail.com";
         $mail->SMTPAuth= true;
         $mail->Port = 465; // Or 587
         $mail->Username = "lifyzer"; //SENDER_EMAIL_ID; // GMAIL username
@@ -29,14 +34,15 @@ class Email
         $mail->Subject = $Mailsubject;
         $mail->Body = $message;
         $mail->addAddress($userEmailId);
-        if($mail->Send()){
-          //  echo "sucsess";
-            return true;
-        }else {
-          //  echo "failed";
-            return false;
+        if ($mail->send()) {
+            //success
+        } else {
+            $post['message'] = $mail->ErrorInfo;
+            $post['status'] = 0;
+            return 0;
         }
     }
 }
 
+?>
 

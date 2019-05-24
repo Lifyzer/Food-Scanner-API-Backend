@@ -10,8 +10,11 @@ define('FAILED', 'failed');
 define('APPNAME', 'FoodScan App');
 //define('SENDER_EMAIL_ID', 'pra@narola.email');
 //define('SENDER_EMAIL_PASSWORD', 'jUVAO8ufUmaucHM');
-define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
-define('SENDER_EMAIL_PASSWORD', 'narola23');
+//define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
+//define('SENDER_EMAIL_PASSWORD', 'narola23');
+define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
+define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');
+
 
 
 
@@ -48,7 +51,7 @@ define('NO_FAVOURITE_HISTORY_FOUND', 'No History not found');
 define('NO_PRODUCT_FOUND_IN_DATABASE', 'No Product found in database');
 define('DATA_FETCHED_SUCCESSFULLY', 'Data fetched successfully');
 define('HISTORY_REMOVED_SUCCESSFULLY', 'History deleted successfully');
-define('FAVOURITE_SUCCESSFULLY', ' Add / Removed to favourite Successfully');
+define('FAVOURITE_SUCCESSFULLY', ' Added to favourite Successfully');
 define('PROFILE_UPDATED_SUCCESSFULLY', 'Profile Updated Successfully');
 
 abstract class DELETE_STATUS
