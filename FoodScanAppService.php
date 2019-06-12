@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Lifyzer\Api;
 
 use PDOException;
@@ -16,6 +17,7 @@ $post_body = file_get_contents('php://input');
 
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $postData = json_decode($post_body);
+
 
 $logger = new Logger();
 if (DEBUG_MODE) {
@@ -38,6 +40,7 @@ if (!empty($_REQUEST['Service'])) {
     }
 
     switch ($_REQUEST['Service']) {
+
         /*********************  User Functions *********************/
         case User::REGISTRATION_ACTION:
         case User::LOGIN_ACTION:
@@ -81,24 +84,27 @@ if (!empty($_REQUEST['Service'])) {
         case 'getProductDetails2':
         case 'getUserHistory':
         case 'removeProductFromHistory':
-            $access_key = validateObject($postData, 'access_key', '');
-            $access_key = addslashes($access_key);
-
-            $secret_key = validateObject($postData, 'secret_key', '');
-            $secret_key = addslashes($secret_key);
-
-            $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
 
 
-//            $product = new Product($db);
-//            $data = $product->callService($_REQUEST['Service'], $postData);
-//            if ($isSecure !== YES || $isSecure !== YES) {
-//                if ($isSecure['key'] === 'Temp') {
-//                    $data['TempToken'] = $isSecure['value'];
-//                } else {
-//                    $data['UserToken'] = $isSecure['value'];
-//                }
-//            }
+
+         $access_key = validateObject($postData, 'access_key', '');
+         $access_key = addslashes($access_key);
+
+          $secret_key = validateObject($postData, 'secret_key', '');
+         $secret_key = addslashes($secret_key);
+
+          $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
+           // $isSecure  = YES;
+
+			$product = new Product($db);
+            $data = $product->callService($_REQUEST['Service'], $postData);
+           if ($isSecure !== YES || $isSecure !== YES) {
+                if ($isSecure['key'] === 'Temp') {
+                    $data['TempToken'] = $isSecure['value'];
+                } else {
+                    $data['UserToken'] = $isSecure['value'];
+                }
+            }
 
 
             if ($isSecure === NO) {
@@ -108,16 +114,15 @@ if (!empty($_REQUEST['Service'])) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
             } else {
-
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
-                if ($isSecure !== YES || $isSecure !== YES) {
+              /*  if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
                         $data['UserToken'] = $isSecure['value'];
                     }
-                }
+                }*/
             }
             break;
 

@@ -283,9 +283,11 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
         } else {
             $check_conditions = $customCondition;
         }
+       
         if (empty($sql)) {
             if (empty($sql)) {
                 $sql = 'SELECT ' . $columns . ' FROM ' . $table . ' WHERE ' . $check_conditions;
+              
             }
         }
 
