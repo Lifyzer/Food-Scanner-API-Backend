@@ -397,18 +397,24 @@ class User
 
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
             if ($edit_response[STATUS_KEY] === SUCCESS) {
-
                 $appname = APPNAME;
                 $firstname = $objUser['first_name'];
                 $lastname = '';
 
                 $message = '<html><body>
-                              <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
-                              <p>Your new password for ' . $appname . ' account is :</br>
-                                  password: ' . $userPassword . '</p>
-                              <p>Regards,</br>
-                              ' . $appname . ' Team</p>
-                              </body></html>';
+                            <p>Hi ' . $objUser['first_name'] . ',</p>
+                            <p>Your new password for ' . APPNAME . ' is:<br> ' . $userPassword . '</p>
+                            <p>Best,<br>' . APPNAME . ' Team</p>
+                            </body></html>';
+
+                try {
+                    $email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
+                    $status = SUCCESS;
+                    $message = PASSWORD_SENT;
+                } catch (\PHPMailer\PHPMailer\Exception $e) {
+                    $status = FAILED;
+                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                }
 
                 $email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
                 $status = SUCCESS;
