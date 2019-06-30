@@ -132,7 +132,7 @@ class User
 
     private function editProfile($userData)
     {
-    
+
         $connection = $this->connection;
 		//mysqli_set_charset($connection,'utf8');
 
@@ -269,10 +269,10 @@ class User
                         $generate_user_guid = $objUser['guid'];
                     }
                     $tokenData = new stdClass;
-                    
+
                     $tokenData-> GUID = $generate_user_guid;
 //					$tokenData["GUID"] = $generate_user_guid;
-//					$tokenData["userId"] = $user_id;					
+//					$tokenData["userId"] = $user_id;
                     $tokenData->userId = $user_id;
                     $security = new Security($connection);
                     $user_token = $security->updateTokenForUser_Login($tokenData);
