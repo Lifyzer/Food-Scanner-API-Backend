@@ -14,7 +14,6 @@ define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
 define('SENDER_EMAIL_PASSWORD', 'narola23');
 
 
-
 define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 
 define('YES', 'yes');
