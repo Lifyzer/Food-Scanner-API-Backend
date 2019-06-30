@@ -397,10 +397,6 @@ class User
 
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
             if ($edit_response[STATUS_KEY] === SUCCESS) {
-                $appname = APPNAME;
-                $firstname = $objUser['first_name'];
-                $lastname = '';
-
                 $message = '<html><body>
                             <p>Hi ' . $objUser['first_name'] . ',</p>
                             <p>Your new password for ' . APPNAME . ' is:<br> ' . $userPassword . '</p>
@@ -415,10 +411,6 @@ class User
                     $status = FAILED;
                     $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                 }
-
-                $email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
-                $status = SUCCESS;
-                $message = PASSWORD_SENT;
             } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
