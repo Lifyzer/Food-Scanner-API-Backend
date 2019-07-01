@@ -23,7 +23,7 @@ class Email
     {
         $mail = new PHPMailer();
         $mail->isSMTP(); // telling the class to use SMTP
-        $mail->CharSet = 'UTF-8';
+        $mail->CharSet = PHPMailer::CHARSET_UTF8;
 
         // 1 = errors and messages
         // 2 = messages only
