@@ -5,9 +5,6 @@ namespace Lifyzer\Api;
 use PDO;
 use stdClass;
 
-include_once 'SendEmailFunction.php';
-//'Email.php';
-
 class User
 {
     public const LOGIN_ACTION = 'Login';
@@ -323,61 +320,6 @@ class User
         return '';
     }
 
-  /* private function forgotPassword($userData)
-    {
-        $connection = $this->connection;
-
-        $email_id = validateObject($userData, 'email_id', "");
-        $email_id = addslashes($email_id);
-
-        $is_delete = IS_DELETE;
-
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
-        if (!empty($objUser)) {
-
-            //$email = new Email();
-            $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
-            $dbPassword = encryptPassword($userPassword);
-            $created_date = getDefaultDate();
-
-            $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
-            if ($edit_response[STATUS_KEY] === SUCCESS) {
-
-                $appname = APPNAME;
-                $firstname = $objUser['first_name'];
-                $lastname = '';
-
-  	 require_once 'SendEmailFunction.php';
-				$objMail = new SendEmailFunction();
-
-
-                $message = '<html><body>
-                              <p>Hi ' . $firstname . ' ' . $lastname . ',</p>
-                              <p>Your new password for ' . $appname . ' account is :</br>
-                                  password: ' . $userPassword . '</p>
-                              <p>Regards,</br>
-                              ' . $appname . ' Team</p>
-                              </body></html>';
-                            //  mail("someone@example.com","My subject",$msg);
-			 $objMail->sendEmail($message, $email_id, 'djasdjn');
-
-                //$email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
-                $status = SUCCESS;
-                $message = PASSWORD_SENT;
-            } else {
-                $status = FAILED;
-                $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-            }
-        } else {
-            $status = FAILED;
-            $message = NO_DATA_AVAILABLE;
-        }
-        $data['status'] = $status;
-        $data['message'] = $message;
-
-        return $data;
-    } */
-
     private function forgotPassword($userData)
     {
         $connection = $this->connection;
@@ -388,14 +330,17 @@ class User
         $is_delete = IS_DELETE;
 
         $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
-        if (!empty($objUser)) {
 
+
+        if (!empty($objUser)) {
             $email = new Email();
+
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
 
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
+
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 $message = '<html><body>
                             <p>Hi ' . $objUser['first_name'] . ',</p>
@@ -404,7 +349,12 @@ class User
                             </body></html>';
 
                 try {
-                    $email->sendMail(SENDER_EMAIL_ID, $message, 'Forgot Password', $email_id);
+                    $email->sendMail(
+                        getenv('SENDER_EMAIL_ID'),
+                        $message,
+                        'Forgot Password',
+                        $email_id
+                    );
                     $status = SUCCESS;
                     $message = PASSWORD_SENT;
                 } catch (\PHPMailer\PHPMailer\Exception $e) {

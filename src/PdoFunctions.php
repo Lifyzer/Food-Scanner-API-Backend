@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Lifyzer\Api;
 
 use PDO;
@@ -28,6 +26,7 @@ function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
             }
         }
         $sql = 'INSERT INTO ' . $table_name . ' (' . $fields . ' ) VALUES (' . $values . ') ';
+        //echo "Query\n". $sql;
         if ($stmt = $connection->prepare($sql)) {
             foreach ($dataArray as $key => $value) {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
@@ -263,6 +262,7 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
         $execute_array = [];
         $condition = '';
 
+
         if (!empty($dataArray)) {
             foreach ($dataArray as $key => $value) {
                 if (empty($sql)) {
@@ -283,9 +283,11 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
         } else {
             $check_conditions = $customCondition;
         }
+       
         if (empty($sql)) {
             if (empty($sql)) {
                 $sql = 'SELECT ' . $columns . ' FROM ' . $table . ' WHERE ' . $check_conditions;
+              
             }
         }
 
@@ -295,6 +297,7 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
                 $statement->bindValue(":$key", $value);
             }
         }
+        
         $statement->execute();
     } catch (PDOException $e) {
         $err_msg = "\nFunction=> " . " Query=> " . $sql . "  Error message= " . $e->getMessage();

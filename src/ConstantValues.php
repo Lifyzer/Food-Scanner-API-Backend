@@ -8,10 +8,6 @@ define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
 define('APPNAME', 'FoodScan App');
-define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
-define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');
-
-define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 
 define('YES', 'yes');
 define('NO', 'no');

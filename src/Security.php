@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Lifyzer\Api;
 
 use PDO;
@@ -65,10 +63,10 @@ class Security
         $connection = $this->connection;
         //$user_id = validateValue($userData->userId, '');
 
-        $user_id = validateObject($userData, 'user_id', '');
+        $user_id = validateObject($userData, 'user_id', "");
         $user_id = addslashes($user_id);
 
-        if ($user_id !== '') {
+        if ($user_id != '') {
             $modifiedDate = date(DATETIME_FORMAT, time());
             $generateToken = $this->generateToken(8);
             $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
@@ -85,12 +83,12 @@ class Security
                     if ($stmt->execute($token_array)) {
                         $stmt->closeCursor();
 
-                        $uuid = validateObject($userData, 'GUID', '');
+                        $uuid = validateObject($userData, 'GUID', "");
                         $uuid = addslashes($uuid);
 
                         $security = new ApiCrypter();
 
-                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, '', 'config_value', '', ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
+                        $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
 
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
@@ -221,10 +219,10 @@ class Security
         );
     }
 
-    public function checkForSecurityNew($accessValue, $secretValue)
+    public function checkForSecurityNew($accessvalue, $secretvalue)
     {
         $connection = $this->connection;
-        if ($accessValue === '' || $secretValue === '') {
+        if ($accessvalue == "" || $secretvalue == "") {
             return ERROR;
         } else {
             // get user-agent from database
@@ -245,31 +243,31 @@ class Security
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $security = new ApiCrypter();
-                            if ($accessValue === 'nousername') {
+                            if ($accessvalue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
-                                if ($secretValue == null) {
-                                    $secretValue = $security->encrypt($tempToken, $masterKey);
+                                if ($secretvalue == null) {
+                                    $secretvalue = $security->encrypt($tempToken, $masterKey);
                                     $response = [];
                                     $response['key'] = "Temp";// return temporary token
-                                    $response['value'] = $secretValue;
+                                    $response['value'] = $secretvalue;
                                     return $response;
                                 } else {
                                     /*echo "\n temp=>".$tempToken;
                                     echo "\n master=>".$masterKey;
-                                    echo "\n secret=>".$secretValue;
-                                    echo "\n new serc==> ". $secretValue1 */
-                                    $secretValue1 = $security->encrypt($tempToken, $masterKey);
-                                    if (trim($secretValue1) == trim($secretValue)) {
+                                    echo "\n secret=>".$secretvalue;
+                                    echo "\n new serc==> ". $secretvalue1 */
+                                    $secretvalue1 = $security->encrypt($tempToken, $masterKey);
+                                    if (trim($secretvalue1) == trim($secretvalue)) {
                                         return YES;
                                     } else {
                                         return NO;
                                     }
                                 }
                             } else {
-//                                echo "\nacces=>".$accessValue;
-//                                echo "\nsec=>".$secretValue;
+//                                echo "\nacces=>".$accessvalue;
+//                                echo "\nsec=>".$secretvalue;
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
-                                return $this->checkCredentialsForSecurityNew($accessValue, $secretValue, $tempToken);
+                                return $this->checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken);
                             }
                         }
                     }
@@ -280,29 +278,21 @@ class Security
         return NO;
     }
 
-    public function checkCredentialsForSecurityNew($accessValue, $secretValue, $tempToken)
+    public function checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken)
     {
         $connection = $this->connection;
         $objGlobalPassword = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'globalPassword', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
         if (!empty($objGlobalPassword)) {
             $masterKey = $objGlobalPassword['config_value'];
             $security = new ApiCrypter();
-            $decrypted_access_key = $security->decrypt($accessValue, $masterKey);
+            $decrypted_access_key = $security->decrypt($accessvalue, $masterKey);
             $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", ['guid' => $decrypted_access_key, 'is_delete' => DELETE_STATUS::NOT_DELETE]);
             if (!empty($objUser)) {
-                $row_token = getSingleTableDataLastDate(
-                    $connection,
-                    TABLE_APP_TOKENS,
-                    '',
-                    'token,expiry',
-                    '',
-                    ['userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE]
-                );
-
+                $row_token = getSingleTableDataLastDate($connection, TABLE_APP_TOKENS, "", "token,expiry", "", ['userid' => $objUser['id'], 'is_delete' => DELETE_STATUS::NOT_DELETE]);
                 if (!empty($row_token)) {
                     $tokenName = $row_token['token'];
                     $currentDate = $row_token['expiry'];
-                    if ($secretValue == $tempToken) {
+                    if ($secretvalue == $tempToken) {
                         // we can return user's private access token here
                         // $tokenName = $tokenName."_".$currentDate;
                         $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
@@ -316,7 +306,7 @@ class Security
 
                         // echo ' secret=access scenario my token=> '.$tokenName;
                         return $response;
-                    } elseif ($secretValue === null) {
+                    } elseif ($secretvalue === null) {
                         $currentDateEncrypt = $security->encrypt($currentDate, $decrypted_access_key);
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
                         $tokenName = $tokenNameEncrypt . '_' . $currentDateEncrypt;
@@ -325,10 +315,10 @@ class Security
                         $response['value'] = $tokenName;
                         return $response;
                     } else {
-                        $secretValue = explode('_', $secretValue);
-                        $decrypted_secret_key = $security->decrypt($secretValue[0], $decrypted_access_key);
+                        $secretvalue = explode('_', $secretvalue);
+                        $decrypted_secret_key = $security->decrypt($secretvalue[0], $decrypted_access_key);
 //                                                echo $decrypted_secret_key;
-//                                                $decrypted_secret_key1 = $security->decrypt($secretValue[1], $decrypted_access_key);
+//                                                $decrypted_secret_key1 = $security->decrypt($secretvalue[1], $decrypted_access_key);
 //                                                echo $decrypted_secret_key1;
 //                                                echo $tokenName;
                         if ($decrypted_secret_key == $tokenName) {
@@ -347,10 +337,10 @@ class Security
         return NO;
     }
 
-    public function checkForSecurityForRefreshToken($accessValue, $secretValue)
+    public function checkForSecurityForRefreshToken($accessvalue, $secretvalue)
     {
         $connection = $this->connection;
-        if ($accessValue == "") {
+        if ($accessvalue == "") {
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
@@ -369,22 +359,22 @@ class Security
                         if (!empty($objGlobalPassword)) {
                             $masterKey = $objGlobalPassword['config_value'];
                             $security = new ApiCrypter();
-                            if ($accessValue === 'nousername') {
+                            if ($accessvalue === 'nousername') {
                                 // check user passed temporary token or request with temporary token.
 
-                                if ($secretValue == null) {
+                                if ($secretvalue == null) {
 //                                    echo "\n temp=>".$tempToken;
 //                                    echo "\n master=>".$masterKey;
 //                                    echo "\n new serc==> ".
-                                    $secretValue = $security->encrypt($tempToken, $masterKey);
+                                    $secretvalue = $security->encrypt($tempToken, $masterKey);
                                     $response = [];
                                     $response['key'] = "Temp";// return temporary token
-                                    $response['value'] = $secretValue;
+                                    $response['value'] = $secretvalue;
                                     return $response;
                                 } else {
-                                    $secretValue = $security->decrypt($secretValue, $masterKey);
+                                    $secretvalue = $security->decrypt($secretvalue, $masterKey);
                                     // match token is valid or not
-                                    if ($secretValue == $tempToken) {
+                                    if ($secretvalue == $tempToken) {
                                         return YES;
                                     }
 
@@ -392,7 +382,7 @@ class Security
                                 }
                             } else {
                                 $tempToken = $security->encrypt($tempToken, $masterKey);
-                                return $this->checkCredentialsForSecurityNew($accessValue, $secretValue, $tempToken);
+                                return $this->checkCredentialsForSecurityNew($accessvalue, $secretvalue, $tempToken);
                             }
                         }
                     }
@@ -418,15 +408,7 @@ class Security
         } else {
             $isSecure = $this->checkForSecurityNew($access_key, $secret_key);
             if ($isSecure != NO) {
-                $stmt_get_admin_config = getMultipleTableData(
-                    $connection,
-                    TABLE_ADMIN_CONFIG,
-                    '',
-                    'config_key,config_value',
-                    " config_key IN('globalPassword','userAgent','tempToken')",
-                    ['is_delete' => DELETE_STATUS::NOT_DELETE]
-                );
-
+                $stmt_get_admin_config = getMultipleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_key,config_value", " config_key IN('globalPassword','userAgent','tempToken')", ['is_delete' => DELETE_STATUS::NOT_DELETE]);
                 if ($stmt_get_admin_config->rowCount() > 0) {
                     while ($objAdminConfig = $stmt_get_admin_config->fetch(PDO::FETCH_ASSOC)) {
                         $data[$objAdminConfig['config_key']] = $objAdminConfig['config_value'];
@@ -470,10 +452,10 @@ class Security
 
         $isSecure = $this->checkForSecurityForRefreshToken($access_key, "");
 
-        if ($isSecure === NO) {
+        if ($isSecure == NO) {
             $status = FAILED;
             $message = MALICIOUS_SOURCE;
-        } elseif ($isSecure === ERROR) {
+        } elseif ($isSecure == ERROR) {
             $status = FAILED;
             $message = TOKEN_ERROR;
         } else {
@@ -486,14 +468,14 @@ class Security
                 }
             }
             $status = SUCCESS;
-            $message = 'Token is generated.';
+            $message = "Token is generated.";
         }
 
         $data[STATUS_KEY] = $status;
         $data[MESSAGE_KEY] = $message;
 
         $arr_adminconfig = $this->getAdminConfigWithToken($userData);
-        $arr_adminconfig['key_iv'] = ENCRYPTION_KEY_IV;
+        $arr_adminconfig['key_iv'] = getenv('ENCRYPTION_KEY_IV');
         $data['data']['adminConfig'] = $arr_adminconfig;
 
         return $data;
