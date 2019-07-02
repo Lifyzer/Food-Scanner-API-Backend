@@ -542,7 +542,7 @@ class Product
         $posts = [];
 
         $is_delete = IS_DELETE;
-        $is_favourite = "1";
+        $is_favourite = 1;
 
         $select_user_favourite_query = "SELECT f.id as favourite_id , f.user_id, f.product_id, f.is_favourite, f.created_date AS favourite_created_date , p.* FROM " . TABLE_FAVOURITE . " AS f
                                         LEFT JOIN " . TABLE_PRODUCT . " AS p ON p.id = f.product_id
