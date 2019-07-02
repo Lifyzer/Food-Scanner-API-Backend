@@ -526,8 +526,8 @@ class Security
     {
         $user_id = validateValue($userData['userId'], '');
 
-        if ($user_id != '') {
-            $modifiedDate = date(DATETIME_FORMAT, time());
+        if ($user_id !== '') {
+            $modifiedDate = date(DATETIME_FORMAT);
             editData($this->connection, 'ExpireToken', TABLE_APP_TOKENS, ['modified_date' => $modifiedDate], ['userid' => $user_id], "");
 
             return YES;
