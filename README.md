@@ -19,3 +19,8 @@
 ## Usage
 
 The index file to be called for requesting the API is `FoodScanAppService.php`. Make a request like `/FoodScanAppService.php?Service=...`
+
+
+## About
+
+[Pierre-Henry Soria](https://pierrehenry.be), super-passionate software engineer. Love learning and discovering new exciting things.
