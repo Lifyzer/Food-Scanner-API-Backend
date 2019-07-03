@@ -6,7 +6,7 @@
 ## Requirements
 
 * 🐘 [PHP 7.1](http://php.net/releases/7_1_0.php) or higher
-* [Composer](https://getcomposer.org)
+* 🎹 [Composer](https://getcomposer.org)
 
 
 ## Setting Up
