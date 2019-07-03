@@ -10,6 +10,7 @@ class Product
     private const CACHE_LIFETIME = 3600 * 24;
     private const CACHE_DRIVER = 'Files';
 
+    /** @var PDO */
     protected $connection;
 
     public function __construct(PDO $con)
@@ -52,7 +53,6 @@ class Product
      */
     public function getProductDetails($userData)
     {
-
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
@@ -79,7 +79,7 @@ class Product
             $newArr = [];
 
             $newArr['status'] = SUCCESS;
-            $newArr['message'] = "";
+            $newArr['message'] = '';
 
             foreach ($tempArr['products'] as $key => $value) {
                 // $product = [];
@@ -166,7 +166,14 @@ class Product
                 //**** Product found in database insert data into history table ****//
                 $product_id = $product['id'];
                 $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
-                $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
+                $objHistory = getSingleTableData(
+                    $connection,
+                    TABLE_HISTORY,
+                    '',
+                    "id",
+                    "",
+                    $conditional_array
+                );
 
                 if (!empty($objHistory)) {
 
@@ -276,13 +283,31 @@ class Product
                 //**** Product found in database insert data into history table ****//
                 $product_id = $product['id'];
                 $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete];
-                $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
+                $objHistory = getSingleTableData(
+                    $connection,
+                    TABLE_HISTORY,
+                    '',
+                    'id',
+                    '',
+                    $conditional_array
+                );
 
                 if (!empty($objHistory)) {
 
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
-                    $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
+                    $edit_history_response = editData(
+                        $connection,
+                        'getProductDetails',
+                        TABLE_HISTORY,
+                        [
+                            'created_date' => $current_date
+                        ],
+                        [
+                            'id' => $history_id
+                        ],
+                        ''
+                    );
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
                     } else {
@@ -291,7 +316,6 @@ class Product
                         break;
                     }
                 } else {
-
                     //******** Insert data into history ********//
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
                     $add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
@@ -364,14 +388,12 @@ class Product
                     ];
 
                     if (!empty($product_array)) {
-
                         if (array_key_exists("image_url", $value)) {
 
                             $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
                         }
 
                         if (array_key_exists("fat_amount", $value)) {
-
                             $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
                         }
 
