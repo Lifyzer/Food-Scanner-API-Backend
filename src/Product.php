@@ -76,7 +76,7 @@ class Product
             curl_close($ch);
             $tempArr = json_decode($result, true);
 
-            $newArr = array();
+            $newArr = [];
 
             $newArr['status'] = SUCCESS;
             $newArr['message'] = "";
@@ -315,7 +315,6 @@ class Product
                 }
             }
         } else {
-
             //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
             $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=" . urlencode($product_name) . "&page=1";
             $ch = curl_init();
@@ -331,9 +330,7 @@ class Product
             $skip = false;
             $selected_index = -1;
 
-            if(!empty($tempArr))
-            {
-
+            if (!empty($tempArr)) {
                 foreach ($tempArr['products'] as $key => $value) {
 
                     $temp++;
@@ -361,34 +358,31 @@ class Product
                     $value = $tempArr['products'][0];
                 }
 
-                if(count($value["nutriments"]) > 0)
-                {
+                if (count($value["nutriments"]) > 0) {
                     $product_array = [
-                        'product_name' => ($value['product_name']?$value['product_name']:''),
-                        'ingredients' => ($value['ingredients_text']?$value["nutriments"]["saturated-fat"]:''),
-                        'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:''),
-                        'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:''),
-                        'sugar' => ($value["nutriments"]["sugars"]?$value["nutriments"]["sugars"]:''),
-                        'salt' => ($value["nutriments"]["salt"]?$value["nutriments"]["salt"]:''),
-                        'carbohydrate' => ($value["nutriments"]["carbohydrates"]?$value["nutriments"]["carbohydrates"]:''),
-                        'dietary_fiber' => ($value["nutriments"]["fiber_value"]?$value["nutriments"]["fiber_value"]:''),
-                        'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:''),
-                        'is_delete' => ($is_delete?$is_delete:0),
-                        'is_test' => ($is_testdata?$is_testdata:0),
+                        'product_name' => ($value['product_name'] ? $value['product_name'] : ''),
+                        'ingredients' => ($value['ingredients_text'] ? $value["nutriments"]["saturated-fat"] : ''),
+                        'saturated_fats' => ($value["nutriments"]["saturated-fat"] ? $value["nutriments"]["saturated-fat"] : ''),
+                        'protein' => ($value["nutriments"]["proteins"] ? $value["nutriments"]["proteins"] : ''),
+                        'sugar' => ($value["nutriments"]["sugars"] ? $value["nutriments"]["sugars"] : ''),
+                        'salt' => ($value["nutriments"]["salt"] ? $value["nutriments"]["salt"] : ''),
+                        'carbohydrate' => ($value["nutriments"]["carbohydrates"] ? $value["nutriments"]["carbohydrates"] : ''),
+                        'dietary_fiber' => ($value["nutriments"]["fiber_value"] ? $value["nutriments"]["fiber_value"] : ''),
+                        'sodium' => ($value["nutriments"]["sodium"] ? $value["nutriments"]["sodium"] : ''),
+                        'is_delete' => ($is_delete ? $is_delete : 0),
+                        'is_test' => ($is_testdata ? $is_testdata : 0),
                     ];
 
-                    if(!empty($product_array))
-                    {
+                    if (!empty($product_array)) {
 
-                        if (array_key_exists("image_url", $value))
-                        {
+                        if (array_key_exists("image_url", $value)) {
 
-                            $product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');//validateValue($value['image_url'], "");
+                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
                         }
 
                         if (array_key_exists("fat_amount", $value)) {
 
-                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"]?$value["nutriments"]["fat_amount"]:'');//$value["nutriments"]["fat_amount"];
+                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
                         }
 
                         $insert_response = addData($connection, 'getProductDetails2', TABLE_PRODUCT, $product_array);
@@ -418,29 +412,21 @@ class Product
 
                                 $stmt->closeCursor();
                             }
-                        }
-                        else
-                        {
+                        } else {
 
                             $message = $insert_response[MESSAGE_KEY];
                         }
-                    }
-                    else
-                    {
+                    } else {
 
                         $message = "No Product Available";
                     }
 
-                }
-                else
-                {
+                } else {
 
                     $message = "No Product Available";
                 }
 
-            }
-            else
-            {
+            } else {
                 $message = "No Products Available";
             }
 
