@@ -98,14 +98,14 @@ class Product
                 $product['sugar'] = $value["nutriments"]["sugars"];
                 $product['dietary_fiber'] = $value["nutriments"]["fiber_value"];
                 $product['protein'] = $value["nutriments"]["proteins"];
-                $product['protein_amount'] = "";
+                $product['protein_amount'] = '';
                 $product['salt'] = $value["nutriments"]["salt"];
                 $product['sodium'] = $value["nutriments"]["sodium"];
 
                 $product['created_date'] = null;
                 $product['modified_date'] = null;
                 $product['is_delete'] = "0";
-                $product['is_test'] = "";
+                $product['is_test'] = '';
                 $product['is_organic'] = null;
                 $product['is_healthy'] = null;
                 $product['is_favourite'] = null;

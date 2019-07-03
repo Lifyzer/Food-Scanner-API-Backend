@@ -314,7 +314,7 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
     return $statement;
 }
 
-function editDataWithCustomCondition(PDO $connection, $function_name = "", $table_name, $dataArray, $conditionArray, $setValues)
+function editDataWithCustomCondition(PDO $connection, $function_name = '', $table_name, $dataArray, $conditionArray, $setValues)
 {
     $sql = '';
     $data = [];
