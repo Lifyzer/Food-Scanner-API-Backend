@@ -140,8 +140,6 @@ class GCM
             exit('Curl failed: ' . curl_error($ch));
         }
 
-        // Close connection
         curl_close($ch);
-        // echo $result;
     }
 }
