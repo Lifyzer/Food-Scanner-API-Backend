@@ -90,7 +90,6 @@ class Product
                 $product['calories'] = null;
 
                 $product['product_name'] = $value["product_name"];
-                $product['product_name'] = $value["product_name"];
                 $product['product_image'] = $value["image_url"];
                 $product['ingredients'] = $value["ingredients_text"];
                 $product['saturated_fats'] = $value["nutriments"]["saturated-fat"];
