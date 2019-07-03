@@ -40,7 +40,6 @@ if (!empty($_REQUEST['Service'])) {
     }
 
     switch ($_REQUEST['Service']) {
-
         /*********************  User Functions *********************/
         case User::REGISTRATION_ACTION:
         case User::LOGIN_ACTION:

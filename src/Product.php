@@ -82,7 +82,6 @@ class Product
             $newArr['message'] = "";
 
             foreach ($tempArr['products'] as $key => $value) {
-
                 // $product = [];
 
                 $product['id'] = null;
@@ -116,13 +115,11 @@ class Product
                 $product['category_id'] = "0";
 
                 $newArr['product'][] = $product;
-
             }
 
             return $newArr;
 
         }
-
 
         $is_delete = IS_DELETE;
         $current_date = getDefaultDate();
@@ -157,9 +154,6 @@ class Product
             $status = SUCCESS;
 
             while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-
-                //******************* get user favourite ****************//
                 $is_favourite = 1;
                 $conditional_array = ['product_id' => $product['id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete];
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
@@ -217,7 +211,6 @@ class Product
 
     public function getProductDetails2($userData)
     {
-
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
@@ -237,17 +230,15 @@ class Product
         $is_delete = IS_DELETE;
         $current_date = getDefaultDate();
 
-        $message = "";
+        $message = '';
         $status = FAILED;
 
         $cacher = new Psr16Adapter(self::CACHE_DRIVER);
         $cacheKey = 'productdetails' . $product_name;
 
-
         if (!$cacher->has($cacheKey)) {
 
             $select_product_details_stmt =
-
                 getMultipleTableData(
                     $connection,
                     TABLE_PRODUCT,
@@ -488,7 +479,6 @@ class Product
         $select_user_history_stmt = getMultipleTableData($connection, "", $select_user_history_query, "", "", $conditional_array);
         if ($select_user_history_stmt->rowCount() > 0) {
             while ($history = $select_user_history_stmt->fetch(PDO::FETCH_ASSOC)) {
-                //******************* get user favourite ****************//
                 $is_favourite = 1;
                 $conditional_array = ['product_id' => $history['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete];
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
