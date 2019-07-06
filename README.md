@@ -23,4 +23,4 @@ The index file to be called for requesting the API is `FoodScanAppService.php`. 
 
 ## About
 
-[Pierre-Henry Soria](https://pierrehenry.be), super-passionate software engineer. Love learning and discovering new exciting things.
+[Pierre-Henry Soria](https://pierrehenry.be), a super-passionate software engineer. Love learning and discovering new exciting things! 🚀
