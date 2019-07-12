@@ -84,7 +84,13 @@ if (!empty($_REQUEST['Service'])) {
         case 'getProductDetailsTest':
         case 'getUserHistory':
         case 'removeProductFromHistory':
+<<<<<<< HEAD
         
+=======
+
+
+
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
          $access_key = validateObject($postData, 'access_key', '');
          $access_key = addslashes($access_key);
 
@@ -94,17 +100,28 @@ if (!empty($_REQUEST['Service'])) {
           $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
            // $isSecure  = YES;
 
+<<<<<<< HEAD
 		
 			$product = new Product($db);
          /*   $data = $product->callService($_REQUEST['Service'], $postData);
+=======
+			$product = new Product($db);
+            $data = $product->callService($_REQUEST['Service'], $postData);
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
            if ($isSecure !== YES || $isSecure !== YES) {
                 if ($isSecure['key'] === 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
                     $data['UserToken'] = $isSecure['value'];
                 }
+<<<<<<< HEAD
             }*/
 		
+=======
+            }
+
+
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
                 $data['message'] = MALICIOUS_SOURCE;
@@ -114,14 +131,18 @@ if (!empty($_REQUEST['Service'])) {
             } else {
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
+<<<<<<< HEAD
                 
               if ($isSecure !== YES || $isSecure !== YES) {
+=======
+              /*  if ($isSecure !== YES || $isSecure !== YES) {
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
                         $data['UserToken'] = $isSecure['value'];
                     }
-                }
+                }*/
             }
              
             break;

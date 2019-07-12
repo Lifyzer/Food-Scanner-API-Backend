@@ -223,6 +223,10 @@ class Product
 	
 	public function getProductDetailsTest($userData)
     {
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
         $connection = $this->connection;
 
         $user_id = validateObject($userData, 'user_id', '');
@@ -343,17 +347,26 @@ class Product
             $result = curl_exec($ch);
             curl_close($ch);
             $tempArr = json_decode($result, true);
+<<<<<<< HEAD
+=======
+			
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
             $temp = -1;
             $skip = false;
             $selected_index = -1;
          
+<<<<<<< HEAD
             if(count($tempArr['products']) >0)//(!empty($tempArr))
+=======
+            if(!empty($tempArr))
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
             {
             	
 				foreach ($tempArr['products'] as $key => $value) {
 	
 					$temp++;
 					
+<<<<<<< HEAD
 					if (!$skip && ($value["product_name"] == $product_name || $this->startsWith($value["product_name"],$product_name))) {
 						$selected_index = $temp;
 						$skip = true;
@@ -501,11 +514,53 @@ class Product
 					'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:0),
 					];
 				
+=======
+					$pos = strpos($value["product_name"], $product_name);
+	
+					/*if (!$skip && $value["product_name"] == $product_name) {
+						$selected_index = $temp;
+						$skip = true;
+					}*/
+					
+					if (!$skip && $pos === true) {
+						$selected_index = $temp;
+						$skip = true;
+					}	
+				}
+				
+				
+				if ($selected_index >= 0) {
+					
+					$value = $tempArr['products'][$selected_index];
+	
+				} else {
+				
+					$value = $tempArr['products'][0];
+				}
+
+				if(count($value["nutriments"]) > 0)
+				{
+					 $product_array = [
+					'product_name' => ($value['product_name']?$value['product_name']:''),
+					'ingredients' => ($value['ingredients_text']?$value["nutriments"]["saturated-fat"]:''),
+					'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:''),
+					'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:''),
+					'sugar' => ($value["nutriments"]["sugars"]?$value["nutriments"]["sugars"]:''),
+					'salt' => ($value["nutriments"]["salt"]?$value["nutriments"]["salt"]:''),
+					'carbohydrate' => ($value["nutriments"]["carbohydrates"]?$value["nutriments"]["carbohydrates"]:''),
+					'dietary_fiber' => ($value["nutriments"]["fiber_value"]?$value["nutriments"]["fiber_value"]:''),
+					'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:''),
+					'is_delete' => ($is_delete?$is_delete:0),
+					'is_test' => ($is_testdata?$is_testdata:0),
+						];
+			
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
 					if(!empty($product_array))
 					{
 						
 						if (array_key_exists("image_url", $value)) 
 						{
+<<<<<<< HEAD
 		
 							$product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');//validateValue($value['image_url'], "");
 						}
@@ -516,13 +571,31 @@ class Product
 						}
 					
 						$insert_response = addData($connection, '', TABLE_PRODUCT, $product_array);
+=======
+		
+							$product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');//validateValue($value['image_url'], "");
+						}
+					
+						if (array_key_exists("fat_amount", $value)) {
+		
+							$product_array['fat_amount'] = ($value["nutriments"]["fat_amount"]?$value["nutriments"]["fat_amount"]:'');//$value["nutriments"]["fat_amount"];
+						}
+		
+					$insert_response = addData($connection, 'getProductDetails2', TABLE_PRODUCT, $product_array);
+						
+		
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
 							if ($insert_response[STATUS_KEY] == SUCCESS) {
 								$last_inserted_id = $insert_response[MESSAGE_KEY];
 				
 				
 								//******** Insert data into history ********//
 								$history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
+<<<<<<< HEAD
 								$add_history_response = addData($connection, '', TABLE_HISTORY, $history_array);
+=======
+								$add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
 				
 								$select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
 								if ($stmt = $this->connection->prepare($select)) {
@@ -539,11 +612,18 @@ class Product
 									}
 									
 									$stmt->closeCursor();
+<<<<<<< HEAD
 									$message = "Product successfully fetched";
+=======
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
 								}
 							}
 							else 
 							{
+<<<<<<< HEAD
+=======
+				
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
 								$message = $insert_response[MESSAGE_KEY];
 							}
 					}
@@ -552,6 +632,7 @@ class Product
 					
 						$message = "No Product Available";
 					}
+<<<<<<< HEAD
             }
             else
             {
@@ -806,10 +887,25 @@ class Product
             {
                 $message = "No Products Available";
             }
+=======
+	
+				}
+				else
+				{
+				
+					$message = "No Product Available";
+				}
+
+            }
+            else
+            {
+            	$message = "No Products Available";
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
             }
             else
             {
             
+<<<<<<< HEAD
         //  https://world.openfoodfacts.org/api/v0/product/20218775.json
             $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
           
@@ -906,6 +1002,8 @@ class Product
                 $message = "No Products Available";
             }
             }
+=======
+>>>>>>> 88161f2d264e9b32286d6632bc23246841e88905
         }
 
         $select_product_details_stmt->closeCursor();
