@@ -40,6 +40,6 @@ class Email
 
         $mail->addAddress($userEmailId);
 
-        return $mail->send();
+        return (bool)$mail->send();
     }
 }
