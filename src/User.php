@@ -40,7 +40,6 @@ class User
                 return $this->changePassword($postData);
 
             case self::EDIT_PROFILE_ACTION:
-
                 return $this->editProfile($postData);
 
             case self::FORGOT_PASSWORD_ACTION:

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Lifyzer\Api;
 
 use PDOException;
@@ -80,12 +79,10 @@ if (!empty($_REQUEST['Service'])) {
         case 'addToFavourite':
         case 'getAllUserFavourite':
         case 'getProductDetails':
-        case 'getProductDetails2':
+        case 'getProductDetailsTest':
         case 'getUserHistory':
         case 'removeProductFromHistory':
-
-
-
+        
          $access_key = validateObject($postData, 'access_key', '');
          $access_key = addslashes($access_key);
 
@@ -95,17 +92,17 @@ if (!empty($_REQUEST['Service'])) {
           $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
            // $isSecure  = YES;
 
+		
 			$product = new Product($db);
-            $data = $product->callService($_REQUEST['Service'], $postData);
+         /*   $data = $product->callService($_REQUEST['Service'], $postData);
            if ($isSecure !== YES || $isSecure !== YES) {
                 if ($isSecure['key'] === 'Temp') {
                     $data['TempToken'] = $isSecure['value'];
                 } else {
                     $data['UserToken'] = $isSecure['value'];
                 }
-            }
-
-
+            }*/
+		
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
                 $data['message'] = MALICIOUS_SOURCE;
@@ -115,14 +112,16 @@ if (!empty($_REQUEST['Service'])) {
             } else {
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
-              /*  if ($isSecure !== YES || $isSecure !== YES) {
+                
+              if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
                         $data['UserToken'] = $isSecure['value'];
                     }
-                }*/
+                }
             }
+             
             break;
 
         case Security::UPDATE_USER_TOKEN:

@@ -7,6 +7,7 @@ use PDOException;
 
 function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
 {
+
     $status = FAILED;
     $message = NO_ERROR;
     $sql = '';
@@ -283,11 +284,10 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
         } else {
             $check_conditions = $customCondition;
         }
-       
+
         if (empty($sql)) {
             if (empty($sql)) {
                 $sql = 'SELECT ' . $columns . ' FROM ' . $table . ' WHERE ' . $check_conditions;
-              
             }
         }
 
@@ -297,7 +297,6 @@ function getMultipleTableData(PDO $connection, $table, $sql, $columns, $customCo
                 $statement->bindValue(":$key", $value);
             }
         }
-        
         $statement->execute();
     } catch (PDOException $e) {
         $err_msg = "\nFunction=> " . " Query=> " . $sql . "  Error message= " . $e->getMessage();
