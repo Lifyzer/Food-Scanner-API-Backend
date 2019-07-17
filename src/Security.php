@@ -125,7 +125,6 @@ class Security
         return $data;
     }
 
-
     public function updateTokenForUser_Login($userData)
     {
         $connection = $this->connection;
