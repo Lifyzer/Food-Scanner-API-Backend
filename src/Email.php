@@ -7,8 +7,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Email
 {
-    private const SMTP_HOST_SERVER = 'smtp.webfaction.com'; //sets GMAIL as the SMTP server
-    private const SMTP_PORT_SERVER = 465; // set the SMTP port for the GMAIL server
+    private const SMTP_HOST_SERVER = 'smtp.webfaction.com';
+    private const SMTP_PORT_SERVER = 465;
 
     /**
      * @param string $senderEmailId
