@@ -11,6 +11,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
+    "ext-json": "*",
     "phpfastcache/phpfastcache": "^6.1",
     "swiftmailer/swiftmailer": "^6.0",
     "vlucas/phpdotenv": "^2.4",
