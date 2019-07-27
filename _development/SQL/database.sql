@@ -12,7 +12,7 @@ CREATE TABLE admin_config (
   created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete tinyint(1) NOT NULL DEFAULT '0',
-  is_testdata varchar(3) NOT NULL DEFAULT 'no' COMMENT 'dev means non garbaged dummy data',
+  is_testdata varchar(3) NOT NULL DEFAULT 'yes' COMMENT 'dev means non garbaged dummy data',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -37,11 +37,8 @@ CREATE TABLE app_tokens (
   created_date datetime DEFAULT '0000-00-00 00:00:00',
   modified_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete enum('0','1') DEFAULT '0',
-  is_testdata varchar(10) NOT NULL DEFAULT 'no',
-  PRIMARY KEY (id),
-  UNIQUE KEY userid_3 (userid),
-  KEY userid (userid),
-  KEY userid_2 (userid)
+  is_testdata varchar(10) NOT NULL DEFAULT 'yes',
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -53,7 +50,7 @@ CREATE TABLE category (
   created_date datetime NOT NULL,
   modified_date datetime DEFAULT NULL,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '0',
+  is_test enum('0','1') NOT NULL DEFAULT '1',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -66,7 +63,7 @@ CREATE TABLE favourite (
   created_date datetime NOT NULL,
   modified_date datetime DEFAULT NULL,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '0',
+  is_test enum('0','1') NOT NULL DEFAULT '1',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -78,7 +75,7 @@ CREATE TABLE history (
   created_date datetime DEFAULT NULL,
   modified_date datetime DEFAULT NULL,
   is_delete enum('0','1') NOT NULL DEFAULT '0',
-  is_test enum('0','1') NOT NULL DEFAULT '0',
+  is_test enum('0','1') NOT NULL DEFAULT '1',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -86,58 +83,17 @@ CREATE TABLE history (
 CREATE TABLE IF NOT EXISTS product (
     id int(10) unsigned NOT NULL AUTO_INCREMENT,
     barcode_id varchar(150) DEFAULT NULL,
-    product_name varchar(100) NOT NULL,
-    company_name varchar(100) DEFAULT NULL,
-    calories float NOT NULL,
+    product_name varchar(255) NOT NULL,
     ingredients text NOT NULL,
-    product_image varchar(200) NOT NULL,
+    product_image varchar(255) NOT NULL,
     saturated_fats float NOT NULL,
-    fat_amount float NOT NULL,
     carbohydrate float NOT NULL,
     sugar float NOT NULL,
     dietary_fiber float NOT NULL,
     protein float NOT NULL,
-    protein_amount float NOT NULL,
     salt float NOT NULL,
     sodium float NOT NULL,
     alcohol float NOT NULL,
-    license_no varchar(100) DEFAULT NULL,
-    category_id int(11) NOT NULL DEFAULT 0,
-    created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    is_delete enum('0','1') NOT NULL DEFAULT '0',
-    is_test enum('0','1') NOT NULL DEFAULT '0',
-    is_organic enum('1','0') NOT NULL DEFAULT '0',
-    is_healthy enum('1','0') NOT NULL DEFAULT '0',
-    PRIMARY KEY (id),
-    UNIQUE KEY (barcode_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-
-
-CREATE TABLE IF NOT EXISTS pending_product (
-    id int(10) unsigned NOT NULL AUTO_INCREMENT,
-    barcode_id varchar(150) DEFAULT NULL,
-    product_name varchar(100) NOT NULL,
-    company_name varchar(100) DEFAULT NULL,
-    calories float NOT NULL,
-    ingredients text NOT NULL,
-    product_image varchar(200) NOT NULL,
-    saturated_fats float NOT NULL,
-    fat_amount float NOT NULL,
-    carbohydrate float NOT NULL,
-    sugar float NOT NULL,
-    dietary_fiber float NOT NULL,
-    protein float NOT NULL,
-    protein_amount float NOT NULL,
-    salt float NOT NULL,
-    sodium float NOT NULL,
-    alcohol float NOT NULL,
-    license_no varchar(100) DEFAULT NULL,
-    category_id int(11) NOT NULL DEFAULT 0,
-    created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    is_delete enum('0','1') NOT NULL DEFAULT '0',
-    is_test enum('0','1') NOT NULL DEFAULT '0',
     is_organic enum('1','0') NOT NULL DEFAULT '0',
     is_healthy enum('1','0') NOT NULL DEFAULT '0',
     PRIMARY KEY (id),
