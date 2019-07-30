@@ -220,7 +220,7 @@ class Security
     public function checkForSecurityNew($accessvalue, $secretvalue)
     {
         $connection = $this->connection;
-        if ($accessvalue == "" || $secretvalue == "") {
+        if ($accessvalue === '' || $secretvalue === '') {
             return ERROR;
         } else {
             // get user-agent from database
@@ -228,7 +228,7 @@ class Security
 
             if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
-                $separateKey = (explode(',', $user_agent));
+                $separateKey = explode(',', $user_agent);
 
                 // check user-agent is valid
                 if ((strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[0]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[1]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[2]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[3]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[4]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[5]) !== false) || (strpos($_SERVER ['HTTP_USER_AGENT'], $separateKey[6]) !== false)) {
@@ -246,7 +246,7 @@ class Security
                                 if ($secretvalue == null) {
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
                                     $response = [];
-                                    $response['key'] = "Temp";// return temporary token
+                                    $response['key'] = 'Temp';// return temporary token
                                     $response['value'] = $secretvalue;
                                     return $response;
                                 } else {
@@ -342,7 +342,18 @@ class Security
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
-            $objUserAgent = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'userAgent', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
+            $objUserAgent = getSingleTableData(
+                $connection,
+                TABLE_ADMIN_CONFIG,
+                '',
+                'config_value',
+                '',
+                [
+                    'config_key' => 'userAgent',
+                    'is_delete' => DELETE_STATUS::NOT_DELETE
+                ]
+            );
+
             if (!empty($objUserAgent)) {
                 $user_agent = $objUserAgent['config_value'];
                 $separateKey = explode(',', $user_agent);

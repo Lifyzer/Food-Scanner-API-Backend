@@ -1,6 +1,6 @@
 # Food Scanner API, Backend
 
-*The REST API for the [Lifyzer](https://lifyzer.com)'s food scanner apps.*
+*The FullREST API for the [Lifyzer](https://lifyzer.com)'s food scanner apps.*
 
 
 ## Server Requirements

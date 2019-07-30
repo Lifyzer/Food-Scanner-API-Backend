@@ -262,7 +262,6 @@ class Product
                     'is_delete' => $is_delete
                 ]
             );
-
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
@@ -681,10 +680,7 @@ class Product
 
 
         if (!$cacher->has($cacheKey)) {
-
-            $select_product_details_stmt =
-
-                getMultipleTableData(
+            $select_product_details_stmt = getMultipleTableData(
                     $connection,
                     TABLE_PRODUCT,
                     '',
@@ -696,11 +692,9 @@ class Product
                         'is_delete' => $is_delete
                     ]
                 );
-
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
-
 
         if ($select_product_details_stmt->rowCount() > 0) {
             $status = SUCCESS;
