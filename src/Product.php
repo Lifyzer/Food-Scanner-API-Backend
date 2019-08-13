@@ -551,7 +551,6 @@ class Product
                     $message = "No Products Available";
                 }
             } else {
-                //	https://world.openfoodfacts.org/api/v0/product/20218775.json
                 $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
 
                 $ch = curl_init();
@@ -869,7 +868,6 @@ class Product
                     $message = "No Products Available";
                 }
             } else {
-                //  https://world.openfoodfacts.org/api/v0/product/20218775.json
                 $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . '.json';
 
                 $ch = curl_init();
