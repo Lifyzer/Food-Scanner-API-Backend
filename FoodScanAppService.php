@@ -62,9 +62,7 @@ if (!empty($_REQUEST['Service'])) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
             } else {
-                $user = new User($db);
-				
-                $data = $user->callService($_REQUEST['Service'], $postData);
+                $data = (new User($db))->callService($_REQUEST['Service'], $postData);
 
                 if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] == 'Temp') {
