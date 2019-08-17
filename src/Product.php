@@ -1097,7 +1097,7 @@ class Product
         } else {
             $favourite_product_array = ['user_id' => $user_id, 'product_id' => $product_id, 'is_favourite' => $is_favourite, 'created_date' => $current_date];
             $favourite_response = addData($connection, "addToFavourite", TABLE_FAVOURITE, $favourite_product_array);
-            if ($favourite_response[STATUS_KEY] == SUCCESS) {
+            if ($favourite_response[STATUS_KEY] === SUCCESS) {
                 $status = SUCCESS;
                 $message = FAVOURITE_SUCCESSFULLY;
             } else {
