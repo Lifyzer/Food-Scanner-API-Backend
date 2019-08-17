@@ -364,23 +364,15 @@ class Product
                     foreach ($tempArr['products'] as $key => $value) {
                         $temp++;
 
-                        if (!$skip && ($value["product_name"] == $product_name || $this->startsWith($value["product_name"], $product_name))) {
+                        if (!$skip && ($value['product_name'] === $product_name || $this->startsWith($value['product_name'], $product_name))) {
                             $selected_index = $temp;
                             $skip = true;
                         }
-
-                        /*if (!$skip && $pos === true) {
-                            $selected_index = $temp;
-                            $skip = true;
-                        }	*/
                     }
 
                     if ($selected_index >= 0) {
-
                         $value = $tempArr['products'][$selected_index];
-
                     } else {
-
                         $value = $tempArr['products'][0];
                     }
 
