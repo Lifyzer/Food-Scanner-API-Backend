@@ -214,11 +214,9 @@ class Product
 
     function startsWith($haystack, $needle)
     {
-        if(substr($haystack,0, strlen($needle))===$needle){
+        if (substr($haystack, 0, strlen($needle)) === $needle) {
             return true;
-        }
-        else
-        {
+        } else {
 
             return false;
         }
@@ -449,14 +447,10 @@ class Product
                             $message = "No Product Available";
                         }*/
 
-                }
-                else
-                {
+                } else {
                     $message = "No Products Available";
                 }
-            }
-            else
-            {
+            } else {
 
                 //	https://world.openfoodfacts.org/api/v0/product/20218775.json
                 $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
@@ -588,17 +582,17 @@ class Product
 
         if (!$cacher->has($cacheKey)) {
             $select_product_details_stmt = getMultipleTableData(
-                    $connection,
-                    TABLE_PRODUCT,
-                    '',
-                    '*',
-                    '(LOWER(product_name) LIKE LOWER(:product_name) OR barcode_id = :barcode) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
-                    [
-                        'product_name' => $product_name . '%', //'%' . $product_name . '%',
-                        'barcode' => $product_name,
-                        'is_delete' => $is_delete
-                    ]
-                );
+                $connection,
+                TABLE_PRODUCT,
+                '',
+                '*',
+                '(LOWER(product_name) LIKE LOWER(:product_name) OR barcode_id = :barcode) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
+                [
+                    'product_name' => $product_name . '%', //'%' . $product_name . '%',
+                    'barcode' => $product_name,
+                    'is_delete' => $is_delete
+                ]
+            );
         } else {
             $select_product_details_stmt = $cacher->get($cacheKey);
         }
@@ -704,40 +698,38 @@ class Product
                     //{
 
                     $product_array = [
-                        'barcode_id' => ($value['code']?$value['code']:''),
-                        'product_name' => ($value['product_name']?$value['product_name']:''),
-                        'is_delete' => ($is_delete?$is_delete:0),
-                        'is_test' => ($is_testdata?$is_testdata:0),
-                        'ingredients' => ($value['ingredients_text']?$value['ingredients_text']:''),
-                        'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:0),
-                        'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:0),
-                        'sugar' => ($value["nutriments"]["sugars"]?$value["nutriments"]["sugars"]:0),
-                        'salt' => ($value["nutriments"]["salt"]?$value["nutriments"]["salt"]:0),
-                        'carbohydrate' => ($value["nutriments"]["carbohydrates"]?$value["nutriments"]["carbohydrates"]:0),
-                        'dietary_fiber' => ($value["nutriments"]["fiber_value"]?$value["nutriments"]["fiber_value"]:0),
-                        'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:0),
+                        'barcode_id' => ($value['code'] ? $value['code'] : ''),
+                        'product_name' => ($value['product_name'] ? $value['product_name'] : ''),
+                        'is_delete' => ($is_delete ? $is_delete : 0),
+                        'is_test' => ($is_testdata ? $is_testdata : 0),
+                        'ingredients' => ($value['ingredients_text'] ? $value['ingredients_text'] : ''),
+                        'saturated_fats' => ($value["nutriments"]["saturated-fat"] ? $value["nutriments"]["saturated-fat"] : 0),
+                        'protein' => ($value["nutriments"]["proteins"] ? $value["nutriments"]["proteins"] : 0),
+                        'sugar' => ($value["nutriments"]["sugars"] ? $value["nutriments"]["sugars"] : 0),
+                        'salt' => ($value["nutriments"]["salt"] ? $value["nutriments"]["salt"] : 0),
+                        'carbohydrate' => ($value["nutriments"]["carbohydrates"] ? $value["nutriments"]["carbohydrates"] : 0),
+                        'dietary_fiber' => ($value["nutriments"]["fiber_value"] ? $value["nutriments"]["fiber_value"] : 0),
+                        'sodium' => ($value["nutriments"]["sodium"] ? $value["nutriments"]["sodium"] : 0),
                     ];
                     //}
 
-                    if(!empty($product_array))
-                    {
+                    if (!empty($product_array)) {
 
-                        if (array_key_exists("image_url", $value))
-                        {
+                        if (array_key_exists("image_url", $value)) {
 
-                            $product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');//validateValue($value['image_url'], "");
+                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
                         }
 
                         if (array_key_exists("fat_amount", $value)) {
 
-                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"]?$value["nutriments"]["fat_amount"]:'');//$value["nutriments"]["fat_amount"];
+                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
                         }
 
                         $conditional_array_product = ['barcode_id' => $product_array['barcode_id'], 'is_delete' => $is_delete];
                         $objProductData = getSingleTableData($connection, TABLE_PRODUCT, "", "barcode_id", "", $conditional_array_product);
 
                         if (!empty($objProductData)) {
-                            $select = "select * from " . TABLE_PRODUCT . " where barcode_id= '" .$product_array['barcode_id']. "' and is_delete = '" .$is_delete. "'";
+                            $select = "select * from " . TABLE_PRODUCT . " where barcode_id= '" . $product_array['barcode_id'] . "' and is_delete = '" . $is_delete . "'";
 
                             if ($stmt = $this->connection->prepare($select)) {
                                 if ($stmt->execute()) {
@@ -784,28 +776,19 @@ class Product
                                     $stmt->closeCursor();
                                     $message = "Product successfully fetched";
                                 }
-                            }
-                            else
-                            {
+                            } else {
 
                                 $message = $insert_response[MESSAGE_KEY];
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
 
                         $message = "No Product Available";
                     }
-                }
-                else
-                {
+                } else {
                     $message = "No Products Available";
                 }
-            }
-            else
-            {
-
+            } else {
                 $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
 
                 $ch = curl_init();
@@ -822,48 +805,44 @@ class Product
                 $skip = false;
                 $selected_index = -1;
 
-                if(count($tempArr['product']) >0)
-                {
+                if (count($tempArr['product']) > 0) {
 
 
                     $value = $tempArr['product'];
 
                     $product_array = [
-                        'product_name' => ($value['product_name']?$value['product_name']:''),
-                        'barcode_id' => ($tempArr['code']?$value['code']:''),
-                        'is_delete' => ($is_delete?$is_delete:0),
-                        'is_test' => ($is_testdata?$is_testdata:0),
-                        'ingredients' => ($value['ingredients_text']?$value['ingredients_text']:''),
-                        'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:0),
-                        'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:0),
-                        'sugar' => ($value["nutriments"]["sugars"]?$value["nutriments"]["sugars"]:0),
-                        'salt' => ($value["nutriments"]["salt"]?$value["nutriments"]["salt"]:0),
-                        'carbohydrate' => ($value["nutriments"]["carbohydrates"]?$value["nutriments"]["carbohydrates"]:0),
-                        'dietary_fiber' => ($value["nutriments"]["fiber_value"]?$value["nutriments"]["fiber_value"]:0),
-                        'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:0),
+                        'product_name' => ($value['product_name'] ? $value['product_name'] : ''),
+                        'barcode_id' => ($tempArr['code'] ? $value['code'] : ''),
+                        'is_delete' => ($is_delete ? $is_delete : 0),
+                        'is_test' => ($is_testdata ? $is_testdata : 0),
+                        'ingredients' => ($value['ingredients_text'] ? $value['ingredients_text'] : ''),
+                        'saturated_fats' => ($value["nutriments"]["saturated-fat"] ? $value["nutriments"]["saturated-fat"] : 0),
+                        'protein' => ($value["nutriments"]["proteins"] ? $value["nutriments"]["proteins"] : 0),
+                        'sugar' => ($value["nutriments"]["sugars"] ? $value["nutriments"]["sugars"] : 0),
+                        'salt' => ($value["nutriments"]["salt"] ? $value["nutriments"]["salt"] : 0),
+                        'carbohydrate' => ($value["nutriments"]["carbohydrates"] ? $value["nutriments"]["carbohydrates"] : 0),
+                        'dietary_fiber' => ($value["nutriments"]["fiber_value"] ? $value["nutriments"]["fiber_value"] : 0),
+                        'sodium' => ($value["nutriments"]["sodium"] ? $value["nutriments"]["sodium"] : 0),
                     ];
 
-                    if(!empty($product_array))
-                    {
+                    if (!empty($product_array)) {
 
-                        if (array_key_exists("image_url", $value))
-                        {
+                        if (array_key_exists("image_url", $value)) {
 
-                            $product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');//validateValue($value['image_url'], "");
+                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
                         }
 
                         if (array_key_exists("fat_amount", $value)) {
 
-                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"]?$value["nutriments"]["fat_amount"]:'');//$value["nutriments"]["fat_amount"];
+                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
                         }
-                        if (value['product_name'] != '')
-                        {
+                        if (value['product_name'] != '') {
                             $conditional_array_product = ['barcode_id' => $product_array['barcode_id'], 'is_delete' => $is_delete];
                             $objProductData = getSingleTableData($connection, TABLE_PRODUCT, "", "barcode_id", "", $conditional_array_product);
 
 
                             if (!empty($objProductData)) {
-                                $select = "select * from " . TABLE_PRODUCT . " where barcode_id= '" .$product_array['barcode_id']. "' and is_delete = '" .$is_delete. "'";
+                                $select = "select * from " . TABLE_PRODUCT . " where barcode_id= '" . $product_array['barcode_id'] . "' and is_delete = '" . $is_delete . "'";
 
                                 if ($stmt = $this->connection->prepare($select)) {
                                     if ($stmt->execute()) {
@@ -910,30 +889,22 @@ class Product
                                         $stmt->closeCursor();
                                         $message = "Product successfully fetched";
                                     }
-                                }
-                                else
-                                {
+                                } else {
 
                                     $message = $insert_response[MESSAGE_KEY];
                                 }
                             }
-                        }
-                        else
-                        {
+                        } else {
 
                             $message = "No Product Available";
                         }
 
 
-                    }
-                    else
-                    {
+                    } else {
 
                         $message = "No Product Available";
                     }
-                }
-                else
-                {
+                } else {
                     $message = "No Products Available";
                 }
             }
