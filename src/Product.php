@@ -588,6 +588,9 @@ class Product
         $flag = validateObject($userData, 'flag', 0);
         $flag = addslashes($flag);
 
+        $is_barcode_scanned = validateObject($userData, 'is_barcode_scanned', 0);
+        $is_barcode_scanned = addslashes($is_barcode_scanned);
+
         $posts = [];
 
         $is_delete = IS_DELETE;
@@ -677,8 +680,7 @@ class Product
             }
         } else {
 
-            if ($flag == 0)
-            {
+            if ($is_barcode_scanned == 0) {
 
             //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
             $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments,code&search_terms=" . urlencode($product_name) . "&page=1";
@@ -810,8 +812,11 @@ class Product
             else
             {
 
-        //  https://world.openfoodfacts.org/api/v0/product/20218775.json
-            $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
+//            $url = "https://world.openfoodfacts.org/api/v0/product/5400141054651.json";
+//            $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
+//            $url = "https://ssl-api.openfoodfacts.org/code/5400141054651.json";
+              $url = "https://ssl-api.openfoodfacts.org/code/".urlencode($product_name).".json";
+
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -821,19 +826,15 @@ class Product
 
             $result = curl_exec($ch);
 
-           // print_r($result);
             curl_close($ch);
             $tempArr = json_decode($result, true);
             $temp = -1;
             $skip = false;
             $selected_index = -1;
 
-            if(count($tempArr['product']) >0)
+            if(count($tempArr['products']) >0)
             {
-
-
-                    $value = $tempArr['product'];
-
+                    $value = $tempArr['products'][0];
                      $product_array = [
                     'product_name' => ($value['product_name']?$value['product_name']:''),
                     'barcode_id' => ($tempArr['code']?$value['code']:''),
