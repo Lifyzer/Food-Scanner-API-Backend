@@ -667,11 +667,8 @@ class Product
                 $skip = false;
                 $selected_index = -1;
 
-                if (count($tempArr['products']) > 0)//(!empty($tempArr))
-                {
-
+                if (count($tempArr['products']) > 0) {
                     foreach ($tempArr['products'] as $key => $value) {
-
                         $temp++;
 
                         if (!$skip && ($value["product_name"] == $product_name || $this->startsWith($value["product_name"], $product_name))) {
@@ -686,11 +683,8 @@ class Product
                     }
 
                     if ($selected_index >= 0) {
-
                         $value = $tempArr['products'][$selected_index];
-
                     } else {
-
                         $value = $tempArr['products'][0];
                     }
 
