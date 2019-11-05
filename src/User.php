@@ -152,12 +152,12 @@ class User
                             </body></html>';
 HTML;
 
-                        $email->sendMail(
-                            getenv('SENDER_EMAIL_ID'),
-                            $htmlMessage,
-                            'Welcome on Lifyzer Community 😊',
-                            $email_id
-                        );
+                    $email->sendMail(
+                        getenv('SENDER_EMAIL_ID'),
+                        $htmlMessage,
+                        'Welcome on Lifyzer Community 😊',
+                        $email_id
+                    );
                 } else {
                     $status = FAILED;
                     $message = DEFAULT_NO_RECORD;
@@ -178,7 +178,7 @@ HTML;
     {
 
         $connection = $this->connection;
-		//mysqli_set_charset($connection,'utf8');
+        //mysqli_set_charset($connection,'utf8');
 
         $user_id = validateObject($userData, 'user_id', "");
         $user_id = addslashes($user_id);
@@ -187,13 +187,12 @@ HTML;
         $email_id = addslashes($email_id);
 
         $first_name = validateObject($userData, 'first_name', "");
-       	$first_name = utf8_decode($first_name);
-      /* echo "First1" .$first_name;
-		$first_name = mysqli_real_escape_string($connection,$first_name); //base64_encode($first_name);
-		echo "First2" .$first_name;
-		print_r($userData);
-				exit();*/
-
+        $first_name = utf8_decode($first_name);
+        /* echo "First1" .$first_name;
+          $first_name = mysqli_real_escape_string($connection,$first_name); //base64_encode($first_name);
+          echo "First2" .$first_name;
+          print_r($userData);
+                  exit();*/
 
 
         $is_delete = IS_DELETE;
@@ -314,7 +313,7 @@ HTML;
                     }
                     $tokenData = new stdClass;
 
-                    $tokenData-> GUID = $generate_user_guid;
+                    $tokenData->GUID = $generate_user_guid;
 //					$tokenData["GUID"] = $generate_user_guid;
 //					$tokenData["userId"] = $user_id;
                     $tokenData->userId = $user_id;
