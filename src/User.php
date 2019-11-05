@@ -380,8 +380,6 @@ HTML;
 
 
         if (!empty($objUser)) {
-            $email = new Email();
-
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
@@ -389,16 +387,22 @@ HTML;
             $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
 
             if ($edit_response[STATUS_KEY] === SUCCESS) {
-                $message = '<html><body>
-                            <p>Hi ' . $objUser['first_name'] . ',</p>
-                            <p>Your new password for ' . APPNAME . ' is:<br> ' . $userPassword . '</p>
-                            <p>Best,<br>' . APPNAME . ' Team</p>
-                            </body></html>';
+                $email = new Email();
+
+                $htmlMessage =
+<<<HTML
+<html><body>
+                            <p>Hi {$objUser['first_name']},</p>
+                            <p>Your new password for Lifyzer App is:<br> $userPassword</p>
+                            <p>&nbsp;</p>
+                            <p>Best,<br> <a href="https://lifyzer.com">Lifyzer, Healthy Food</a> Team</p>
+                            </body></html>
+HTML;
 
                 try {
                     $email->sendMail(
                         getenv('SENDER_EMAIL_ID'),
-                        $message,
+                        $htmlMessage,
                         'Forgot Password',
                         $email_id
                     );
