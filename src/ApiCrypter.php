@@ -8,7 +8,8 @@ class ApiCrypter
 {
     public function encrypt($input, $key): string
     {
-        $iv = getenv('ENCRYPTION_KEY_IV');
+        $iv = getenv('ENCRYPTION_KEY_IV') !== false ? getenv('ENCRYPTION_KEY_IV') : ENCRYPTION_KEY;
+
         $plaintext = $input;
         $password = $key;
         $method = 'aes-256-cbc';

@@ -2,11 +2,15 @@
 
 namespace Lifyzer\Api;
 
+define('ENCRYPTION_KEY', 'niplframework');
 define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
 define('APPNAME', 'Lifyzer App');
+
+define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
+define('SENDER_EMAIL_PASSWORD', 'narola23');
 
 define('YES', 'yes');
 define('NO', 'no');
