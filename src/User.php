@@ -186,7 +186,16 @@ class User
 
         $posts = [];
 
-        $objUserEmail = getSingleTableData($connection, TABLE_USER, "", "*", " id != $user_id ", ['email' => $email_id, 'is_delete' => $is_delete]);
+        $objUserEmail = getSingleTableData(
+            $connection,
+            TABLE_USER,
+            '', '*',
+            " id != $user_id ",
+            [
+                'email' => $email_id,
+                'is_delete' => $is_delete
+            ]
+        );
         if (!empty($objUserEmail)) {
             $created_date = getDefaultDate();
             $update_array = ['first_name' => $first_name, 'email' => $email_id, 'modified_date' => $created_date];
