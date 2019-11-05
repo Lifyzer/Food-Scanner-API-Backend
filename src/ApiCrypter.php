@@ -22,7 +22,7 @@ class ApiCrypter
 
     public function decrypt($crypt, $sKey): string
     {
-        $iv = getenv('ENCRYPTION_KEY_IV');
+        $iv = getenv('ENCRYPTION_KEY_IV') !== false ? getenv('ENCRYPTION_KEY_IV') : ENCRYPTION_KEY;
         $method = 'aes-256-cbc';
         $password = $sKey;
         $password = substr(hash('sha256', $password, true), 0, 32);
