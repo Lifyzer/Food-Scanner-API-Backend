@@ -6,7 +6,7 @@ define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
-define('APPNAME', 'FoodScan App');
+define('APPNAME', 'Lifyzer App');
 
 define('YES', 'yes');
 define('NO', 'no');
