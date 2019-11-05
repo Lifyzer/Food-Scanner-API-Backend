@@ -16,6 +16,7 @@ class Email
      * @param string $userEmailId
      *
      * @return bool
+     *
      * @throws Exception
      */
     public function sendMail(string $message, string $subject, string $userEmailId): bool
