@@ -309,7 +309,7 @@ class Security
                         $tokenNameEncrypt = $security->encrypt($tokenName, $decrypted_access_key);
                         $tokenName = $tokenNameEncrypt . '_' . $currentDateEncrypt;
                         $response = [];
-                        $response['key'] = "User";// return user's private token
+                        $response['key'] = 'User';// return user's private token
                         $response['value'] = $tokenName;
                         return $response;
                     } else {
@@ -338,7 +338,7 @@ class Security
     public function checkForSecurityForRefreshToken($accessvalue, $secretvalue)
     {
         $connection = $this->connection;
-        if ($accessvalue == "") {
+        if ($accessvalue === '') {
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
@@ -377,7 +377,7 @@ class Security
 //                                    echo "\n new serc==> ".
                                     $secretvalue = $security->encrypt($tempToken, $masterKey);
                                     $response = [];
-                                    $response['key'] = "Temp";// return temporary token
+                                    $response['key'] = 'Temp';// return temporary token
                                     $response['value'] = $secretvalue;
                                     return $response;
                                 } else {
@@ -411,7 +411,7 @@ class Security
 
         $access_key = validateObject($postData, 'access_key', "");
         $access_key = addslashes($access_key);
-        if ($access_key == "") {
+        if ($access_key === '') {
             $data[STATUS_KEY] = FAILED;
             $data[MESSAGE_KEY] = TOKEN_ERROR;
         } else {
@@ -434,10 +434,10 @@ class Security
 
     private function generateToken($length)
     {
-        $token = "";
-        $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        $codeAlphabet .= "abcdefghijklmnopqrstuvwxyz";
-        $codeAlphabet .= "0123456789";
+        $token = '';
+        $codeAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $codeAlphabet .= 'abcdefghijklmnopqrstuvwxyz';
+        $codeAlphabet .= '0123456789';
         $max = strlen($codeAlphabet) - 1;
         for ($i = 0; $i < $length; $i++) {
             $token .= $codeAlphabet[$this->crypto_random_secure(0, $max)];
@@ -462,14 +462,14 @@ class Security
         } else {
             //print_r($isSecure);
             if ($isSecure != YES) {
-                if ($isSecure['key'] == "Temp") {
+                if ($isSecure['key'] === 'Temp') {
                     $data['data']['tempToken'] = $isSecure['value'];
                 } else {
                     $data['data']['userToken'] = $isSecure['value'];
                 }
             }
             $status = SUCCESS;
-            $message = "Token is generated.";
+            $message = 'Token is generated.';
         }
 
         $data[STATUS_KEY] = $status;
