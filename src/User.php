@@ -306,8 +306,8 @@ HTML;
                 $user_id = $objUser['id'];
                 $created_date = getDefaultDate();
                 $edit_response = editData($connection, "Login", TABLE_USER, ['device_type' => $device_type, 'modified_date' => $created_date], ['id' => $user_id]);
-                if ($edit_response[STATUS_KEY] == SUCCESS) {
-                    if ($objUser['guid'] == null || $objUser['guid'] == "") {
+                if ($edit_response[STATUS_KEY] === SUCCESS) {
+                    if ($objUser['guid'] == null || $objUser['guid'] == '') {
                         $generate_user_guid = $this->updateGuidForUser($user_id);
                     } else {
                         $generate_user_guid = $objUser['guid'];
