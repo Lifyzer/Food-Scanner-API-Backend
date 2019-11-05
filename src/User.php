@@ -442,7 +442,6 @@ class User
 HTML;
 
         $email->sendMail(
-            getenv('SENDER_EMAIL_ID'),
             $htmlMessage,
             $data['subject'],
             $data['email_id']
@@ -463,7 +462,6 @@ HTML;
 
         try {
             $email->sendMail(
-                getenv('SENDER_EMAIL_ID'),
                 $htmlMessage,
                 $data['subject'],
                 $data['email_id']
