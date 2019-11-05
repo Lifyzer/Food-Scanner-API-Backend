@@ -431,10 +431,10 @@ class User
             <<<HTML
 <html><body>
         <p>Hi {$data['first_name']},</p>
-        <p>I'm <a href="https://www.linkedin.com/in/ph7enry/">Pierre-Henry Soria</a>, the CEO of Lifyzer, Healthy Food Solution™️</p>
+        <p>I'm <a href="https://www.linkedin.com/in/ph7enry/">Pierre-Henry Soria</a>, the CEO of <a href="https://lifyzer.com">Lifyzer, Healthy Food Solution™️</a></p>
         <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
         <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
-        <p>Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise! 🏆</p>
+        <p>🏆 Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise, just for YOU! ❤️</p>
         <p>&nbsp;</p>
         <p>Best, <br />
         Pierre-Henry Soria</p>
