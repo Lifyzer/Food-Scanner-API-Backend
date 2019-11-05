@@ -83,33 +83,81 @@ class User
         $is_delete = IS_DELETE;
         $created_date = date(self::DATETIME_FORMAT);
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id", "", ['email' => $email_id, 'is_delete' => $is_delete]);
+        $objUser = getSingleTableData(
+            $connection,
+            TABLE_USER,
+            '',
+            'id',
+            '',
+            [
+                'email' => $email_id,
+                'is_delete' => $is_delete]
+        );
         if (!empty($objUser)) {
             $status = FAILED;
             $message = EMAIL_ALREADY_EXISTS;
         } else {
-
             //****  INSERT USER ****//
             $security = new Security($connection);
             $generate_guid = $security->generateUniqueId();
-            $user_array = ['email' => $email_id, 'first_name' => $first_name, 'last_name' => $last_name,
-                'password' => $password, 'device_type' => $device_type, 'device_token' => $device_token, 'created_date' => $created_date, 'guid' => $generate_guid];
-            $user_response = addData($connection, "Registration", TABLE_USER, $user_array);
+            $user_array = [
+                'email' => $email_id,
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'password' => $password,
+                'device_type' => $device_type,
+                'device_token' => $device_token,
+                'created_date' => $created_date,
+                'guid' => $generate_guid
+            ];
+            $user_response = addData($connection, 'Registration', TABLE_USER, $user_array);
 
             if ($user_response[STATUS_KEY] === SUCCESS) {
                 $user_inserted_id = $user_response[MESSAGE_KEY];
-                $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_inserted_id, 'is_delete' => $is_delete]);
+                $getUser = getSingleTableData(
+                    $connection,
+                    TABLE_USER,
+                    '',
+                    '*',
+                    '',
+                    [
+                        'id' => $user_inserted_id,
+                        'is_delete' => $is_delete
+                    ]
+                );
                 if (!empty($getUser)) {
                     $tokenData = new stdClass;
                     $tokenData->GUID = $getUser['guid'];
                     $tokenData->userId = $getUser['id'];
                     $user_token = $security->updateTokenForUser_Login($tokenData);
-                    if ($user_token[STATUS_KEY] == SUCCESS) {
+                    if ($user_token[STATUS_KEY] === SUCCESS) {
                         $data[USERTOKEN] = $user_token[USERTOKEN];
                     }
                     $posts[] = $getUser;
                     $status = SUCCESS;
                     $message = REGISTRATION_SUCCESSFULLY_DONE;
+
+                    $email = new Email();
+                    $htmlMessage =
+<<<HTML
+ <html><body>
+                            <p>Hi $first_name,</p>
+                            <p>I'm <a href="https://www.linkedin.com/in/ph7enry/">Pierre-Henry Soria</a>, the CEO of Lifyzer, Healthy Food Solution™️</p>
+                            <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
+                            <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
+                            <p>Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise! 🏆</p>
+                            <p>&nbsp;</p>
+                            <p>Best, <br />
+                            Pierre-Henry Soria</p>
+                            </body></html>';
+HTML;
+
+                        $email->sendMail(
+                            getenv('SENDER_EMAIL_ID'),
+                            $htmlMessage,
+                            'Welcome on Lifyzer Community 😊',
+                            $email_id
+                        );
                 } else {
                     $status = FAILED;
                     $message = DEFAULT_NO_RECORD;
