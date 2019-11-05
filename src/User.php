@@ -137,26 +137,13 @@ class User
                     $status = SUCCESS;
                     $message = REGISTRATION_SUCCESSFULLY_DONE;
 
-                    $email = new Email();
-                    $htmlMessage =
-<<<HTML
- <html><body>
-                            <p>Hi $first_name,</p>
-                            <p>I'm <a href="https://www.linkedin.com/in/ph7enry/">Pierre-Henry Soria</a>, the CEO of Lifyzer, Healthy Food Solution™️</p>
-                            <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
-                            <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
-                            <p>Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise! 🏆</p>
-                            <p>&nbsp;</p>
-                            <p>Best, <br />
-                            Pierre-Henry Soria</p>
-                            </body></html>';
-HTML;
-
-                    $email->sendMail(
-                        getenv('SENDER_EMAIL_ID'),
-                        $htmlMessage,
-                        'Welcome on Lifyzer Community 😊',
-                        $email_id
+                    $this->sendWelcomeEmail(
+                        [
+                            'first_name' => $first_name,
+                            'email_id' => $email_id,
+                            'subject' => 'Welcome on Lifyzer Community 😊'
+                        ],
+                        new Email
                     );
                 } else {
                     $status = FAILED;
@@ -370,47 +357,51 @@ HTML;
     {
         $connection = $this->connection;
 
-        $email_id = validateObject($userData, 'email_id', "");
+        $email_id = validateObject($userData, 'email_id', '');
         $email_id = addslashes($email_id);
 
         $is_delete = IS_DELETE;
 
-        $objUser = getSingleTableData($connection, TABLE_USER, "", "id,first_name", "", ['email' => $email_id, 'is_delete' => $is_delete]);
-
+        $objUser = getSingleTableData(
+            $connection,
+            TABLE_USER,
+            '',
+            'id,first_name',
+            '',
+            [
+                'email' => $email_id,
+                'is_delete' => $is_delete
+            ]
+        );
 
         if (!empty($objUser)) {
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
             $created_date = getDefaultDate();
 
-            $edit_response = editData($connection, 'Forgot Password', TABLE_USER, ['password' => $dbPassword, 'modified_date' => $created_date], ['email' => $email_id]);
+            $edit_response = editData(
+                $connection,
+                'Forgot Password',
+                TABLE_USER,
+                [
+                    'password' => $dbPassword,
+                    'modified_date' => $created_date
+                ],
+                [
+                    'email' => $email_id
+                ]
+            );
 
             if ($edit_response[STATUS_KEY] === SUCCESS) {
-                $email = new Email();
-
-                $htmlMessage =
-<<<HTML
-<html><body>
-                            <p>Hi {$objUser['first_name']},</p>
-                            <p>Your new password for Lifyzer App is:<br> $userPassword</p>
-                            <p>&nbsp;</p>
-                            <p>Best,<br> <a href="https://lifyzer.com">Lifyzer, Healthy Food</a> Team</p>
-                            </body></html>
-HTML;
-
-                try {
-                    $email->sendMail(
-                        getenv('SENDER_EMAIL_ID'),
-                        $htmlMessage,
-                        'Forgot Password',
-                        $email_id
-                    );
-                    $status = SUCCESS;
-                    $message = PASSWORD_SENT;
-                } catch (\PHPMailer\PHPMailer\Exception $e) {
-                    $status = FAILED;
-                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                }
+                $this->sendForgotPassword(
+                    [
+                        'first_name' => $objUser['first_name'],
+                        'email_id' => $email_id,
+                        'subject' => 'Forgot Password',
+                        'password' => $userPassword
+                    ],
+                    new Email
+                );
             } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
@@ -423,6 +414,57 @@ HTML;
         $data['message'] = $message;
 
         return $data;
+    }
+
+    private function sendWelcomeEmail(array $data, Email $email)
+    {
+        $htmlMessage =
+            <<<HTML
+<html><body>
+        <p>Hi {$data['first_name']},</p>
+        <p>I'm <a href="https://www.linkedin.com/in/ph7enry/">Pierre-Henry Soria</a>, the CEO of Lifyzer, Healthy Food Solution™️</p>
+        <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
+        <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
+        <p>Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise! 🏆</p>
+        <p>&nbsp;</p>
+        <p>Best, <br />
+        Pierre-Henry Soria</p>
+</body></html>';
+HTML;
+
+        $email->sendMail(
+            getenv('SENDER_EMAIL_ID'),
+            $htmlMessage,
+            $data['subject'],
+            $data['email_id']
+        );
+    }
+
+    private function sendForgotPassword(array $data, Email $email)
+    {
+        $htmlMessage =
+            <<<HTML
+<html><body>
+       <p>Hi {$data['first_name']},</p>
+        <p>Your new password for Lifyzer App is:<br> {$data['password']}</p>
+        <p>&nbsp;</p>
+        <p>Best,<br> <a href="https://lifyzer.com">Lifyzer, Healthy Food</a> Team</p>
+</body></html>
+HTML;
+
+        try {
+            $email->sendMail(
+                getenv('SENDER_EMAIL_ID'),
+                $htmlMessage,
+                $data['subject'],
+                $data['email_id']
+            );
+            $status = SUCCESS;
+            $message = PASSWORD_SENT;
+        } catch (\PHPMailer\PHPMailer\Exception $e) {
+            $status = FAILED;
+            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+        }
     }
 
     private function deleteAccount(array $userData): array
