@@ -13,10 +13,8 @@ require 'src/HelperFunctions.php';
 require 'src/PdoFunctions.php';
 
 $post_body = file_get_contents('php://input');
-
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
 $postData = json_decode($post_body);
-
 
 $logger = new Logger();
 if (DEBUG_MODE) {
@@ -62,7 +60,9 @@ if (!empty($_REQUEST['Service'])) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
             } else {
-                $data = (new User($db))->callService($_REQUEST['Service'], $postData);
+                $user = new User($db);
+
+                $data = $user->callService($_REQUEST['Service'], $postData);
 
                 if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] == 'Temp') {
@@ -80,14 +80,30 @@ if (!empty($_REQUEST['Service'])) {
         case 'getProductDetailsTest':
         case 'getUserHistory':
         case 'removeProductFromHistory':
-            $access_key = validateObject($postData, 'access_key', '');
-            $access_key = addslashes($access_key);
+        case 'addReview':
+        case 'updateReview':
+        case 'deleteReview':
+        case 'getReviewList':
 
-            $secret_key = validateObject($postData, 'secret_key', '');
-            $secret_key = addslashes($secret_key);
+         $access_key = validateObject($postData, 'access_key', '');
+         $access_key = addslashes($access_key);
 
-            $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-            // $isSecure  = YES;
+          $secret_key = validateObject($postData, 'secret_key', '');
+         $secret_key = addslashes($secret_key);
+
+          $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
+            $isSecure  = YES;
+
+
+			$product = new Product($db);
+         /*   $data = $product->callService($_REQUEST['Service'], $postData);
+           if ($isSecure !== YES || $isSecure !== YES) {
+                if ($isSecure['key'] === 'Temp') {
+                    $data['TempToken'] = $isSecure['value'];
+                } else {
+                    $data['UserToken'] = $isSecure['value'];
+                }
+            }*/
 
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
@@ -99,7 +115,7 @@ if (!empty($_REQUEST['Service'])) {
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
 
-                if ($isSecure !== YES || $isSecure !== YES) {
+              if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
@@ -107,6 +123,7 @@ if (!empty($_REQUEST['Service'])) {
                     }
                 }
             }
+
             break;
 
         case Security::UPDATE_USER_TOKEN:
