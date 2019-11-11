@@ -15,9 +15,6 @@ define('APPNAME', 'Lifyzer App');
 define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
 define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');
 
-
-
-
 define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 
 define('YES', 'yes');
@@ -51,13 +48,12 @@ define('NO_FAVOURITE_HISTORY_FOUND', 'No History not found');
 define('NO_PRODUCT_FOUND_IN_DATABASE', 'No Product found in database');
 define('DATA_FETCHED_SUCCESSFULLY', 'Data fetched successfully');
 define('HISTORY_REMOVED_SUCCESSFULLY', 'History deleted successfully');
-define('FAVOURITE_SUCCESSFULLY', ' Added to favourite Successfully');
+define('FAVOURITE_SUCCESSFULLY', 'Added to favourite Successfully');
 define('PROFILE_UPDATED_SUCCESSFULLY', 'Profile Updated Successfully');
 define('NO_REVIEW_FOUND', 'No Review found');
 define('REVIEW_REMOVED_SUCCESSFULLY', 'Review deleted successfully');
 define('REVIEW_ADDED_SUCCESSFULLY', 'Review added successfully');
 define('REVIEW_UPDATED_SUCCESSFULLY', 'Review updated successfully');
-
 
 
 abstract class DELETE_STATUS
