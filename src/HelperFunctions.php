@@ -11,7 +11,8 @@ function errorLogFunction(string $errorMessage): void
     $current .= "\n----------------------------\n";
     $current .= basename(dirname(__DIR__)) . '/logs/';
     $current .= "\n----------------------------\n";
-    $current .= "Date := " . date(DATETIME_FORMAT) . "\n----------------------------\n";
+    $current .= "Date := " . date(DATETIME_FORMAT);
+    $current .= "\n----------------------------\n";
     $current .= $errorMessage;
     $current .= (microtime(true)) - time() . " seconds elapsed\n\n";
 
