@@ -7,7 +7,7 @@ define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
-define('APPNAME', 'FoodScan App');
+define('APPNAME', 'Lifyzer App');
 //define('SENDER_EMAIL_ID', 'pra@narola.email');
 //define('SENDER_EMAIL_PASSWORD', 'jUVAO8ufUmaucHM');
 //define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
