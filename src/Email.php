@@ -9,6 +9,7 @@ class Email
 {
     private const SMTP_HOST_SERVER = 'smtp.webfaction.com';
     private const SMTP_PORT_SERVER = 465;
+    private const SMTP_PREFIX_SERVER = 'ssl';
 
     /**
      * @param string $message
@@ -31,7 +32,7 @@ class Email
         // 1 = errors and messages
         // 2 = messages only
         $mail->SMTPAuth = true; // enable SMTP authentication
-        $mail->SMTPSecure = 'ssl'; // sets the prefix to the server
+        $mail->SMTPSecure = self::SMTP_PREFIX_SERVER;
         $mail->Host = self::SMTP_HOST_SERVER;
         $mail->Port = self::SMTP_PORT_SERVER;
         $mail->Username = $senderEmailId;
