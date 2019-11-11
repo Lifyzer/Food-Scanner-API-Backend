@@ -476,7 +476,7 @@ class Security
         $data[MESSAGE_KEY] = $message;
 
         $arr_adminconfig = $this->getAdminConfigWithToken($userData);
-        $arr_adminconfig['key_iv'] = getenv('ENCRYPTION_KEY_IV') !== false ? getenv('ENCRYPTION_KEY_IV') : ENCRYPTION_KEY;
+        $arr_adminconfig['key_iv'] = getenv('ENCRYPTION_KEY_IV') !== false ? getenv('ENCRYPTION_KEY_IV') : ENCRYPTION_KEY_IV;
         $data['data']['adminConfig'] = $arr_adminconfig;
 
         return $data;
