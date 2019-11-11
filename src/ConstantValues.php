@@ -2,14 +2,23 @@
 
 namespace Lifyzer\Api;
 
+define('ENCRYPTION_KEY', 'niplframework');
 define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
-define('APPNAME', 'Lifyzer App');
-define('ENCRYPTION_KEY', '@#$%!@#$#$%!@#$%');
+define('APPNAME', 'FoodScan App');
+//define('SENDER_EMAIL_ID', 'pra@narola.email');
+//define('SENDER_EMAIL_PASSWORD', 'jUVAO8ufUmaucHM');
+//define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
+//define('SENDER_EMAIL_PASSWORD', 'narola23');
 define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
 define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');
+
+
+
+
+define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 
 define('YES', 'yes');
 define('NO', 'no');
@@ -25,7 +34,8 @@ define('USERTOKEN', 'UserToken');
 define('SOMETHING_WENT_WRONG_TRY_AGAIN_LATER', 'Something went wrong, Please try again later');
 define('EMAIL_ALREADY_EXISTS', 'Email ID already exists');
 define('REGISTRATION_SUCCESSFULLY_DONE', 'Registration successfully done');
-define('MALICIOUS_SOURCE', 'Another session for this user has been detected in another device. Please logout and verify your number again to continue using the app.');
+//define('MALICIOUS_SOURCE', '');//'Malicious source detected');
+define("MALICIOUS_SOURCE","There is login detected for this user in another device. so, please logout and verify your number again to continue using app.");//Malicious source detected
 
 define('TOKEN_ERROR', 'Please ensure that security token is supplied in your request');
 define('DEFAULT_NO_RECORD', 'No record found');
@@ -41,8 +51,14 @@ define('NO_FAVOURITE_HISTORY_FOUND', 'No History not found');
 define('NO_PRODUCT_FOUND_IN_DATABASE', 'No Product found in database');
 define('DATA_FETCHED_SUCCESSFULLY', 'Data fetched successfully');
 define('HISTORY_REMOVED_SUCCESSFULLY', 'History deleted successfully');
-define('FAVOURITE_SUCCESSFULLY', 'Added to favourite Successfully');
+define('FAVOURITE_SUCCESSFULLY', ' Added to favourite Successfully');
 define('PROFILE_UPDATED_SUCCESSFULLY', 'Profile Updated Successfully');
+define('NO_REVIEW_FOUND', 'No Review found');
+define('REVIEW_REMOVED_SUCCESSFULLY', 'Review deleted successfully');
+define('REVIEW_ADDED_SUCCESSFULLY', 'Review added successfully');
+define('REVIEW_UPDATED_SUCCESSFULLY', 'Review updated successfully');
+
+
 
 abstract class DELETE_STATUS
 {
