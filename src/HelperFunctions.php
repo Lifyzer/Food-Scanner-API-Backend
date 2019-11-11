@@ -27,10 +27,8 @@ function validateValue($value, $placeHolder)
 
 function validateObject($object, $key, $placeHolder)
 {
-    if (isset($object->$key)) {
-        // $value = validateValue($object->$key, "");
+    if (isset($object->$key))
         return $object->$key;
-    }
 
     return $placeHolder;
 }
