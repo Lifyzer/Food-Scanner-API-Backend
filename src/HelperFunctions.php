@@ -9,11 +9,12 @@ function errorLogFunction(string $errorMessage): void
     $file = date('F-j-Y') . '_log.txt';
     $current = @file_get_contents($file);
     $current .= "\n----------------------------\n";
-    $current .= basename(dirname(__DIR__)) . '/logs/' .
+    $current .= basename(dirname(__DIR__)) . '/logs/';
     $current .= "\n----------------------------\n";
     $current .= "Date := " . date(DATETIME_FORMAT) . "\n----------------------------\n";
     $current .= $errorMessage;
     $current .= (microtime(true)) - time() . " seconds elapsed\n\n";
+
     // Write the contents back to the file
     file_put_contents(Logger::LOG_PATH . $file, $current, FILE_APPEND);
 }
