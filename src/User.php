@@ -435,8 +435,9 @@ class User
         <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
         <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
         <p>🏆 Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise, just for YOU! ❤️</p>
+        <p>Note: I attached my vegetarian cookbook. Hopefully, you will enjoy it! 😊</p>
         <p>&nbsp;</p>
-        <p>Best, <br />
+        <p>Best, 💚 <br />
         Pierre-Henry Soria</p>
 </body></html>';
 HTML;
@@ -444,7 +445,8 @@ HTML;
         $email->sendMail(
             $htmlMessage,
             $data['subject'],
-            $data['email_id']
+            $data['email_id'],
+            Email::ATTACH_COOKBOOK_FILE
         );
     }
 

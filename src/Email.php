@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Email
 {
+    public const ATTACH_COOKBOOK_FILE = true;
     private const SMTP_HOST_SERVER = 'smtp.webfaction.com';
     private const SMTP_PORT_SERVER = 465;
     private const SMTP_PREFIX_SERVER = 'ssl';
@@ -15,12 +16,13 @@ class Email
      * @param string $message
      * @param string $subject
      * @param string $userEmailId
+     * @param bool $attachCookbook
      *
      * @return bool
      *
      * @throws Exception
      */
-    public function sendMail(string $message, string $subject, string $userEmailId): bool
+    public function sendMail(string $message, string $subject, string $userEmailId, bool $attachCookbook = false): bool
     {
         $senderEmailId = getenv('SENDER_EMAIL_ID') !== false ? getenv('SENDER_EMAIL_ID') : SENDER_EMAIL_ID;
         $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD') !== false ? getenv('SENDER_EMAIL_PASSWORD') : SENDER_EMAIL_PASSWORD;
@@ -28,9 +30,6 @@ class Email
         $mail = new PHPMailer();
         $mail->isSMTP(); // telling the class to use SMTP
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
-
-        // 1 = errors and messages
-        // 2 = messages only
         $mail->SMTPAuth = true; // enable SMTP authentication
         $mail->SMTPSecure = self::SMTP_PREFIX_SERVER;
         $mail->Host = self::SMTP_HOST_SERVER;
@@ -41,6 +40,13 @@ class Email
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $message;
+
+        if ($attachCookbook) {
+            $mail->addAttachment(
+                ASSETS_PATH . 'books/9-Recipe-Vegetarian-Menu.epub',
+                '9 Recipe Vegetarian Cookbook'
+            );
+        }
 
         $mail->addAddress($userEmailId);
 
