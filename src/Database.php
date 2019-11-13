@@ -15,7 +15,7 @@ class Database extends PDO
 {
     private const DSN_MYSQL_PREFIX = 'mysql';
     private const DSN_POSTGRESQL_PREFIX = 'pgsql';
-    private const DBMS_CHARSET = 'UTF8';
+    private const DBMS_CHARSET = 'UTF8MB4';
 
     public function __construct()
     {

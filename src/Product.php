@@ -94,27 +94,23 @@ class Product
 
         $connection = $this->connection;
 
-
         $review_id = validateObject($userData, 'review_id', "");
         $review_id = addslashes($review_id);
 
         $ratting = validateObject($userData, 'ratting', '');
         $ratting = addslashes($ratting);
 
-        $title = validateObject($userData, 'title', '');
-        $title = addslashes($title);
-
         $desc = validateObject($userData, 'desc', '');
-        $desc = addslashes($desc);
+        $desc = utf8_decode($desc);//addslashes($desc);
 
         $is_testdata = validateObject ($userData , 'is_testdata', 0);
         $is_testdata = addslashes($is_testdata);
 
         $is_delete = DELETE_STATUS::IS_DELETE;
 
-        $edit_history_response = editData($connection, "updateReview", TABLE_REVIEW, ['ratting'=>$ratting,'title'=>$title,'description'=>$desc], ['id' => $review_id,is_test =>$is_testdata,$is_delete => $is_delete], "");
+        $edit_history_response = editData($connection, "updateReview", TABLE_REVIEW, ['ratting'=>$ratting,'description'=>$desc], ['id' => $review_id,is_test =>$is_testdata,$is_delete => $is_delete], "");
         if ($edit_history_response[STATUS_KEY] === SUCCESS) {
-            $message = REVIEW_UPDATED_SUCCESSFULLY  ;
+            $message = REVIEW_UPDATED_SUCCESSFULLY . $desc  ;
             $status = SUCCESS;
         } else {
             $status = FAILED;
@@ -140,18 +136,15 @@ class Product
         $ratting = validateObject($userData, 'ratting', '');
         $ratting = addslashes($ratting);
 
-        $title = validateObject($userData, 'title', '');
-        $title = addslashes($title);
-
         $desc = validateObject($userData, 'desc', '');
-        $desc = addslashes($desc);
+        $desc = utf8_decode($desc);//addslashes($desc);
 
         $is_testdata = validateObject ($userData , 'is_testdata', 1);
         $is_testdata = addslashes($is_testdata);
 
         //Check User Selected Category earlier
 
-            $conditional_array = ['user_id' => $user_id, 'product_id' => $product_id, 'ratting' => $ratting, 'title' => $title,'description' => $desc ,'is_test' => $is_testdata ];
+            $conditional_array = ['user_id' => $user_id, 'product_id' => $product_id, 'ratting' => $ratting, 'description' => $desc ,'is_test' => $is_testdata ];
             $favourite_response = addData($connection, "addReview", TABLE_REVIEW, $conditional_array);
 
             if ($favourite_response[STATUS_KEY] == SUCCESS) {
@@ -228,7 +221,7 @@ class Product
         }
 
         //User Review
-        $select_user_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.title,r.description,r.ratting,r.modified_date from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where r.is_test = '".$is_testdata."' and  r.user_id = u.id and r.product_id = p.id and r.user_id = '".$user_id."' and r.product_id = '".$product_id."' and r.is_delete = '".$is_delete."'";
+        $select_user_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.description,r.ratting,r.modified_date from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where r.is_test = '".$is_testdata."' and  r.user_id = u.id and r.product_id = p.id and r.user_id = '".$user_id."' and r.product_id = '".$product_id."' and r.is_delete = '".$is_delete."'";
         $select_user_stmt = getMultipleTableData($connection, "", $select_user_query, "", "");
 
         if ($select_user_stmt->rowCount() > 0) {
@@ -240,7 +233,7 @@ class Product
         }
 
         //Customer Review
-        $select_customer_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.title,r.description,r.ratting,r.modified_date from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where r.is_test = '".$is_testdata."' and  r.user_id = u.id and r.product_id = p.id and r.user_id != '".$user_id."' and r.product_id = '".$product_id."' and r.is_delete = '".$is_delete."' ORDER BY r.created_date DESC limit $from_index,$to_index ";
+        $select_customer_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.description,r.ratting,r.modified_date from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where r.is_test = '".$is_testdata."' and  r.user_id = u.id and r.product_id = p.id and r.user_id != '".$user_id."' and r.product_id = '".$product_id."' and r.is_delete = '".$is_delete."' ORDER BY r.created_date DESC limit $from_index,$to_index ";
         $select_customer_stmt = getMultipleTableData($connection, "", $select_customer_query, "", "");
 
         if ($select_customer_stmt->rowCount() > 0) {
@@ -257,89 +250,6 @@ class Product
         $data['data'] = $posts;
         return $data;
     }
-
-//    public function getReviewList($userData)
-//    {
-//        $connection = $this->connection;
-//        $status = SUCCESS;
-//        $message = DATA_FETCHED_SUCCESSFULLY;
-//        $posts = array();
-//
-//        $user_id = validateObject($userData, 'user_id', '');
-//        $user_id = addslashes($user_id);
-//
-//        $product_id = validateObject($userData, 'product_id', '');
-//        $product_id = addslashes($product_id);
-//
-//        $is_testdata = validateObject ($userData , 'is_testdata', 0);
-//        $is_testdata = addslashes($is_testdata);
-//
-//        $to_index = validateObject($userData, 'to_index', "");
-//        $to_index = addslashes($to_index);
-//
-//        $from_index = validateObject($userData, 'from_index', "");
-//        $from_index = addslashes($from_index);
-//
-////        $limit = 10;
-//
-//
-//        $review_count_query = "Select count(*) as total_review from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where r.is_test = '".$is_testdata."' and  r.user_id = u.id and r.product_id = p.id  and r.product_id = '".$product_id."' and r.is_delete IS NOT NULL";
-//        $review_count_response = mysqli_query($connection,$review_count_query) or $errorMsg =  mysqli_error($connection);
-//
-//        if (mysqli_num_rows($review_count_response) > 0)
-//        {
-//
-//            while ($postTotalReview = mysqli_fetch_assoc($review_count_response)) {
-//                 $posts['reviews_count'] = $postTotalReview['total_review'];
-//            }
-//        }
-//
-//        $total_user_query = "Select count(*) as total_user from ". TABLE_USER ." u where is_test= '".$is_testdata."' and is_delete = 0";
-//        $total_user_response = mysqli_query($connection,$total_user_query) or $errorMsg =  mysqli_error($connection);
-//        if (mysqli_num_rows($total_user_response) > 0)
-//        {
-//
-//            while ($postTotalUser = mysqli_fetch_assoc($total_user_response)) {
-//                $posts['user_count'] = $postTotalUser['total_user'];
-//            }
-//        }
-//
-//        $user_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.title,r.description,r.ratting,r.modified_date from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where is_test= '".$is_testdata."' and  r.user_id = u.id and r.product_id = p.id and r.user_id = '".$user_id."' and r.product_id = '".$product_id."' and r.is_delete IS NOT NULL ORDER BY h.created_date DESC limit $from_index,$to_index ";
-//        $user_response = mysqli_query($connection,$user_query) or $errorMsg =  mysqli_error($connection);
-//        if (mysqli_num_rows($user_response) > 0)
-//        {
-//            while ($post = mysqli_fetch_assoc($user_response)) {
-//                $posts['User_review'][] = $post;
-//            }
-//        }
-//        else
-//        {
-//            $posts['User_review'] = [];
-//        }
-//
-//        $cust_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.title,r.description,r.ratting,r.modified_date from ". TABLE_REVIEW ." r,". TABLE_USER ." u,". TABLE_PRODUCT ." p where is_test= '".$is_testdata."' and r.user_id = u.id and r.product_id = p.id and r.user_id != '".$user_id."' and r.product_id = '".$product_id."' and r.is_delete IS NOT NULL ORDER BY h.created_date DESC limit $from_index,$to_index ";
-//        $cust_response = mysqli_query($connection,$cust_query) or $errorMsg =  mysqli_error($connection);
-//
-//        if (mysqli_num_rows($cust_response) > 0)
-//        {
-//
-//            while ($postCust = mysqli_fetch_assoc($cust_response)) {
-//                $posts['Customer_review'][] = $postCust;
-//            }
-//        }
-//        else
-//        {
-//            $posts['Customer_review'] = [];
-//        }
-//
-//        $data['status'] = $status;
-//        $data['message'] = $errorMsg;
-//        $data['data'] = $posts;
-//
-//        return $data;
-//
-//
-//    }
 
 
     public function getProductDetails($userData)
