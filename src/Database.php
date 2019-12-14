@@ -22,7 +22,12 @@ class Database extends PDO
         $details = $this->getDetails();
 
         $driverOptions[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES {$details['charset']}";
-        parent::__construct("{$details['db_type']}:host={$details['host']};dbname={$details['name']};", $details['user'], $details['password'], $driverOptions);
+        parent::__construct(
+            "{$details['db_type']}:host={$details['host']};dbname={$details['name']};",
+            $details['user'],
+            $details['password'],
+            $driverOptions
+        );
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 

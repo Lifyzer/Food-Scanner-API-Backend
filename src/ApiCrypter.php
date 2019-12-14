@@ -15,7 +15,15 @@ class ApiCrypter
         $method = 'aes-256-cbc';
         // Must be exact 32 chars (256 bit)
         $password = substr(hash('sha256', $password, true), 0, 32);
-        $data = base64_encode(openssl_encrypt($plaintext, $method, $password, OPENSSL_RAW_DATA, $iv));
+        $data = base64_encode(
+            openssl_encrypt(
+                $plaintext,
+                $method,
+                $password,
+                OPENSSL_RAW_DATA,
+                $iv
+            )
+        );
 
         return $data;
     }
@@ -26,7 +34,13 @@ class ApiCrypter
         $method = 'aes-256-cbc';
         $password = $sKey;
         $password = substr(hash('sha256', $password, true), 0, 32);
-        $decrypted = openssl_decrypt(base64_decode($crypt), $method, $password, OPENSSL_RAW_DATA, $iv);
+        $decrypted = openssl_decrypt(
+            base64_decode($crypt),
+            $method,
+            $password,
+            OPENSSL_RAW_DATA,
+            $iv
+        );
 
         return $decrypted;
     }
