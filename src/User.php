@@ -402,15 +402,22 @@ class User
             );
 
             if ($edit_response[STATUS_KEY] === SUCCESS) {
-                $this->sendForgotPassword(
-                    [
-                        'first_name' => $objUser['first_name'],
-                        'email_id' => $email_id,
-                        'subject' => 'Forgot Password',
-                        'password' => $userPassword
-                    ],
-                    new Email
-                );
+                try {
+                    $this->sendForgotPassword(
+                        [
+                            'first_name' => $objUser['first_name'],
+                            'email_id' => $email_id,
+                            'subject' => 'Forgot Password',
+                            'password' => $userPassword
+                        ],
+                        new Email
+                    );
+                    $status = SUCCESS;
+                    $message = PASSWORD_SENT;
+                } catch (\PHPMailer\PHPMailer\Exception $e) {
+                    $status = FAILED;
+                    $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                }
             } else {
                 $status = FAILED;
                 $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
@@ -450,6 +457,12 @@ HTML;
         );
     }
 
+    /**
+     * @param array $data
+     * @param Email $email
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     private function sendForgotPassword(array $data, Email $email)
     {
         $htmlMessage =
@@ -461,19 +474,11 @@ HTML;
         <p>Best,<br> <a href="https://lifyzer.com">Lifyzer, Healthy Food</a> Team</p>
 </body></html>
 HTML;
-
-        try {
-            $email->sendMail(
-                $htmlMessage,
-                $data['subject'],
-                $data['email_id']
-            );
-            $status = SUCCESS;
-            $message = PASSWORD_SENT;
-        } catch (\PHPMailer\PHPMailer\Exception $e) {
-            $status = FAILED;
-            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-        }
+        $email->sendMail(
+            $htmlMessage,
+            $data['subject'],
+            $data['email_id']
+        );
     }
 
     private function deleteAccount(array $userData): array
