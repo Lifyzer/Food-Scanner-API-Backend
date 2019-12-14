@@ -137,14 +137,19 @@ class User
                     $status = SUCCESS;
                     $message = REGISTRATION_SUCCESSFULLY_DONE;
 
-                    $this->sendWelcomeEmail(
-                        [
-                            'first_name' => $first_name,
-                            'email_id' => $email_id,
-                            'subject' => 'Welcome on Lifyzer Community 😊'
-                        ],
-                        new Email
-                    );
+                    try {
+                        $this->sendWelcomeEmail(
+                            [
+                                'first_name' => $first_name,
+                                'email_id' => $email_id,
+                                'subject' => 'Welcome on Lifyzer Community 😊'
+                            ],
+                            new Email
+                        );
+                    } catch (\PHPMailer\PHPMailer\Exception $e) {
+                        $status = FAILED;
+                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                    }
                 } else {
                     $status = FAILED;
                     $message = DEFAULT_NO_RECORD;
@@ -432,6 +437,12 @@ class User
         return $data;
     }
 
+    /**
+     * @param array $data
+     * @param Email $email
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     private function sendWelcomeEmail(array $data, Email $email)
     {
         $htmlMessage =
