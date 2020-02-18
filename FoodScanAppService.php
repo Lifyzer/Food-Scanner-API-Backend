@@ -14,6 +14,8 @@ require 'src/PdoFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
+//$post_body = iconv('UTF-8', 'UTF-8', utf8_encode($post_body));
+
 $postData = json_decode($post_body);
 
 $logger = new Logger();
@@ -23,7 +25,6 @@ if (DEBUG_MODE) {
     $logger->hideErrors();
 }
 unset($logger);
-
 
 if (!empty($_REQUEST['Service'])) {
     try {
@@ -35,7 +36,6 @@ if (!empty($_REQUEST['Service'])) {
             exit('An unexpected database error occured.');
         }
     }
-
     switch ($_REQUEST['Service']) {
         /*********************  User Functions *********************/
         case User::REGISTRATION_ACTION:
@@ -84,6 +84,7 @@ if (!empty($_REQUEST['Service'])) {
         case 'updateReview':
         case 'deleteReview':
         case 'getReviewList':
+        case 'updateRatingStatus':
 
          $access_key = validateObject($postData, 'access_key', '');
          $access_key = addslashes($access_key);
@@ -93,7 +94,6 @@ if (!empty($_REQUEST['Service'])) {
 
           $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
             $isSecure  = YES;
-
 
 			$product = new Product($db);
          /*   $data = $product->callService($_REQUEST['Service'], $postData);
