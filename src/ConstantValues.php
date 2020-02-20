@@ -28,7 +28,9 @@ define('ERROR', 'error');
 define('STATUS_KEY', 'status');
 define('MESSAGE_KEY', 'message');
 define('IS_DELETE', '0');
-define('IS_TESTDATA', '0');
+//define('IS_TESTDATA', '0');
+define('IS_TESTDATA', '1');
+
 
 define('NO_ERROR', 'No error');
 define('UPDATE_SUCCESS', 'update Success');
