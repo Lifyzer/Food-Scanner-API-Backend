@@ -84,7 +84,6 @@ if (!empty($_REQUEST['Service'])) {
         case 'updateReview':
         case 'deleteReview':
         case 'getReviewList':
-
          $access_key = validateObject($postData, 'access_key', '');
          $access_key = addslashes($access_key);
 
@@ -92,7 +91,7 @@ if (!empty($_REQUEST['Service'])) {
          $secret_key = addslashes($secret_key);
 
           $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-            $isSecure  = YES;
+          $isSecure  = YES;
 
 
 			$product = new Product($db);

@@ -1110,7 +1110,6 @@ class Product
                             $message = "No Product Available";
                         }
 
-
                     } else {
 
                         $message = "No Product Available";
