@@ -147,7 +147,7 @@ class Product
         $conditional_array = ['user_id' => $user_id, 'product_id' => $product_id, 'ratting' => $ratting, 'description' => $desc, 'is_test' => $is_testdata];
         $favourite_response = addData($connection, "addReview", TABLE_REVIEW, $conditional_array);
 
-        if ($favourite_response[STATUS_KEY] == SUCCESS) {
+        if ($favourite_response[STATUS_KEY] === SUCCESS) {
             $status = SUCCESS;
             $message = REVIEW_ADDED_SUCCESSFULLY;
         } else {
@@ -376,11 +376,10 @@ class Product
                 $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
 
                 if (!empty($objHistory)) {
-
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
                     $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
-                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                     } else {
                         $status = FAILED;
@@ -388,11 +387,10 @@ class Product
                         break;
                     }
                 } else {
-
                     //******** Insert data into history ********//
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
                     $add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
-                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($add_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                     } else {
                         $status = FAILED;
@@ -503,12 +501,11 @@ class Product
                 $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
 
                 if (!empty($objHistory)) {
-
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
 
                     $edit_history_response = editData($connection, 'getProductDetailsTest', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
-                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
@@ -521,7 +518,7 @@ class Product
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
 
                     $add_history_response = addData($connection, '', TABLE_HISTORY, $history_array);
-                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($add_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
@@ -607,7 +604,7 @@ class Product
                         }
 
                         $insert_response = addData($connection, '', TABLE_PRODUCT, $product_array);
-                        if ($insert_response[STATUS_KEY] == SUCCESS) {
+                        if ($insert_response[STATUS_KEY] === SUCCESS) {
                             $last_inserted_id = $insert_response[MESSAGE_KEY];
 
 
@@ -696,7 +693,7 @@ class Product
                         }
 
                         $insert_response = addData($connection, '', TABLE_PRODUCT, $product_array);
-                        if ($insert_response[STATUS_KEY] == SUCCESS) {
+                        if ($insert_response[STATUS_KEY] === SUCCESS) {
                             $last_inserted_id = $insert_response[MESSAGE_KEY];
 
 
@@ -822,7 +819,7 @@ class Product
                     $history_id = $objHistory['id'];
 
                     $edit_history_response = editData($connection, 'getProductDetailsTest', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
-                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
@@ -836,7 +833,7 @@ class Product
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date];
 
                     $add_history_response = addData($connection, '', TABLE_HISTORY, $history_array);
-                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($add_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
@@ -948,7 +945,7 @@ class Product
                         } else {
 
                             $insert_response = addData($connection, '', TABLE_PRODUCT, $product_array);
-                            if ($insert_response[STATUS_KEY] == SUCCESS) {
+                            if ($insert_response[STATUS_KEY] === SUCCESS) {
                                 $last_inserted_id = $insert_response[MESSAGE_KEY];
 
 
@@ -1058,13 +1055,10 @@ class Product
                                     $stmt->closeCursor();
                                     $message = PRODUCT_FETCHED_SUCCESSFULLY;
                                 }
-
                             } else {
-
                                 $insert_response = addData($connection, '', TABLE_PRODUCT, $product_array);
-                                if ($insert_response[STATUS_KEY] == SUCCESS) {
+                                if ($insert_response[STATUS_KEY] === SUCCESS) {
                                     $last_inserted_id = $insert_response[MESSAGE_KEY];
-
 
                                     //******** Insert data into history ********//
                                     $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
@@ -1285,7 +1279,7 @@ class Product
         } else {
             $favourite_product_array = ['user_id' => $user_id, 'product_id' => $product_id, 'is_favourite' => $is_favourite, 'created_date' => $current_date];
             $favourite_response = addData($connection, "addToFavourite", TABLE_FAVOURITE, $favourite_product_array);
-            if ($favourite_response[STATUS_KEY] == SUCCESS) {
+            if ($favourite_response[STATUS_KEY] === SUCCESS) {
                 $status = SUCCESS;
                 $message = FAVOURITE_SUCCESSFULLY;
             } else {
