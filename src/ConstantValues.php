@@ -45,6 +45,8 @@ define('PASSWORD_SENT', 'Password is sent successfully');
 define('NO_FAVOURITE_PRODUCT_FOUND', 'No Favourite Product not found');
 define('NO_FAVOURITE_HISTORY_FOUND', 'No History not found');
 define('NO_PRODUCT_FOUND_IN_DATABASE', 'No Product found in database');
+define('NO_PRODUCT_AVAILABLE', 'No Product Available');
+define('PRODUCT_FETCHED_SUCCESSFULLY', 'Product successfully fetched');
 define('DATA_FETCHED_SUCCESSFULLY', 'Data fetched successfully');
 define('HISTORY_REMOVED_SUCCESSFULLY', 'History deleted successfully');
 define('FAVOURITE_SUCCESSFULLY', 'Added to favourite Successfully');
