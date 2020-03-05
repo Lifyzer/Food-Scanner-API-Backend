@@ -29,7 +29,7 @@ define('UPDATE_SUCCESS', 'update Success');
 define('USERTOKEN', 'UserToken');
 
 // ************  Messages  ****************//
-define('SOMETHING_WENT_WRONG_TRY_AGAIN_LATER', 'Something went wrong, Please try again later');
+define('SOMETHING_WENT_WRONG_TRY_AGAIN_LATER', 'We got an internal issue with our backend. Please try again later');
 define('EMAIL_ALREADY_EXISTS', 'Email ID already exists');
 define('REGISTRATION_SUCCESSFULLY_DONE', 'Registration successfully done');
 define('MALICIOUS_SOURCE', 'Another session for this user has been detected in another device. Please logout and verify your number again to continue using the app.');
