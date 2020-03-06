@@ -145,19 +145,20 @@ class Product
         $is_delete = IS_DELETE;
         $is_rate = false;
 
-        $edit_history_response = editData($connection, "updateReview", TABLE_REVIEW, ['ratting'=>$ratting,'description'=>$desc], ['id' => $review_id,is_test =>$is_testdata,$is_delete => $is_delete], "");
+        $edit_review_response = editData($connection, "updateReview", TABLE_REVIEW, ['ratting'=>$ratting,'description'=>$desc], ['id' => $review_id,is_test =>$is_testdata,$is_delete => $is_delete], "");
 
-        if ($edit_history_response[STATUS_KEY] === SUCCESS) {
+        if ($edit_review_response[STATUS_KEY] === SUCCESS) {
             $message = REVIEW_UPDATED_SUCCESSFULLY;
             $status = SUCCESS;
 
                 //START : if user have left 2 comments or rated 3 products (or more) then will rate status as TRUE else FALSE.
                 $rate_status = $this->IsUserRate($user_id);
                 if($rate_status == SUCCESS){
-                     $select_user_review_query = "SELECT * from ".TABLE_REVIEW." WHERE user_id = ".$user_id." 
-                                    AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."' ";
+                    $select_user_rate_query = "(SELECT COUNT(*) from ".TABLE_REVIEW." WHERE user_id = ".$user_id." AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."') as count_rate";
+                    $select_user_desc_query = "(SELECT COUNT(*) from ".TABLE_REVIEW." WHERE user_id = ".$user_id." AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."' AND description != '') as count_comment";
+                    $select_user_review_query = "SELECT ".$select_user_rate_query.",".$select_user_desc_query;
                     $select_user_review_stmt = getSingleTableData($connection, "", $select_user_review_query, "", "", []);
-                    if (!empty($select_user_review_stmt) &&(count($select_user_review_stmt) == 2 || count($select_user_review_stmt) >= 3)) {
+                    if (!empty($select_user_review_stmt) &&($select_user_review_stmt['count_comment'] >= 2 || $select_user_review_stmt["count_rate"] >= 3)) {
                         $is_rate = true;
                     }else{
                         $is_rate = false;
@@ -199,6 +200,16 @@ class Product
         $is_testdata = IS_TESTDATA;
         $is_rate = false;
 
+        $edit_review_response = editData($connection, "updateReview", TABLE_REVIEW, ['is_delete' => DELETE_STATUS::IS_DELETE], ['user_id' => $user_id,'product_id' => $product_id,is_test =>$is_testdata,is_delete => IS_DELETE], "");
+
+        if ($edit_review_response[STATUS_KEY] === SUCCESS) {
+            $status = SUCCESS;
+            $message = REVIEW_UPDATED_SUCCESSFULLY;
+        }else {
+            $status = FAILED;
+            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+        }
+
 
             $conditional_array = ['user_id' => $user_id, 'product_id' => $product_id, 'ratting' => $ratting, 'description' => $desc ,'is_test' => $is_testdata ];
             $favourite_response = addData($connection, "addReview", TABLE_REVIEW, $conditional_array);
@@ -210,10 +221,12 @@ class Product
                 //START : if user have left 2 comments or rated 3 products (or more) then will rate status as TRUE else FALSE.
                $rate_status = $this->IsUserRate($user_id);
                 if($rate_status == SUCCESS){
-                     $select_user_review_query = "SELECT * from ".TABLE_REVIEW." WHERE user_id = ".$user_id." 
-                                    AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."' ";
+                    $select_user_rate_query = "(SELECT COUNT(*) from ".TABLE_REVIEW." WHERE user_id = ".$user_id." AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."') as count_rate";
+                    $select_user_desc_query = "(SELECT COUNT(*) from ".TABLE_REVIEW." WHERE user_id = ".$user_id." AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."' AND description != '') as count_comment";
+                    $select_user_review_query = "SELECT ".$select_user_rate_query.",".$select_user_desc_query;
                     $select_user_review_stmt = getSingleTableData($connection, "", $select_user_review_query, "", "", []);
-                    if (!empty($select_user_review_stmt) &&(count($select_user_review_stmt) == 2 || count($select_user_review_stmt) >= 3)) {
+//                    print_r($select_user_review_stmt);
+                    if (!empty($select_user_review_stmt) &&($select_user_review_stmt['count_comment'] >= 2 || $select_user_review_stmt["count_rate"] >= 3)) {
                         $is_rate = true;
                     }else{
                         $is_rate = false;
@@ -1504,12 +1517,11 @@ class Product
         if  ($status == SUCCESS) {
             $rate_status = $this->IsUserRate($user_id);
             if ($rate_status == SUCCESS) {
-                $select_user_fav_query = "SELECT * from " . TABLE_FAVOURITE . " WHERE user_id = " . $user_id . " 
+                $select_user_fav_query = "SELECT count(*) as count_fav from " . TABLE_FAVOURITE . " WHERE user_id = " . $user_id . " 
                                     AND is_favourite = '1'
                                     AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' ";
                 $select_user_fav_stmt = getSingleTableData($connection, "", $select_user_fav_query, "", "", []);
-
-                if (!empty($select_user_fav_stmt) && count($select_user_fav_stmt) >= 5) {
+                if (!empty($select_user_fav_stmt) && $select_user_fav_stmt['count_fav'] >= 5) {
                     $is_rate = true;
                 } else {
                     $is_rate = false;
