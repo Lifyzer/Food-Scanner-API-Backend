@@ -1391,9 +1391,9 @@ class Product
                 $conditional_array = ['product_id' => $history['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete,'is_test' =>$is_testdata];
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
                 if (!empty($objFavourite)) {
-                    $history['is_favourite'] = 1;
+                    $history['is_favourite'] = "1";
                 } else {
-                    $history['is_favourite'] = 0;
+                    $history['is_favourite'] = "0";
                 }
                 $posts[] = $history;
             }

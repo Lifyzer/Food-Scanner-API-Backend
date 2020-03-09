@@ -7,15 +7,15 @@ define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
-define('APPNAME', 'FoodScan App');
+define('APPNAME', 'Lifyzer App');
 //define('SENDER_EMAIL_ID', 'pra@narola.email');
 //define('SENDER_EMAIL_PASSWORD', 'jUVAO8ufUmaucHM');
 //define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
 //define('SENDER_EMAIL_PASSWORD', 'narola23');
 define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
-define('SENDER_EMAIL_PASSWORD', 'sJ*2bB3}AYp{-5%Rma');
+//define('SENDER_EMAIL_PASSWORD', 'sJ*2bB3}AYp{-5%Rma');
 
-//define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');
+define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');
 
 
 
@@ -28,8 +28,8 @@ define('ERROR', 'error');
 define('STATUS_KEY', 'status');
 define('MESSAGE_KEY', 'message');
 define('IS_DELETE', '0');
-//define('IS_TESTDATA', '0');
-define('IS_TESTDATA', '1');
+define('IS_TESTDATA', '0');
+//define('IS_TESTDATA', '1');
 
 
 define('NO_ERROR', 'No error');
@@ -47,7 +47,8 @@ define('TOKEN_ERROR', 'Please ensure that security token is supplied in your req
 define('DEFAULT_NO_RECORD', 'No record found');
 define('WRONG_PASSWORD_MESSAGE', 'You have entered a wrong password');
 define('CHNG_WRONG_PASSWORD_MESSAGE', 'Old password is incorrect');
-define('NO_DATA_AVAILABLE', 'No data available');
+//define('NO_DATA_AVAILABLE', 'No data available');
+define('NO_DATA_AVAILABLE', 'User not found');
 define('NO_EMAIL_AND_PASSWORD_AVAILABLE', 'Email ID or Password is incorrect.');
 define('USER_LOGIN_SUCCESSFULLY', 'User Login Successfully');
 define('PASSWORD_CHANGED', 'Password successfully changed!');
