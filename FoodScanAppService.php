@@ -14,8 +14,6 @@ require 'src/PdoFunctions.php';
 
 $post_body = file_get_contents('php://input');
 $post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
-//$post_body = iconv('UTF-8', 'UTF-8', utf8_encode($post_body));
-
 $postData = json_decode($post_body);
 
 $logger = new Logger();
@@ -36,6 +34,7 @@ if (!empty($_REQUEST['Service'])) {
             exit('An unexpected database error occured.');
         }
     }
+
     switch ($_REQUEST['Service']) {
         /*********************  User Functions *********************/
         case User::REGISTRATION_ACTION:
@@ -93,17 +92,7 @@ if (!empty($_REQUEST['Service'])) {
          $secret_key = addslashes($secret_key);
 
           $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-            $isSecure  = YES;
-
-			$product = new Product($db);
-         /*   $data = $product->callService($_REQUEST['Service'], $postData);
-           if ($isSecure !== YES || $isSecure !== YES) {
-                if ($isSecure['key'] === 'Temp') {
-                    $data['TempToken'] = $isSecure['value'];
-                } else {
-                    $data['UserToken'] = $isSecure['value'];
-                }
-            }*/
+          $isSecure  = YES;
 
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
