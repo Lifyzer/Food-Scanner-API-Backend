@@ -24,7 +24,6 @@ if (DEBUG_MODE) {
 }
 unset($logger);
 
-
 if (!empty($_REQUEST['Service'])) {
     try {
         $db = new Database();
@@ -84,6 +83,8 @@ if (!empty($_REQUEST['Service'])) {
         case 'updateReview':
         case 'deleteReview':
         case 'getReviewList':
+        case 'updateRatingStatus':
+
          $access_key = validateObject($postData, 'access_key', '');
          $access_key = addslashes($access_key);
 
@@ -92,17 +93,6 @@ if (!empty($_REQUEST['Service'])) {
 
           $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
           $isSecure  = YES;
-
-
-			$product = new Product($db);
-         /*   $data = $product->callService($_REQUEST['Service'], $postData);
-           if ($isSecure !== YES || $isSecure !== YES) {
-                if ($isSecure['key'] === 'Temp') {
-                    $data['TempToken'] = $isSecure['value'];
-                } else {
-                    $data['UserToken'] = $isSecure['value'];
-                }
-            }*/
 
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
