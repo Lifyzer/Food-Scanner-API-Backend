@@ -415,7 +415,7 @@ class User
                             'subject' => 'Forgot Password',
                             'password' => $userPassword
                         ],
-                        new Email
+                        new Email()
                     );
                     $status = SUCCESS;
                     $message = PASSWORD_SENT;

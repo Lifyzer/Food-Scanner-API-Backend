@@ -510,7 +510,7 @@ class Security
                 [
                     'userid' => $user_id
                 ],
-                ""
+                ''
             );
 
             return YES;
