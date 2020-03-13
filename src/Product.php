@@ -333,7 +333,7 @@ class Product
         return $data;
     }
 
-    function startsWith($haystack, $needle)
+    public function startsWith($haystack, $needle)
 	{
               if(substr($haystack,0, strlen($needle))===$needle){
              	return true;
@@ -801,7 +801,6 @@ class Product
                         break;
                     }
                 } else {
-
                     //******** Insert data into history ********//
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date,'is_test' => $is_testdata];
 
@@ -818,10 +817,7 @@ class Product
             }
         } else {
 
-            if ($flag == 0)
-            {
-
-            //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
+            if ($flag == 0) {
             $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments,code&search_terms=" . urlencode($product_name) . "&page=1";
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
