@@ -68,16 +68,15 @@ class Product
         $device_type = validateObject($userData, 'device_type', "");
         $device_type = addslashes($device_type);
 
-        $is_testdata = IS_TESTDATA;
         $rate_status = '1';
 
         $select_user_rated_query = "SELECT * from ".TABLE_RATING." WHERE user_id = ".$user_id." 
                                     AND is_rate = '1'
                                     AND device_type = '".$device_type."'
-                                    AND is_test = '".$is_testdata."' AND is_delete = '".IS_DELETE."' ";
+                                    AND is_test = '".IS_TESTDATA."' AND is_delete = '".IS_DELETE."' ";
         $select_user_rated_stmt = getSingleTableData($connection, "", $select_user_rated_query, "", "", []);
         if (empty($select_user_rated_stmt)){
-            $conditional_array = ['is_rate' => $rate_status, 'user_id' => $user_id, 'device_type' => $device_type, 'is_test' => $is_testdata ];
+            $conditional_array = ['is_rate' => $rate_status, 'user_id' => $user_id, 'device_type' => $device_type, 'is_test' => IS_TESTDATA ];
             $rating_response = addData($connection, "updateRatingStatus", TABLE_RATING, $conditional_array);
 
             if ($rating_response[STATUS_KEY] == SUCCESS) {
@@ -457,8 +456,6 @@ class Product
 
             if ($flag == 0)
             {
-
-                //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
                 $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments,code&search_terms=" . urlencode($product_name) . "&page=1";
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
