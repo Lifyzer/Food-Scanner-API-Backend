@@ -430,7 +430,7 @@ class Product
                     $edit_history_response = editData($connection, 'getProductDetailsTest', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id], "");
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
-                        $message = "Product successfully fetched";
+                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
                         $status = FAILED;
                         $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
@@ -444,7 +444,7 @@ class Product
                     $add_history_response = addData($connection, '', TABLE_HISTORY, $history_array);
                     if ($add_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
-                        $message = "Product successfully fetched";
+                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
                         $status = FAILED;
                         $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
@@ -543,7 +543,7 @@ class Product
                                 }
 
                                 $stmt->closeCursor();
-                                $message = "Product successfully fetched";
+                                $message = PRODUCT_FETCHED_SUCCESSFULLY;
                             }
 
                         } else {
@@ -572,17 +572,24 @@ class Product
                                     }
 
                                     $stmt->closeCursor();
-                                    $message = "Product successfully fetched";
+                                    $message = PRODUCT_FETCHED_SUCCESSFULLY;
                                 }
                             } else {
                                 $message = $insert_response[MESSAGE_KEY];
                             }
                         }
                     } else {
+<<<<<<< HEAD
+                        $message = NO_PRODUCT_AVAILABLE;
+                    }
+                } else {
+                    $message = NO_PRODUCT_AVAILABLE;
+=======
                         $message = "No Product Available";
                     }
                 } else {
                     $message = "No Products Available";
+>>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                 }
             } else {
                 $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
@@ -651,7 +658,7 @@ class Product
                                     }
 
                                     $stmt->closeCursor();
-                                    $message = "Product successfully fetched";
+                                    $message = PRODUCT_FETCHED_SUCCESSFULLY;
                                 }
 
                             } else {
@@ -679,7 +686,7 @@ class Product
                                         }
 
                                         $stmt->closeCursor();
-                                        $message = "Product successfully fetched";
+                                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
                                     }
                                 }
                                 else
@@ -692,7 +699,7 @@ class Product
                         else
                         {
 
-                            $message = "No Product Available";
+                            $message = NO_PRODUCT_AVAILABLE;
                         }
 
 
@@ -700,10 +707,14 @@ class Product
                     else
                     {
 
-                        $message = "No Product Available";
+                        $message = NO_PRODUCT_AVAILABLE;
                     }
                 } else {
+<<<<<<< HEAD
+                    $message = NO_PRODUCT_AVAILABLE;
+=======
                     $message = "No Products Available";
+>>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                 }
             }
         }
@@ -794,7 +805,7 @@ class Product
                     $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id,'is_delete' => $is_delete,'is_test' => $is_testdata], "");
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
-                        $message = "Product successfully fetched";
+                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
                         $status = FAILED;
                         $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
@@ -807,7 +818,7 @@ class Product
                     $add_history_response = addData($connection, '', TABLE_HISTORY, $history_array);
                     if ($add_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
-                        $message = "Product successfully fetched";
+                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
                         $status = FAILED;
                         $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
@@ -904,7 +915,7 @@ class Product
                                     }
 
                                     $stmt->closeCursor();
-                                    $message = "Product successfully fetched";
+                                    $message = PRODUCT_FETCHED_SUCCESSFULLY;
                                 }
 
 						} else {
@@ -933,7 +944,7 @@ class Product
 										}
 
 										$stmt->closeCursor();
-										$message = "Product successfully fetched";
+										$message = PRODUCT_FETCHED_SUCCESSFULLY;
 									}
 								}
 								else
@@ -946,12 +957,16 @@ class Product
                     else
                     {
 
+<<<<<<< HEAD
+                        $message = NO_PRODUCT_AVAILABLE;
+=======
                         $message = "No Product Available";
+>>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                     }
 				}
 				else
 				{
-					$message = "No Products Available";
+					$message = NO_PRODUCT_AVAILABLE;
 				}
             }
             else
@@ -1032,7 +1047,7 @@ class Product
 										}
 
 										$stmt->closeCursor();
-										$message = "Product successfully fetched";
+										$message = PRODUCT_FETCHED_SUCCESSFULLY;
 									}
 
 								} else {
@@ -1061,7 +1076,7 @@ class Product
 											}
 
 											$stmt->closeCursor();
-											$message = "Product successfully fetched";
+											$message = PRODUCT_FETCHED_SUCCESSFULLY;
 										}
 									}
 									else
@@ -1074,7 +1089,11 @@ class Product
                     	 else
 						{
 
+<<<<<<< HEAD
+							$message = NO_PRODUCT_AVAILABLE;
+=======
 							$message = "No Product Available";
+>>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
 						}
 
 
@@ -1082,12 +1101,16 @@ class Product
                     else
                     {
 
+<<<<<<< HEAD
+                        $message = NO_PRODUCT_AVAILABLE;
+=======
                         $message = "No Product Available";
+>>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                     }
 				}
 				else
 				{
-					$message = "No Products Available";
+					$message = NO_PRODUCT_AVAILABLE;
 				}
             }
         }
@@ -1179,9 +1202,9 @@ class Product
                 $conditional_array = ['product_id' => $history['product_id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete,'is_test' =>$is_testdata];
                 $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
                 if (!empty($objFavourite)) {
-                    $history['is_favourite'] = 1;
+                    $history['is_favourite'] = "1";
                 } else {
-                    $history['is_favourite'] = 0;
+                    $history['is_favourite'] = "0";
                 }
                 $posts[] = $history;
             }
