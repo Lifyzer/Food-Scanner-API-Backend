@@ -30,7 +30,7 @@ class Product
                 return $this->getAllUserFavourite($postData);
 
             case 'getProductDetails':
-                return $this->getProductDetails2($postData);
+                return $this->getProductDetails($postData);
 
             case 'getProductDetailsTest':
                 return $this->getProductDetailsTest($postData);
@@ -331,177 +331,6 @@ class Product
         $data['status'] = SUCCESS;//$status;
         $data['message'] = DATA_FETCHED_SUCCESSFULLY;//$message;
         $data['data'] = $posts;
-        return $data;
-    }
-
-
-    public function getProductDetails($userData)
-    {
-
-        $connection = $this->connection;
-
-        $user_id = validateObject($userData, 'user_id', '');
-        $user_id = addslashes($user_id);
-
-        $product_name = validateObject($userData, 'product_name', '');
-
-        $is_foodfact = validateObject($userData, 'is_foodfact', '');
-        $is_foodfact = addslashes($is_foodfact);
-
-        $is_testdata = validateObject ($userData , 'is_testdata', 0);
-        $is_testdata = addslashes($is_testdata);
-
-
-        $posts = [];
-
-        if ($is_foodfact == "1") {
-
-            //$url="https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
-            $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments&search_terms=Mini%20crackers%20Tomato,%20Onion%20&%20Chili&page=1";
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $tempArr = json_decode($result, true);
-
-            $newArr = array();
-
-            $newArr['status'] = SUCCESS;
-            $newArr['message'] = '';
-
-            foreach ($tempArr['products'] as $key => $value) {
-
-                // $product = [];
-
-                $product['id'] = null;
-                $product['barcode_id'] = null;
-                $product['company_name'] = null;
-                $product['calories'] = null;
-
-                $product['product_name'] = $value["product_name"];
-                $product['product_name'] = $value["product_name"];
-                $product['product_image'] = $value["image_url"];
-                $product['ingredients'] = $value["ingredients_text"];
-                $product['saturated_fats'] = $value["nutriments"]["saturated-fat"];
-                $product['fat_amount'] = $value["nutriments"]["fat_amount"];
-                $product['carbohydrate'] = $value["nutriments"]["carbohydrates"];
-                $product['sugar'] = $value["nutriments"]["sugars"];
-                $product['dietary_fiber'] = $value["nutriments"]["fiber_value"];
-                $product['protein'] = $value["nutriments"]["proteins"];
-                $product['protein_amount'] = "";
-                $product['salt'] = $value["nutriments"]["salt"];
-                $product['sodium'] = $value["nutriments"]["sodium"];
-
-                $product['created_date'] = null;
-                $product['modified_date'] = null;
-                $product['is_delete'] = "0";
-                $product['is_test'] = "";
-                $product['is_organic'] = null;
-                $product['is_healthy'] = null;
-                $product['is_favourite'] = null;
-                $product['alcohol'] = null;
-                $product['license_no'] = null;
-                $product['category_id'] = "0";
-
-                $newArr['product'][] = $product;
-
-            }
-
-            return $newArr;
-
-        }
-
-
-        $is_delete = IS_DELETE;
-        $current_date = getDefaultDate();
-
-        $cacher = new Psr16Adapter(self::CACHE_DRIVER);
-        $cacheKey = 'productdetails' . $product_name;
-
-        if (!$cacher->has($cacheKey)) {
-
-            $select_product_details_stmt =
-                getMultipleTableData(
-                    $connection,
-                    TABLE_PRODUCT,
-                    '',
-                    '*',
-                    '(LOWER(product_name) LIKE LOWER(:product_name) OR barcode_id = :barcode) AND is_delete = :is_delete AND is_test = :is_test ORDER BY created_date LIMIT 1',
-                    [
-                        'product_name' => '%' . $product_name . '%',
-                        'barcode' => $product_name,
-                        'is_delete' => $is_delete,
-                        'is_test' => $is_testdata
-                    ]
-                );
-
-            //$cacher->set($cacheKey, $select_product_details_stmt, self::CACHE_LIFETIME);
-
-            //echo "Row count : " .$select_product_details_stmt->rowCount() > 0;
-        } else {
-            $select_product_details_stmt = $cacher->get($cacheKey);
-        }
-
-        if ($select_product_details_stmt->rowCount() > 0) {
-            $status = SUCCESS;
-
-            while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-
-                //******************* get user favourite ****************//
-                $is_favourite = 1;
-                $conditional_array = ['product_id' => $product['id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => $is_delete,'is_test' => $is_testdata];
-                $objFavourite = getSingleTableData($connection, TABLE_FAVOURITE, "", "id", "", $conditional_array);
-//                echo $product['id']."-2-".$user_id."-3-".$is_favourite."-4-".$is_delete;
-                if (!empty($objFavourite)) {
-                    $product['is_favourite'] = 1;
-                } else {
-                    $product['is_favourite'] = 0;
-                }
-
-                //**** Product found in database insert data into history table ****//
-                $product_id = $product['id'];
-                $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => $is_delete,'is_test' => $is_testdata];
-                $objHistory = getSingleTableData($connection, TABLE_HISTORY, "", "id", "", $conditional_array);
-
-                if (!empty($objHistory)) {
-
-                    //******** Update history ********//
-                    $history_id = $objHistory['id'];
-                    $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id,'is_test' => $is_testdata], "");
-                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
-                        $posts[] = $product;
-                    } else {
-                        $status = FAILED;
-                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                        break;
-                    }
-                } else {
-
-                    //******** Insert data into history ********//
-                    $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date,'is_test' => $is_testdata];
-                    $add_history_response = addData($connection, 'getProductDetails', TABLE_HISTORY, $history_array);
-                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
-                        $posts[] = $product;
-                    } else {
-                        $status = FAILED;
-                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                        break;
-                    }
-                }
-            }
-        } else {
-
-            $status = SUCCESS;
-            $message = NO_PRODUCT_FOUND_IN_DATABASE;
-        }
-
-        $select_product_details_stmt->closeCursor();
-        $data['status'] = $status;
-        $data['message'] = $message;
-        $data['product'] = $posts;
-
         return $data;
     }
 
@@ -891,7 +720,7 @@ class Product
 
     }
 
-   public function getProductDetails2($userData)
+   public function getProductDetails($userData)
  	{
         $connection = $this->connection;
 
@@ -965,7 +794,7 @@ class Product
                     //******** Update history ********//
                     $history_id = $objHistory['id'];
 
-                    $edit_history_response = editData($connection, 'getProductDetails2', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id,'is_delete' => $is_delete,'is_test' => $is_testdata], "");
+                    $edit_history_response = editData($connection, 'getProductDetails', TABLE_HISTORY, ['created_date' => $current_date], ['id' => $history_id,'is_delete' => $is_delete,'is_test' => $is_testdata], "");
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
                         $message = "Product successfully fetched";
