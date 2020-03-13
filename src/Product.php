@@ -579,17 +579,10 @@ class Product
                             }
                         }
                     } else {
-<<<<<<< HEAD
                         $message = NO_PRODUCT_AVAILABLE;
                     }
                 } else {
                     $message = NO_PRODUCT_AVAILABLE;
-=======
-                        $message = "No Product Available";
-                    }
-                } else {
-                    $message = "No Products Available";
->>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                 }
             } else {
                 $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
@@ -710,11 +703,7 @@ class Product
                         $message = NO_PRODUCT_AVAILABLE;
                     }
                 } else {
-<<<<<<< HEAD
                     $message = NO_PRODUCT_AVAILABLE;
-=======
-                    $message = "No Products Available";
->>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                 }
             }
         }
@@ -953,15 +942,8 @@ class Product
 									$message = $insert_response[MESSAGE_KEY];
 								}
 						}
-                    }
-                    else
-                    {
-
-<<<<<<< HEAD
+                    } else {
                         $message = NO_PRODUCT_AVAILABLE;
-=======
-                        $message = "No Product Available";
->>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                     }
 				}
 				else
@@ -1088,24 +1070,14 @@ class Product
                     	}
                     	 else
 						{
-
-<<<<<<< HEAD
 							$message = NO_PRODUCT_AVAILABLE;
-=======
-							$message = "No Product Available";
->>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
 						}
 
 
                     }
                     else
                     {
-
-<<<<<<< HEAD
                         $message = NO_PRODUCT_AVAILABLE;
-=======
-                        $message = "No Product Available";
->>>>>>> 31a439d072ad9da3c583e16dc6fe53702162f31a
                     }
 				}
 				else
