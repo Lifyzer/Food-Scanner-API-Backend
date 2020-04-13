@@ -34,7 +34,6 @@ if (!empty($_REQUEST['Service'])) {
             exit('An unexpected database error occured.');
         }
     }
-
     switch ($_REQUEST['Service']) {
         /*********************  User Functions *********************/
         case User::REGISTRATION_ACTION:
@@ -60,9 +59,7 @@ if (!empty($_REQUEST['Service'])) {
                 $data['message'] = TOKEN_ERROR;
             } else {
                 $user = new User($db);
-
                 $data = $user->callService($_REQUEST['Service'], $postData);
-
                 if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] == 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
@@ -72,11 +69,9 @@ if (!empty($_REQUEST['Service'])) {
                 }
             }
             break;
-
         case 'addToFavourite':
         case 'getAllUserFavourite':
         case 'getProductDetails':
-        case 'getProductDetailsTest':
         case 'getUserHistory':
         case 'removeProductFromHistory':
         case 'addReview':
@@ -84,15 +79,14 @@ if (!empty($_REQUEST['Service'])) {
         case 'deleteReview':
         case 'getReviewList':
         case 'updateRatingStatus':
+            $access_key = validateObject($postData, 'access_key', '');
+            $access_key = addslashes($access_key);
 
-         $access_key = validateObject($postData, 'access_key', '');
-         $access_key = addslashes($access_key);
+            $secret_key = validateObject($postData, 'secret_key', '');
+            $secret_key = addslashes($secret_key);
 
-          $secret_key = validateObject($postData, 'secret_key', '');
-         $secret_key = addslashes($secret_key);
-
-          $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-          $isSecure  = YES;
+            $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
+            $isSecure  = YES;
 
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
@@ -103,7 +97,6 @@ if (!empty($_REQUEST['Service'])) {
             } else {
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
-
               if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
@@ -112,22 +105,18 @@ if (!empty($_REQUEST['Service'])) {
                     }
                 }
             }
-
             break;
-
         case Security::UPDATE_USER_TOKEN:
         case Security::TEST_ENCRYPTION:
         case Security::REFRESH_TOKEN:
             $security = new Security($db);
             $data = $security->callService($_REQUEST['Service'], $postData);
             break;
-
         default:
             $data['data'] = 'No Service Found';
             $data['message'] = $_REQUEST['Service'];
     }
 }
-
 //(new AllowCors)->init(); // Set CORS headers
 header('Content-type: application/json');
 echo json_encode($data);

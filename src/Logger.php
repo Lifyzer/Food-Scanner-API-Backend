@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-
 namespace Lifyzer\Api;
 
 class Logger
@@ -15,7 +14,7 @@ class Logger
         ini_set('error_log', self::LOG_PATH . self::LOG_FILENAME);
         ini_set('ignore_repeated_errors', 'On');
     }
-
+    
     public function showErrors(): void
     {
         error_reporting(E_ALL); // Since PHP 5.4 E_STRICT became part of E_ALL
@@ -47,10 +46,8 @@ class Logger
     public function writeToFile($identifer, $content, $filename): void
     {
         $logtime = date('m/d/Y h:i:s a', time());
-
         // The new person to add to the file
         $person = $logtime . "\n\n $identifer" . serialize($content);// Write the contents to the file,
-
         // using the FILE_APPEND flag to append the content to the end of the file
         // and the LOCK_EX flag to prevent anyone else writing to the file at the same time
         file_put_contents($filename, $person, FILE_APPEND | LOCK_EX);

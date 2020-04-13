@@ -1,7 +1,6 @@
 <?php
 
 namespace Lifyzer\Api;
-
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -24,8 +23,8 @@ class Email
      */
     public function sendMail(string $message, string $subject, string $userEmailId, bool $attachCookbook = false): bool
     {
-        echo $senderEmailId = getenv('SENDER_EMAIL_ID') !== false ? getenv('SENDER_EMAIL_ID') : SENDER_EMAIL_ID;
-        echo $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD') !== false ? getenv('SENDER_EMAIL_PASSWORD') : SENDER_EMAIL_PASSWORD;
+        $senderEmailId = getenv('SENDER_EMAIL_ID') !== false ? getenv('SENDER_EMAIL_ID') : SENDER_EMAIL_ID;
+        $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD') !== false ? getenv('SENDER_EMAIL_PASSWORD') : SENDER_EMAIL_PASSWORD;
 
         $mail = new PHPMailer();
         $mail->isSMTP(); // telling the class to use SMTP
@@ -47,9 +46,7 @@ class Email
                 '9 Recipe Vegetarian Cookbook'
             );
         }
-
         $mail->addAddress($userEmailId);
-
         return (bool)$mail->send();
     }
 }

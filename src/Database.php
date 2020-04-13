@@ -6,9 +6,7 @@
  */
 
 declare(strict_types=1);
-
 namespace Lifyzer\Api;
-
 use PDO;
 
 class Database extends PDO
@@ -20,7 +18,6 @@ class Database extends PDO
     public function __construct()
     {
         $details = $this->getDetails();
-
         $driverOptions[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES {$details['charset']}";
         parent::__construct(
             "{$details['db_type']}:host={$details['host']};dbname={$details['name']};",

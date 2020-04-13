@@ -9,19 +9,10 @@ define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
 define('APPNAME', 'Lifyzer App');
-//define('SENDER_EMAIL_ID', 'pra@narola.email');
-//define('SENDER_EMAIL_PASSWORD', 'jUVAO8ufUmaucHM');
-//define('SENDER_EMAIL_ID', 'narolamobile@gmail.com');
-//define('SENDER_EMAIL_PASSWORD', 'narola23');
 define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
 //define('SENDER_EMAIL_PASSWORD', 'sJ*2bB3}AYp{-5%Rma');//NEW => not working for sending mails
 define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');//OLD => working
-
-
-
-
 define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
-
 define('YES', 'yes');
 define('NO', 'no');
 define('ERROR', 'error');
@@ -29,8 +20,6 @@ define('STATUS_KEY', 'status');
 define('MESSAGE_KEY', 'message');
 define('IS_DELETE', '0');
 define('IS_TESTDATA', '0');
-
-
 define('NO_ERROR', 'No error');
 define('UPDATE_SUCCESS', 'update Success');
 define('USERTOKEN', 'UserToken');
@@ -40,7 +29,6 @@ define('SOMETHING_WENT_WRONG_TRY_AGAIN_LATER', 'We got an internal issue with ou
 define('EMAIL_ALREADY_EXISTS', 'Email ID already exists');
 define('REGISTRATION_SUCCESSFULLY_DONE', 'Registration successfully done');
 define('MALICIOUS_SOURCE', 'Another session for this user has been detected in another device. Please logout and verify your number again to continue using the app.');
-
 define('TOKEN_ERROR', 'Please ensure that security token is supplied in your request');
 define('DEFAULT_NO_RECORD', 'No record found');
 define('WRONG_PASSWORD_MESSAGE', 'You have entered a wrong password');
@@ -64,9 +52,6 @@ define('REVIEW_REMOVED_SUCCESSFULLY', 'Review deleted successfully');
 define('REVIEW_ADDED_SUCCESSFULLY', 'Review added successfully');
 define('REVIEW_UPDATED_SUCCESSFULLY', 'Review updated successfully');
 define('RATING_STATUS_STORED_SUCCESSFULLY', 'Rating status updated successfully');
-
-
-
 
 abstract class DELETE_STATUS
 {
