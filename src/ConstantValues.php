@@ -3,7 +3,7 @@
 namespace Lifyzer\Api;
 
 define('ENCRYPTION_KEY', 'niplframework');
-define('ASSETS_PATH', '/home/hizup/webapps/lifyzer_home/assets/');
+define('ASSETS_PATH', $_SERVER['DOCUMENT_ROOT'].'/assets/');
 define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');

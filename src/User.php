@@ -4,6 +4,8 @@ namespace Lifyzer\Api;
 
 use PDO;
 use stdClass;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class User
 {
@@ -139,7 +141,7 @@ class User
                                 'email_id' => $email_id,
                                 'subject' => 'Welcome on Lifyzer Community 😊'
                             ],
-                            new Email
+                            new Email()
                         );
                     } catch (\PHPMailer\PHPMailer\Exception $e) {
                         $status = FAILED;
@@ -359,7 +361,6 @@ class User
                 'is_delete' => $is_delete
             ]
         );
-
         if (!empty($objUser)) {
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
@@ -376,7 +377,6 @@ class User
                     'email' => $email_id
                 ]
             );
-
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 try {
                     $this->sendForgotPassword(
@@ -390,7 +390,7 @@ class User
                     );
                     $status = SUCCESS;
                     $message = PASSWORD_SENT;
-                } catch (\PHPMailer\PHPMailer\Exception $e) {
+                } catch (Exception $e) {
                     $status = FAILED;
                     $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                 }

@@ -5,6 +5,7 @@ namespace Lifyzer\Api;
 use Dotenv\Dotenv;
 use phpFastCache\CacheManager;
 
+
 // Setup cache config
 CacheManager::setDefaultConfig([
     'path' => dirname(__DIR__) . '/cache',
