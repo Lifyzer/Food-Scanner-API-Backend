@@ -427,7 +427,7 @@ class User
         <p>&nbsp;</p>
         <p>Best, 💚 <br />
         Pierre-Henry Soria</p>
-</body></html>';
+</body></html>
 HTML;
 
         $email->sendMail(

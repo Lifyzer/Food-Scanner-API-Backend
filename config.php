@@ -3,13 +3,13 @@
 namespace Lifyzer\Api;
 
 use Dotenv\Dotenv;
-use phpFastCache\CacheManager;
+use PhpFastCache\CacheManager;
 
 
 // Setup cache config
-CacheManager::setDefaultConfig([
-    'path' => dirname(__DIR__) . '/cache',
-]);
+//CacheManager::setDefaultConfig([
+//    'path' => dirname(__DIR__) . '/cache',
+//]);
 
 (new Dotenv(__DIR__))->load();
 

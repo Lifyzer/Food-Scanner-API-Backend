@@ -9,9 +9,6 @@ define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
 define('APPNAME', 'Lifyzer App');
-define('SENDER_EMAIL_ID', 'hello@lifyzer.com');
-//define('SENDER_EMAIL_PASSWORD', 'sJ*2bB3}AYp{-5%Rma');//NEW => not working for sending mails
-define('SENDER_EMAIL_PASSWORD', '1784Y3))*ScanF0Odapi$');//OLD => working
 define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 define('YES', 'yes');
 define('NO', 'no');
@@ -19,7 +16,7 @@ define('ERROR', 'error');
 define('STATUS_KEY', 'status');
 define('MESSAGE_KEY', 'message');
 define('IS_DELETE', '0');
-define('IS_TESTDATA', '0');
+define('IS_TESTDATA', '1'); //=> will change to '1' when testing mode is there
 define('NO_ERROR', 'No error');
 define('UPDATE_SUCCESS', 'update Success');
 define('USERTOKEN', 'UserToken');
@@ -46,6 +43,7 @@ define('PRODUCT_FETCHED_SUCCESSFULLY', 'Product successfully fetched');
 define('DATA_FETCHED_SUCCESSFULLY', 'Data fetched successfully');
 define('HISTORY_REMOVED_SUCCESSFULLY', 'History deleted successfully');
 define('FAVOURITE_SUCCESSFULLY', 'Added to favourite Successfully');
+define('REMOVE_FAVOURITE_SUCCESSFULLY', 'Product removed from favourite.');
 define('PROFILE_UPDATED_SUCCESSFULLY', 'Profile Updated Successfully');
 define('NO_REVIEW_FOUND', 'No Review found');
 define('REVIEW_REMOVED_SUCCESSFULLY', 'Review deleted successfully');
