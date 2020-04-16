@@ -17,7 +17,6 @@ class Email
      * @param string $message
      * @param string $subject
      * @param string $userEmailId
-     * @param bool $attachCookbook
      *
      * @return bool
      *
