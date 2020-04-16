@@ -37,7 +37,7 @@ class Email
             $mail->Host = self::SMTP_HOST_SERVER;
             $mail->Username = "lifyzer";
             $mail->Password = $senderEmailPassword;
-            //$mail->SMTPDebug = SMTP::DEBUG_SERVER; => When need to show log of smtp process
+            //$mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER; // When need to show log of SMTP process
 
             //Recipients
             $mail->setFrom($senderEmailId, "Lifyzer");
