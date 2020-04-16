@@ -423,7 +423,7 @@ class User
         <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
         <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
         <p>🏆 Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise, just for YOU! ❤️</p>
-        <p>Note: I attached my vegetarian cookbook (worths $5.99 on Amazon). Hopefully, you will appreciate it! 😊</p>
+        <p>Psst, <a href="https://lifyzer.com/assets/books/9-Recipe-Vegetarian-Menu.pdf">Here is by gift to you!</a> (<a href="https://lifyzer.com/assets/books/9-Recipe-Vegetarian-Menu.epub">ePub format here</a>) 🧧 A vegetarian cookbook (worths $5.99 on Amazon). Hopefully, you will appreciate it! 😊</p>
         <p>&nbsp;</p>
         <p>Best, 💚 <br />
         Pierre-Henry Soria</p>
@@ -433,8 +433,7 @@ HTML;
         $email->sendMail(
             $htmlMessage,
             $data['subject'],
-            $data['email_id'],
-            Email::ATTACH_COOKBOOK_FILE
+            $data['email_id']
         );
     }
 
