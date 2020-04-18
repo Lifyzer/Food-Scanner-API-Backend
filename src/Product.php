@@ -30,6 +30,9 @@ class Product
             case 'getProductDetails':
                 return $this->getProductDetails($postData);
 
+            case 'getOtherProductDetails':
+                return $this->getProductDetailsV2($postData);
+
             case 'getUserHistory':
                 return $this->getUserHistory($postData);
 
@@ -331,6 +334,362 @@ class Product
           }
     }
 
+    public function getOpenFoodDetails($product_name,$scan_type){
+        $temp = -1;
+        $skip = false;
+        $selected_index = -1;
+        $product_array = [];
+        switch ($scan_type){
+            case "0":
+                $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments,code&search_terms=" . urlencode($product_name) . "&page=1";
+                $tempArr = curlRequestLoad($url);
+                if(count($tempArr['products']) >0)
+                {
+                    foreach ($tempArr['products'] as $key => $value) {
+                        $temp++;
+                        if (!$skip && ($value["product_name"] == $product_name ||
+                                $this->startsWith($value["product_name"], $product_name))) {
+                            $selected_index = $temp;
+                            $skip = true;
+                        }
+                    }
+                    if ($selected_index >= 0) {
+                        $value = $tempArr['products'][$selected_index];
+                    } else {
+                        $value = $tempArr['products'][0];
+                    }
+                    $product_array = [
+                        'barcode_id' => ($value['code'] ? $value['code'] : ''),
+                        'product_name' => ($value['product_name'] ? $value['product_name'] : ''),
+                        'is_delete' => IS_DELETE,
+                        'is_test' => IS_TESTDATA,
+                        'ingredients' => ($value['ingredients_text'] ? $value['ingredients_text'] : ''),
+                        'saturated_fats' => ($value["nutriments"]["saturated-fat"] ? $value["nutriments"]["saturated-fat"] : 0),
+                        'protein' => ($value["nutriments"]["proteins"] ? $value["nutriments"]["proteins"] : 0),
+                        'sugar' => ($value["nutriments"]["sugars"] ? $value["nutriments"]["sugars"] : 0),
+                        'salt' => ($value["nutriments"]["salt"] ? $value["nutriments"]["salt"] : 0),
+                        'carbohydrate' => ($value["nutriments"]["carbohydrates"] ? $value["nutriments"]["carbohydrates"] : 0),
+                        'dietary_fiber' => ($value["nutriments"]["fiber_value"] ? $value["nutriments"]["fiber_value"] : 0),
+                        'sodium' => ($value["nutriments"]["sodium"] ? $value["nutriments"]["sodium"] : 0)];
+                    if (!empty($product_array)) {
+                        if (array_key_exists("image_url", $value)) {
+                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
+                        }
+                        if (array_key_exists("fat_amount", $value)) {
+
+                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
+                        }
+                    }
+                }
+                break;
+            case "1":
+                echo $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
+                $tempArr = curlRequestLoad($url);
+                if(count($tempArr['product']) >0)
+                {
+                    $value = $tempArr['product'];
+                    $product_array = [
+                        'product_name' => ($value['product_name']?$value['product_name']:''),
+                        'barcode_id' => ($tempArr['code']?$value['code']:''),
+                        'is_delete' => IS_DELETE,
+                        'is_test' => IS_TESTDATA,
+                        'ingredients' => ($value['ingredients_text']?$value['ingredients_text']:''),
+                        'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:0),
+                        'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:0),
+                        'sugar' => ($value["nutriments"]["sugars"]?$value["nutriments"]["sugars"]:0),
+                        'salt' => ($value["nutriments"]["salt"]?$value["nutriments"]["salt"]:0),
+                        'carbohydrate' => ($value["nutriments"]["carbohydrates"]?$value["nutriments"]["carbohydrates"]:0),
+                        'dietary_fiber' => ($value["nutriments"]["fiber_value"]?$value["nutriments"]["fiber_value"]:0),
+                        'sodium' => ($value["nutriments"]["sodium"]?$value["nutriments"]["sodium"]:0)
+                    ];
+                    if(!empty($product_array))
+                    {
+                        if (array_key_exists("image_url", $value)){
+                            $product_array['product_image'] = ($value["image_url"]?$value["image_url"]:'');
+                        }
+                        if (array_key_exists("fat_amount", $value)) {
+                            $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"]?$value["nutriments"]["fat_amount"]:'');
+                        }
+                    }
+
+                }
+                break;
+        }
+        return $product_array;
+    }
+
+    public function getUSAFoodDetails($product_name){
+        $product_array = [];
+        $temp = -1;
+        $skip = false;
+        $selected_index = -1;
+        $key = 'OVbqZrThuHq5YAnjoRf6HYuk7MftuSDybcGZ7UV6';
+        $url = "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=".$key."&query=".urlencode($product_name);
+        $tempArr = curlRequestLoad($url);
+
+        if (!empty($tempArr['foods'])){
+            foreach ($tempArr['foods'] as $key => $value) {
+                $temp++;
+                if (!$skip && ($value["description"] == $product_name)
+                    || (substr($value["description"],0, strlen($product_name))===$product_name)){
+                    $selected_index = $temp;
+                    $skip = true;
+                }
+            }
+            if ($selected_index >= 0) {
+                $value = $tempArr['foods'][$selected_index];
+            } else {
+                $value = $tempArr['foods'][0];
+            }
+            $product_array = [
+                'product_name' => $value["description"],
+                'is_delete' => IS_DELETE,
+                'is_test' => IS_TESTDATA,
+                'ingredients' => ($value['ingredients']?$value['ingredients']:'')];
+            $barcode = ($value['gtinUpc']?$value['gtinUpc']:'');
+            if ($barcode != ''){
+                $product_array['barcode_id'] = $barcode;
+            }
+            $objNutriments =  $value['foodNutrients'];
+            $product_array['saturated_fats'] = ($objNutriments['Fatty acids, total saturated"']['value']?$objNutriments['Fatty acids, total saturated"']['value']:0);
+            $product_array['protein'] = ($objNutriments['Protein']['value']?$$objNutriments['Protein']['value']:0);
+            $product_array['sugar'] = ($objNutriments['Sugars, total including NLEA']['value']?$objNutriments['Sugars, total including NLEA']['value']:0);
+            $product_array['salt'] = ($objNutriments['Vitamin C, total ascorbic acid']['value']?$objNutriments['Vitamin C, total ascorbic acid']['value']:0);
+            $product_array['carbohydrate'] = ($objNutriments['Carbohydrate, by difference']['value']?$objNutriments['Carbohydrate, by difference']['value']:0);
+            $product_array['dietary_fiber'] = ($objNutriments['Fiber, total dietary']['value']?$objNutriments['Fiber, total dietary']['value']:0);
+            $product_array['sodium'] = ($objNutriments['Sodium, Na']['value']?$objNutriments['Sodium, Na']['value']:0);
+            $product_array['fat_amount'] = ($objNutriments['Total lipid (fat)']['value']?$objNutriments['Total lipid (fat)']['value']:0);
+            $product_array['calories'] = ($objNutriments['Fatty acids, total saturated"']['value']?$objNutriments['Fatty acids, total saturated"']['value']:0);
+        }
+
+        return $product_array;
+    }
+
+    public function getSwissFoodDetails($product_name){
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => "https://www.foodrepo.org/api/v3/products/_search",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS =>"{\"query\":{\"query_string\":{\"query\":\"".$product_name."\"}}}",
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: Token token=57b3ef7653d245e45ee113c5172b51bd",
+                "Content-Type: application/vnd.api+json",
+                "Accept: application/json",
+                "Content-Type: application/json"
+            ),
+        ));
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $tempArr = json_decode($result, true);
+        $temp = -1;
+        $skip = false;
+        $selected_index = -1;
+        $arrProducts =  $tempArr['hits']["hits"];
+        foreach ($arrProducts as $key => $value) {
+            $temp++;
+            $name = $value["_source"]["display_name_translations"]["de"];
+            if (!$skip && ($name == $product_name)
+                || (substr($name,0, strlen($product_name))===$product_name)){
+                $selected_index = $temp;
+                $skip = true;
+            }
+        }
+        if ($selected_index >= 0) {
+            $value = $arrProducts[$selected_index];
+        } else {
+            $value = $arrProducts[0];
+        }
+        $objProduct = $value["_source"];
+        $product_array = [
+            'is_delete' => IS_DELETE,
+            'is_test' => IS_TESTDATA,
+        ];
+        foreach ($objProduct as $obj => $key) {
+            switch ($obj){
+                case 'barcode':
+                    $product_array['barcode_id'] = $key;
+                    break;
+                case 'alcohol_by_volume':
+                    $product_array['alcohol'] = $key;
+                    break;
+                case 'energy_kcal':
+                    $product_array['calories'] = $key;
+                    break;
+                case 'display_name_translations':
+                    $product_array['product_name'] = $key['de'];
+                    break;
+                case 'ingredients_translations':
+                    $product_array['ingredients'] = $key['de']?$key['de']:'';
+                    break;
+                case 'images':
+                    foreach ($objProduct[$obj] as $objImage=> $keyImage) {
+                        if ($keyImage['categories'][0] == 'Front'){
+                            $product_array['product_image'] = $keyImage['medium'];
+                        }
+                    }
+                    break;
+                case 'nutrients':
+                    $objNutriments =  $objProduct[$obj];
+                    $product_array['saturated_fats'] = ($objNutriments['saturated_fat']['per_hundred']?$objNutriments['saturated_fat']['per_hundred']:0);
+                    $product_array['protein'] = ($objNutriments['protein']['per_hundred']?$objNutriments['protein']['per_hundred']:0);
+                    $product_array['sugar'] = ($objNutriments['sugars']['per_hundred']?$objNutriments['sugars']['per_hundred']:0);
+                    $product_array['salt'] = ($objNutriments['salt']['per_hundred']?$objNutriments['salt']['per_hundred']:0);
+                    $product_array['carbohydrate'] = ($objNutriments['carbohydrates']['per_hundred']?$objNutriments['carbohydrates']['per_hundred']:0);
+                    $product_array['dietary_fiber'] = ($objNutriments['fiber']['per_hundred']?$objNutriments['fiber']['per_hundred']:0);
+                    $product_array['sodium'] = ($objNutriments['sodium']['per_hundred']?$objNutriments['sodium']['per_hundred']:0);
+                    $product_array['fat_amount'] = ($objNutriments['fat']['per_hundred']?$objNutriments['fat']['per_hundred']:0);
+                    $product_array['calories'] = ($objNutriments['energy_kcal']['per_hundred']?$objNutriments['energy_kcal']['per_hundred']:0);
+                    break;
+            }
+        }
+        return $product_array;
+    }
+
+    public function getProductDetailsV2($userData)
+    {
+        $connection = $this->connection;
+
+        $user_id = validateObject($userData, 'user_id', '');
+        $user_id = addslashes($user_id);
+
+        $product_name = validateObject($userData, 'product_name', '');
+        $product_name = utf8_decode($product_name);
+
+        $flag = validateObject($userData, 'flag', 0); // 0 => Scan by productName, 1 => Scan by Barcode
+        $flag = addslashes($flag);
+
+        $food_type = validateObject($userData, 'food_type', 0); // 0 => Open Food , 1 => USA Food , 2 => Swiss Food
+        $food_type = addslashes($food_type);
+
+        $current_date = getDefaultDate();
+        $is_favourite = 1;
+
+        $select_product_details_stmt = getMultipleTableData(
+            $connection,TABLE_PRODUCT,
+            '','*',
+            '(LOWER(product_name) LIKE LOWER(:product_name) OR barcode_id = :barcode) AND is_delete = :is_delete ORDER BY created_date LIMIT 1',
+            [
+                'product_name' => $product_name.'%',
+                'barcode' => $product_name,
+                'is_delete' => IS_DELETE
+            ]);
+        if ($select_product_details_stmt->rowCount() > 0)
+        {
+            $status = SUCCESS;
+            while ($product = $select_product_details_stmt->fetch(PDO::FETCH_ASSOC)) {
+                $conditional_array = ['product_id' => $product['id'], 'user_id' => $user_id, 'is_favourite' => $is_favourite, 'is_delete' => IS_DELETE,'is_test' => IS_TESTDATA];
+                $objFavourite = getSingleTableData(
+                    $connection, TABLE_FAVOURITE,
+                    "", "id", "",
+                    $conditional_array);
+                $product['is_favourite'] = !empty($objFavourite)?1:0;
+                $product_id = $product['id'];
+
+                $conditional_array = ['product_id' => $product_id, 'user_id' => $user_id, 'is_delete' => IS_DELETE,'is_test' => IS_TESTDATA];
+                $objHistory = getSingleTableData(
+                    $connection,TABLE_HISTORY,
+                    "","id","",
+                    $conditional_array);
+                if (!empty($objHistory)) {
+                    $history_id = $objHistory['id'];
+                    $edit_history_response = editData(
+                        $connection,'getProductDetails',
+                        TABLE_HISTORY,['created_date' => $current_date],
+                        ['id' => $history_id,'is_delete' => IS_DELETE,'is_test' => IS_TESTDATA],
+                        "");
+                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                        $posts[] = $product;
+                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
+                    } else {
+                        $status = FAILED;
+                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                        break;
+                    }
+                } else {
+                    $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date,'is_test' => IS_TESTDATA];
+                    $add_history_response = addData(
+                        $connection, '',
+                        TABLE_HISTORY,$history_array);
+                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                        $posts[] = $product;
+                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
+                    } else {
+                        $status = FAILED;
+                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            //Create Product param to store product details
+            $product_array = [];
+            switch ($food_type){
+                case "0": //Open Food
+                    $product_array = $this -> getOpenFoodDetails($product_name,$flag);
+                    break;
+                case "1": //USA Food
+                    $product_array = $this -> getUSAFoodDetails($product_name);
+                    break;
+                case "2": // Swiss Food
+                    $product_array = $this -> getSwissFoodDetails($product_name);
+                    break;
+            }
+            if (!empty($product_array)){
+                $conditional_array_product = ['barcode_id' => $product_array['barcode_id'], 'is_delete' => IS_DELETE];
+                $objProductData = getSingleTableData(
+                    $connection,TABLE_PRODUCT,
+                    "","*", "",
+                    $conditional_array_product);
+                if (!empty($objProductData)) {
+                    $product['is_favourite'] = 0;
+                    $posts[] = $objProductData;
+                }
+                else {
+                    $insert_response = addData(
+                        $connection, '',
+                        TABLE_PRODUCT,$product_array);
+                    if ($insert_response[STATUS_KEY] == SUCCESS) {
+                        $last_inserted_id = $insert_response[MESSAGE_KEY];
+                        $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
+                        $add_history_response = addData(
+                            $connection, '',
+                            TABLE_HISTORY,$history_array);
+                        $select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
+                        if ($stmt = $this->connection->prepare($select)) {
+                            if ($stmt->execute()) {
+                                if ($stmt->rowCount() > 0) {
+                                    $status = SUCCESS;
+                                    while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $product['is_favourite'] = 0;
+                                        $posts[] = $product;
+                                    }
+                                }
+                            }
+                            $stmt->closeCursor();
+                            $message = PRODUCT_FETCHED_SUCCESSFULLY;
+                        }
+                    }
+                    else{
+                        $message = $insert_response[MESSAGE_KEY];
+                    }
+                }
+            }else{
+                $message = NO_PRODUCT_AVAILABLE;
+            }
+
+        }
+
+        $data['status'] = $status;
+        $data['message'] = $message;
+        $data['product'] = $posts;
+        return $data;
+    }
+
+
     public function getProductDetails($userData)
     {
         $connection = $this->connection;
@@ -497,7 +856,8 @@ class Product
                                     $stmt->closeCursor();
                                     $message = PRODUCT_FETCHED_SUCCESSFULLY;
                                 }
-                            } else {
+                            }
+                            else {
                                  $insert_response = addData(
                                      $connection, '',
                                      TABLE_PRODUCT,
