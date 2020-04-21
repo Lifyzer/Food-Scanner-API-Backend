@@ -30,7 +30,7 @@ class Product
             case 'getProductDetails':
                 return $this->getProductDetails($postData);
 
-            case 'getOtherProductDetails':
+            case 'getProductDetailsV2':
                 return $this->getProductDetailsV2($postData);
 
             case 'getUserHistory':
@@ -341,7 +341,7 @@ class Product
         $product_array = [];
         switch ($scan_type){
             case "0":
-                $url = "https://ssl-api.openfoodfacts.org/cgi/search.pl?search_simple=1&json=1&action=process&fields=product_name,ingredients_text,codes_tags,image_url,nutriments,code&search_terms=" . urlencode($product_name) . "&page=1";
+                $url = getenv('URL_OPEN_FOOD_NAME_API').urlencode($product_name)."&page=1";
                 $tempArr = curlRequestLoad($url);
                 if(count($tempArr['products']) >0)
                 {
@@ -383,7 +383,7 @@ class Product
                 }
                 break;
             case "1":
-                echo $url = "https://world.openfoodfacts.org/api/v0/product/" . urlencode($product_name) . ".json";
+                $url = getenv('URL_OPEN_FOOD_BARCODE_API').urlencode($product_name).".json";
                 $tempArr = curlRequestLoad($url);
                 if(count($tempArr['product']) >0)
                 {
@@ -423,8 +423,7 @@ class Product
         $temp = -1;
         $skip = false;
         $selected_index = -1;
-        $key = 'OVbqZrThuHq5YAnjoRf6HYuk7MftuSDybcGZ7UV6';
-        $url = "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=".$key."&query=".urlencode($product_name);
+        $url = getenv('URL_USA_FOOD_API').getenv('USA_FOOD_KEY')."&query=".urlencode($product_name);
         $tempArr = curlRequestLoad($url);
 
         if (!empty($tempArr['foods'])){
@@ -451,15 +450,34 @@ class Product
                 $product_array['barcode_id'] = $barcode;
             }
             $objNutriments =  $value['foodNutrients'];
-            $product_array['saturated_fats'] = ($objNutriments['Fatty acids, total saturated"']['value']?$objNutriments['Fatty acids, total saturated"']['value']:0);
-            $product_array['protein'] = ($objNutriments['Protein']['value']?$$objNutriments['Protein']['value']:0);
-            $product_array['sugar'] = ($objNutriments['Sugars, total including NLEA']['value']?$objNutriments['Sugars, total including NLEA']['value']:0);
-            $product_array['salt'] = ($objNutriments['Vitamin C, total ascorbic acid']['value']?$objNutriments['Vitamin C, total ascorbic acid']['value']:0);
-            $product_array['carbohydrate'] = ($objNutriments['Carbohydrate, by difference']['value']?$objNutriments['Carbohydrate, by difference']['value']:0);
-            $product_array['dietary_fiber'] = ($objNutriments['Fiber, total dietary']['value']?$objNutriments['Fiber, total dietary']['value']:0);
-            $product_array['sodium'] = ($objNutriments['Sodium, Na']['value']?$objNutriments['Sodium, Na']['value']:0);
-            $product_array['fat_amount'] = ($objNutriments['Total lipid (fat)']['value']?$objNutriments['Total lipid (fat)']['value']:0);
-            $product_array['calories'] = ($objNutriments['Fatty acids, total saturated"']['value']?$objNutriments['Fatty acids, total saturated"']['value']:0);
+            foreach ($objNutriments as $key) {
+                switch ($key['nutrientName']){
+                    case 'Fatty acids, total saturated"' :
+                        $product_array['saturated_fats'] = $key['value'];
+                        break;
+                    case 'Protein' :
+                        $product_array['protein'] = $key['value'];
+                        break;
+                    case 'Sugars, total including NLEA' :
+                        $product_array['sugar'] = $key['value'];
+                        break;
+                    case 'Vitamin C, total ascorbic acid' :
+                        $product_array['salt'] = $key['value'];
+                        break;
+                    case 'Carbohydrate, by difference' :
+                        $product_array['carbohydrate'] = $key['value'];
+                        break;
+                    case 'Fiber, total dietary' :
+                        $product_array['dietary_fiber'] = $key['value'];
+                        break;
+                    case 'Sodium, Na' :
+                        $product_array['sodium'] = $key['value'];
+                        break;
+                    case 'Total lipid (fat)':
+                        $product_array['fat_amount'] = $key['value'];;
+                        break;
+                }
+            }
         }
 
         return $product_array;
@@ -468,14 +486,14 @@ class Product
     public function getSwissFoodDetails($product_name){
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL => "https://www.foodrepo.org/api/v3/products/_search",
+            CURLOPT_URL => getenv('URL_SWISS_FOOD_API'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS =>"{\"query\":{\"query_string\":{\"query\":\"".$product_name."\"}}}",
             CURLOPT_HTTPHEADER => array(
-                "Authorization: Token token=57b3ef7653d245e45ee113c5172b51bd",
+                "Authorization: Token token=".getenv('SWISS_FOOD_KEY'),
                 "Content-Type: application/vnd.api+json",
                 "Accept: application/json",
                 "Content-Type: application/json"
@@ -490,7 +508,7 @@ class Product
         $arrProducts =  $tempArr['hits']["hits"];
         foreach ($arrProducts as $key => $value) {
             $temp++;
-            $name = $value["_source"]["display_name_translations"]["de"];
+            $name = $value["_source"]["display_name_translations"]["en"];
             if (!$skip && ($name == $product_name)
                 || (substr($name,0, strlen($product_name))===$product_name)){
                 $selected_index = $temp;
@@ -519,10 +537,10 @@ class Product
                     $product_array['calories'] = $key;
                     break;
                 case 'display_name_translations':
-                    $product_array['product_name'] = $key['de'];
+                    $product_array['product_name'] = $key['en'];
                     break;
                 case 'ingredients_translations':
-                    $product_array['ingredients'] = $key['de']?$key['de']:'';
+                    $product_array['ingredients'] = $key['en']?$key['en']:'';
                     break;
                 case 'images':
                     foreach ($objProduct[$obj] as $objImage=> $keyImage) {
@@ -533,15 +551,35 @@ class Product
                     break;
                 case 'nutrients':
                     $objNutriments =  $objProduct[$obj];
-                    $product_array['saturated_fats'] = ($objNutriments['saturated_fat']['per_hundred']?$objNutriments['saturated_fat']['per_hundred']:0);
-                    $product_array['protein'] = ($objNutriments['protein']['per_hundred']?$objNutriments['protein']['per_hundred']:0);
-                    $product_array['sugar'] = ($objNutriments['sugars']['per_hundred']?$objNutriments['sugars']['per_hundred']:0);
-                    $product_array['salt'] = ($objNutriments['salt']['per_hundred']?$objNutriments['salt']['per_hundred']:0);
-                    $product_array['carbohydrate'] = ($objNutriments['carbohydrates']['per_hundred']?$objNutriments['carbohydrates']['per_hundred']:0);
-                    $product_array['dietary_fiber'] = ($objNutriments['fiber']['per_hundred']?$objNutriments['fiber']['per_hundred']:0);
-                    $product_array['sodium'] = ($objNutriments['sodium']['per_hundred']?$objNutriments['sodium']['per_hundred']:0);
-                    $product_array['fat_amount'] = ($objNutriments['fat']['per_hundred']?$objNutriments['fat']['per_hundred']:0);
-                    $product_array['calories'] = ($objNutriments['energy_kcal']['per_hundred']?$objNutriments['energy_kcal']['per_hundred']:0);
+                    foreach ($objNutriments as $obj => $key) {
+                        $value = $key['per_hundred'];
+                        switch ($obj){
+                            case 'saturated_fat' :
+                                $product_array['saturated_fats'] = $value;
+                                break;
+                            case 'protein' :
+                                $product_array['protein'] = $value;
+                                break;
+                            case 'sugars' :
+                                $product_array['sugar'] = $value;
+                                break;
+                            case 'salt' :
+                                $product_array['salt'] = $value;
+                                break;
+                            case 'carbohydrates' :
+                                $product_array['carbohydrate'] = $value;
+                                break;
+                            case 'fiber' :
+                                $product_array['dietary_fiber'] = $value;
+                                break;
+                            case 'sodium' :
+                                $product_array['sodium'] = $value;
+                                break;
+                            case 'fat':
+                                $product_array['fat_amount'] = $value;
+                                break;
+                        }
+                    }
                     break;
             }
         }
