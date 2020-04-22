@@ -451,7 +451,7 @@ HTML;
        <p>Hi {$data['first_name']},</p>
         <p>Your new password for Lifyzer App is:<br> {$data['password']}</p>
         <p>&nbsp;</p>
-        <p>Best,<br> <a href="https://lifyzer.com">Lifyzer, Healthy Food</a> Team</p>
+        <p>Best,<br> <a href="https://lifyzer.com">Lifyzer, Healthy Food</a> 🍍</p>
 </body></html>
 HTML;
         $email->sendMail(
