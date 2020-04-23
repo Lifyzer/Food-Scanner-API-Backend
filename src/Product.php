@@ -676,7 +676,7 @@ class Product
                     $product_array = $this -> getSwissFoodDetails($product_name);
                     break;
             }
-            if (!empty($product_array)){
+            if (!empty($product_array)) {
                 $conditional_array_product = ['barcode_id' => $product_array['barcode_id'], 'is_delete' => IS_DELETE];
                 $objProductData = getSingleTableData(
                     $connection,TABLE_PRODUCT,
@@ -687,33 +687,39 @@ class Product
                     $posts[] = $objProductData;
                 }
                 else {
-                    $insert_response = addData(
-                        $connection, '',
-                        TABLE_PRODUCT,$product_array);
-                    if ($insert_response[STATUS_KEY] == SUCCESS) {
-                        $last_inserted_id = $insert_response[MESSAGE_KEY];
-                        $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
-                        $add_history_response = addData(
+                    if ($product_array['product_name'] != '')
+                    {
+                        $insert_response = addData(
                             $connection, '',
-                            TABLE_HISTORY,$history_array);
-                        $select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
-                        if ($stmt = $this->connection->prepare($select)) {
-                            if ($stmt->execute()) {
-                                if ($stmt->rowCount() > 0) {
-                                    $status = SUCCESS;
-                                    while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                        $product['is_favourite'] = 0;
-                                        $posts[] = $product;
+                            TABLE_PRODUCT,$product_array);
+                        if ($insert_response[STATUS_KEY] == SUCCESS) {
+                            $last_inserted_id = $insert_response[MESSAGE_KEY];
+                            $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
+                            $add_history_response = addData(
+                                $connection, '',
+                                TABLE_HISTORY,$history_array);
+                            $select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
+                            if ($stmt = $this->connection->prepare($select)) {
+                                if ($stmt->execute()) {
+                                    if ($stmt->rowCount() > 0) {
+                                        $status = SUCCESS;
+                                        while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $product['is_favourite'] = 0;
+                                            $posts[] = $product;
+                                        }
                                     }
                                 }
+                                $stmt->closeCursor();
+                                $message = PRODUCT_FETCHED_SUCCESSFULLY;
                             }
-                            $stmt->closeCursor();
-                            $message = PRODUCT_FETCHED_SUCCESSFULLY;
                         }
+                        else{
+                            $message = $insert_response[MESSAGE_KEY];
+                        }
+                    }else{
+                        $message = NO_PRODUCT_AVAILABLE;
                     }
-                    else{
-                        $message = $insert_response[MESSAGE_KEY];
-                    }
+
                 }
             }else{
                 $message = NO_PRODUCT_AVAILABLE;
