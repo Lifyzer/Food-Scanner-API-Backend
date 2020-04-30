@@ -35,6 +35,7 @@ class Security
                 return null;
         }
     }
+
     //Generate Random Unique Token Number
     public function crypto_random_secure($min, $max)
     {

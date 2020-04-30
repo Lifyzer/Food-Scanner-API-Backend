@@ -404,6 +404,7 @@ class User
         }
         $data['status'] = $status;
         $data['message'] = $message;
+
         return $data;
     }
 
@@ -480,6 +481,7 @@ HTML;
         $data['message'] = $message;
         return $data;
     }
+
     /**
      * Data takeout feature. Ideal to be GDPR compliant.
      *
