@@ -111,7 +111,7 @@ class Security
         return $data;
     }
 
-    public function updateTokenForUser_Login($userData)
+    public function updateTokenForUserLogin($userData)
     {
         $connection = $this->connection;
         $user_id = validateValue($userData->userId, '');

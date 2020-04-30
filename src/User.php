@@ -127,7 +127,7 @@ class User
                     $tokenData = new stdClass;
                     $tokenData->GUID = $getUser['guid'];
                     $tokenData->userId = $getUser['id'];
-                    $user_token = $security->updateTokenForUser_Login($tokenData);
+                    $user_token = $security->updateTokenForUserLogin($tokenData);
                     if ($user_token[STATUS_KEY] === SUCCESS) {
                         $data[USERTOKEN] = $user_token[USERTOKEN];
                     }
@@ -298,7 +298,7 @@ class User
                     $tokenData->GUID = $generate_user_guid;
                     $tokenData->userId = $user_id;
                     $security = new Security($connection);
-                    $user_token = $security->updateTokenForUser_Login($tokenData);
+                    $user_token = $security->updateTokenForUserLogin($tokenData);
                     if ($user_token[STATUS_KEY] === SUCCESS) {
                         $token = $user_token[USERTOKEN];
                     }
