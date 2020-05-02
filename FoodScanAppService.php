@@ -78,6 +78,7 @@ if (!empty($_REQUEST['Service'])) {
         case 'deleteReview':
         case 'getReviewList':
         case 'updateRatingStatus':
+        case 'getProductDetailsV2':
             $access_key = validateObject($postData, 'access_key', '');
             $access_key = addslashes($access_key);
 

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 namespace Lifyzer\Api;
 
+use function foo\func;
+
 function errorLogFunction(string $errorMessage): void
 {
     $file = date('F-j-Y') . '_log.txt';
@@ -50,4 +52,20 @@ function generateRandomString(int $length = 10): string
         $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
     return $randomString;
+}
+function curlRequestLoad($url,$isParam = false,$params=""){
+    $ch = curl_init();
+    curl_setopt_array($ch, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 0,
+    ));
+    if ($isParam){
+        curl_setopt_array(CURLOPT_POSTFIELDS,$params);
+    }
+    $result = curl_exec($ch);
+    curl_close($ch);
+    $tempArr = json_decode($result, true);
+    return $tempArr;
 }
