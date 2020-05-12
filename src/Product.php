@@ -361,8 +361,6 @@ class Product
                     $product_array = [
                         'barcode_id' => ($value['code'] ? $value['code'] : ''),
                         'product_name' => ($value['product_name'] ? $value['product_name'] : ''),
-                        'is_delete' => IS_DELETE,
-                        'is_test' => IS_TESTDATA,
                         'ingredients' => ($value['ingredients_text'] ? $value['ingredients_text'] : ''),
                         'saturated_fats' => ($value["nutriments"]["saturated-fat"] ? $value["nutriments"]["saturated-fat"] : 0),
                         'protein' => ($value["nutriments"]["proteins"] ? $value["nutriments"]["proteins"] : 0),
@@ -391,8 +389,6 @@ class Product
                     $product_array = [
                         'product_name' => ($value['product_name']?$value['product_name']:''),
                         'barcode_id' => ($tempArr['code']?$value['code']:''),
-                        'is_delete' => IS_DELETE,
-                        'is_test' => IS_TESTDATA,
                         'ingredients' => ($value['ingredients_text']?$value['ingredients_text']:''),
                         'saturated_fats' => ($value["nutriments"]["saturated-fat"]?$value["nutriments"]["saturated-fat"]:0),
                         'protein' => ($value["nutriments"]["proteins"]?$value["nutriments"]["proteins"]:0),
@@ -442,8 +438,6 @@ class Product
             }
             $product_array = [
                 'product_name' => $value["description"],
-                'is_delete' => IS_DELETE,
-                'is_test' => IS_TESTDATA,
                 'ingredients' => ($value['ingredients']?$value['ingredients']:'')];
             $barcode = ($value['gtinUpc']?$value['gtinUpc']:'');
             if ($barcode != ''){
@@ -478,6 +472,7 @@ class Product
                         break;
                 }
             }
+
         }
 
         return $product_array;
@@ -521,10 +516,7 @@ class Product
             $value = $arrProducts[0];
         }
         $objProduct = $value["_source"];
-        $product_array = [
-            'is_delete' => IS_DELETE,
-            'is_test' => IS_TESTDATA,
-        ];
+        $product_array = [];
         foreach ($objProduct as $obj => $key) {
             switch ($obj){
                 case 'barcode':
@@ -596,10 +588,12 @@ class Product
         $product_name = validateObject($userData, 'product_name', '');
         $product_name = utf8_decode($product_name);
 
-        $flag = validateObject($userData, 'flag', 0); // 0 => Scan by productName, 1 => Scan by Barcode
+        // 0 => Scan by productName, 1 => Scan by Barcode
+        $flag = validateObject($userData, 'flag', 0);
         $flag = addslashes($flag);
 
-        $food_type = validateObject($userData, 'food_type', 0); // 0 => Open Food , 1 => USA Food , 2 => Swiss Food
+        // 0 => Open Food , 1 => USA Food , 2 => Swiss Food
+        $food_type = validateObject($userData, 'food_type', 0);
         $food_type = addslashes($food_type);
 
         $current_date = getDefaultDate();
@@ -640,12 +634,14 @@ class Product
                         "");
                     if ($edit_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
-                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
+                        $data['status'] = SUCCESS;
+                        $data['message'] = PRODUCT_FETCHED_SUCCESSFULLY;
+                        $data['product'] = $posts;
                     } else {
-                        $status = FAILED;
-                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                        break;
+                        $data['status'] = FAILED;
+                        $data['message'] = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                     }
+                    return $data;
                 } else {
                     $history_array = ['user_id' => $user_id, 'product_id' => $product_id, 'created_date' => $current_date,'is_test' => IS_TESTDATA];
                     $add_history_response = addData(
@@ -653,12 +649,14 @@ class Product
                         TABLE_HISTORY,$history_array);
                     if ($add_history_response[STATUS_KEY] == SUCCESS) {
                         $posts[] = $product;
-                        $message = PRODUCT_FETCHED_SUCCESSFULLY;
+                        $data['status'] = SUCCESS;
+                        $data['message'] = PRODUCT_FETCHED_SUCCESSFULLY;
+                        $data['product'] = $posts;
                     } else {
-                        $status = FAILED;
-                        $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
-                        break;
+                        $data['status'] = FAILED;
+                        $data['message'] = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                     }
+                    return $data;
                 }
             }
         }
@@ -668,71 +666,112 @@ class Product
             switch ($food_type){
                 case "0": //Open Food
                     $product_array = $this -> getOpenFoodDetails($product_name,$flag);
+                    if (empty($product_array)){
+                        $product_array = $this -> getUSAFoodDetails($product_name);
+                        if (empty($product_array)){
+                            $product_array = $this -> getSwissFoodDetails($product_name);
+                        }
+                    }
                     break;
                 case "1": //USA Food
                     $product_array = $this -> getUSAFoodDetails($product_name);
+                    if (empty($product_array)){
+                        $product_array = $this -> getSwissFoodDetails($product_name);
+                        if (empty($product_array)){
+                            $product_array = $this -> getOpenFoodDetails($product_name,$flag);
+                        }
+                    }
                     break;
                 case "2": // Swiss Food
                     $product_array = $this -> getSwissFoodDetails($product_name);
+                    print_r($product_array);
+                    if (empty($product_array)){
+                        $product_array = $this -> getOpenFoodDetails($product_name,$flag);
+                        if (empty($product_array)){
+                            $product_array = $this -> getUSAFoodDetails($product_name);
+                        }
+                    }
                     break;
             }
             if (!empty($product_array)) {
-                $conditional_array_product = ['barcode_id' => $product_array['barcode_id'], 'is_delete' => IS_DELETE];
-                $objProductData = getSingleTableData(
-                    $connection,TABLE_PRODUCT,
-                    "","*", "",
-                    $conditional_array_product);
-                if (!empty($objProductData)) {
-                    $product['is_favourite'] = 0;
-                    $posts[] = $objProductData;
+                $product_array['is_delete'] = IS_DELETE;
+                $product_array['is_test'] = IS_TESTDATA;
+                $productDetails  = $this->processProductDetails($product_array,$user_id);
+                if ($productDetails[STATUS_KEY] == SUCCESS){
+                    return $productDetails;
+                }else{
+                    $data['status'] = $productDetails[STATUS_KEY];
+                    $data['message'] = $productDetails[MESSAGE_KEY];
+                    return $data;
                 }
-                else {
-                    if ($product_array['product_name'] != '')
-                    {
-                        $insert_response = addData(
-                            $connection, '',
-                            TABLE_PRODUCT,$product_array);
-                        if ($insert_response[STATUS_KEY] == SUCCESS) {
-                            $last_inserted_id = $insert_response[MESSAGE_KEY];
-                            $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
-                            $add_history_response = addData(
-                                $connection, '',
-                                TABLE_HISTORY,$history_array);
-                            $select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
-                            if ($stmt = $this->connection->prepare($select)) {
-                                if ($stmt->execute()) {
-                                    if ($stmt->rowCount() > 0) {
-                                        $status = SUCCESS;
-                                        while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            $product['is_favourite'] = 0;
-                                            $posts[] = $product;
-                                        }
-                                    }
-                                }
-                                $stmt->closeCursor();
-                                $message = PRODUCT_FETCHED_SUCCESSFULLY;
-                            }
-                        }
-                        else{
-                            $message = $insert_response[MESSAGE_KEY];
-                        }
-                    }else{
-                        $message = NO_PRODUCT_AVAILABLE;
-                    }
-
-                }
-            }else{
-                $message = NO_PRODUCT_AVAILABLE;
+            }
+            else{
+                $data['status'] = FAILED;
+                $data['message'] = NO_PRODUCT_AVAILABLE;
+                return $data;
             }
 
         }
-
-        $data['status'] = $status;
-        $data['message'] = $message;
-        $data['product'] = $posts;
-        return $data;
     }
 
+    function processProductDetails($product_array,$user_id)
+    {
+        $connection = $this->connection;
+        $current_date = getDefaultDate();
+
+        $conditional_array_product = ['barcode_id' => $product_array['barcode_id'], 'is_delete' => IS_DELETE];
+        $objProductData = getSingleTableData(
+            $connection,TABLE_PRODUCT,
+            "","*", "",
+            $conditional_array_product);
+        if (!empty($objProductData)) {
+            $objProductData['is_favourite'] = 0;
+            $posts[] = $objProductData;
+            $data['status'] = SUCCESS;
+            $data['message'] = PRODUCT_FETCHED_SUCCESSFULLY;
+            $data['product'] = $posts;
+            return $data;
+        }
+        else {
+            if ($product_array['product_name'] != '')
+            {
+                $insert_response = addData(
+                    $connection, '',
+                    TABLE_PRODUCT,$product_array);
+                if ($insert_response[STATUS_KEY] == SUCCESS) {
+                    $last_inserted_id = $insert_response[MESSAGE_KEY];
+                    $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
+                    addData($connection, '',TABLE_HISTORY,$history_array);
+                    $select = "select * from " . TABLE_PRODUCT . " where id=" . $last_inserted_id;
+                    if ($stmt = $this->connection->prepare($select)) {
+                        if ($stmt->execute()) {
+                            if ($stmt->rowCount() > 0) {
+                                $status = SUCCESS;
+                                while ($product = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $product['is_favourite'] = 0;
+                                    $posts[] = $product;
+                                }
+                            }
+                        }
+                        $stmt->closeCursor();
+                        $data['status'] = SUCCESS;
+                        $data['message'] = PRODUCT_FETCHED_SUCCESSFULLY;
+                        $data['product'] = $posts;
+                        return $data;
+                    }
+                }
+                else{
+                    $data['status'] = FAILED;
+                    $data['message'] = $insert_response[MESSAGE_KEY];
+                    return $data;
+                }
+            }else{
+                $data['status'] = FAILED;
+                $data['message'] = NO_PRODUCT_AVAILABLE;
+                return $data;
+            }
+        }
+    }
 
     public function getProductDetails($userData)
     {
