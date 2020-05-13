@@ -663,7 +663,7 @@ class Product
             //Create Product param to store product details
             $product_array = [];
             switch ($food_type) {
-                case ApiProviders::OPEN_FOOD_FACTS: //Open Food
+                case ApiProviders::OPEN_FOOD_FACTS:
                     $product_array = $this->getOpenFoodDetails($product_name, $flag);
                     if (empty($product_array)) {
                         $product_array = $this->getUSAFoodDetails($product_name);
@@ -672,7 +672,7 @@ class Product
                         }
                     }
                     break;
-                case ApiProviders::USDA: //USA Food
+                case ApiProviders::FDC_USDA:
                     $product_array = $this->getUSAFoodDetails($product_name);
                     if (empty($product_array)) {
                         $product_array = $this->getSwissFoodDetails($product_name);
@@ -681,7 +681,7 @@ class Product
                         }
                     }
                     break;
-                case ApiProviders::FOOD_REPO: // Swiss Food
+                case ApiProviders::FOOD_REPO:
                     $product_array = $this->getSwissFoodDetails($product_name);
                     print_r($product_array);
                     if (empty($product_array)) {
