@@ -61,12 +61,25 @@ class Security
         if ($user_id != '') {
             $modifiedDate = date(DATETIME_FORMAT, time());
             $generateToken = $this->generateToken(8);
-            $objExpiryDate = getSingleTableData($connection, TABLE_ADMIN_CONFIG, "", "config_value", "", ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]);
+            $objExpiryDate = getSingleTableData(
+                $connection,
+                TABLE_ADMIN_CONFIG,
+                '',
+                'config_value',
+                '',
+                ['config_key' => 'expiry_duration', 'is_delete' => DELETE_STATUS::NOT_DELETE]
+            );
             if (!empty($objExpiryDate)) {
                 $expiryDuration = $objExpiryDate['config_value'];
                 $currentDate = date("dmyHis", time() + $expiryDuration);
-                $token_array = [':userid' => $user_id, ':token' => $generateToken,
-                    ':expiry' => $currentDate, ':token1' => $generateToken, ':expiry1' => $currentDate, ':created_date' => $modifiedDate];
+                $token_array = [
+                    ':userid' => $user_id,
+                    ':token' => $generateToken,
+                    ':expiry' => $currentDate,
+                    ':token1' => $generateToken,
+                    ':expiry1' => $currentDate,
+                    ':created_date' => $modifiedDate
+                ];
                 error_reporting(E_ALL & ~E_NOTICE);
                 $insertUpdateQuery = "INSERT INTO " . TABLE_APP_TOKENS . " (userid,token,expiry) VALUES(:userid,:token,:expiry)
             ON DUPLICATE KEY UPDATE token = :token1 , expiry = :expiry1, created_date = :created_date";
