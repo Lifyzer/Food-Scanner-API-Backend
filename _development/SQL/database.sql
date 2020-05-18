@@ -1,5 +1,5 @@
 --
--- Copyright:     (c) 2018, Pierre-Henry Soria. All Rights Reserved.
+-- Copyright:     (c) 2018-2020, Pierre-Henry Soria. All Rights Reserved.
 -- License:       GNU General Public License <https://www.gnu.org/licenses/gpl-3.0.en.html>
 --
 
@@ -9,21 +9,21 @@ CREATE TABLE admin_config (
   config_value varchar(200) NOT NULL,
   value_unit varchar(20) NOT NULL,
   scope enum('All','Admin') NOT NULL DEFAULT 'All' COMMENT 'This will define value is applicable for which scope',
-  created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created datetime NOT NULL,
+  modified timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete tinyint(1) NOT NULL DEFAULT '0',
-  is_testdata varchar(3) NOT NULL DEFAULT 'yes' COMMENT 'dev means non garbaged dummy data',
+  is_testdata varchar(3) NOT NULL DEFAULT 'yes' COMMENT 'dev means non garbage dummy data',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO admin_config (id, config_key, config_value, value_unit, scope, created, modified, is_delete, is_testdata) VALUES
-(1, 'globalPassword', '_$(Skill)!_square@#$%_23_06_2017', 'text', 'All', '2016-09-26 12:21:02', '2017-06-23 11:41:40', 0, 'yes'),
-(2, 'userAgent', 'iOS,Android,Mozilla/5.0,PostmanRuntime/2.5.0', 'comma-separated', 'All', '2016-06-28 13:22:22', '2016-09-26 12:46:41', 0, 'yes'),
-(3, 'tempToken', 'allowAccessToApp', 'text', 'All', '2016-06-28 13:22:22', '0000-00-00 00:00:00', 0, 'yes'),
-(4, 'expiry_duration', '3600', 'second', 'All', '2016-07-05 04:31:34', '0000-00-00 00:00:00', 0, 'yes'),
-(5, 'autologout', '1', 'boolean', 'All', '2016-07-05 04:31:34', '0000-00-00 00:00:00', 0, 'yes'),
-(6, 'appVersion', '1.0', 'text', 'All', '0000-00-00 00:00:00', '2017-05-11 09:11:55', 0, 'yes'),
-(7, 'isUpdateOptional', '1', 'boolean', 'All', '0000-00-00 00:00:00', '2017-05-11 09:32:27', 0, 'yes');
+INSERT INTO admin_config (id, config_key, config_value, value_unit, scope, created, is_delete, is_testdata) VALUES
+(1, 'globalPassword', '_$(Skill)!_square@#$%_23_06_2017', 'text', 'All', '2016-09-26 12:21:02', 0, 'yes'),
+(2, 'userAgent', 'iOS,Android,Mozilla/5.0,PostmanRuntime/2.5.0', 'comma-separated', 'All', '2016-06-28 13:22:22', 0, 'yes'),
+(3, 'tempToken', 'allowAccessToApp', 'text', 'All', '2016-06-28 13:22:22', 0, 'yes'),
+(4, 'expiry_duration', '3600', 'second', 'All', '2016-07-05 04:31:34', 0, 'yes'),
+(5, 'autologout', '1', 'boolean', 'All', '2016-07-05 04:31:34', 0, 'yes'),
+(6, 'appVersion', '1.0', 'text', 'All', '2016-07-05 04:31:34', 0, 'yes'),
+(7, 'isUpdateOptional', '1', 'boolean', 'All', '2016-07-05 04:31:34', 0, 'yes');
 
 
 CREATE TABLE app_tokens (
@@ -34,7 +34,7 @@ CREATE TABLE app_tokens (
   status enum('active','expired') DEFAULT 'active',
   expiry varchar(30) DEFAULT '',
   access_count int(11) DEFAULT NULL,
-  created_date datetime DEFAULT '0000-00-00 00:00:00',
+  created_date datetime DEFAULT NULL,
   modified_date datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete enum('0','1') DEFAULT '0',
   is_testdata varchar(10) NOT NULL DEFAULT 'yes',
