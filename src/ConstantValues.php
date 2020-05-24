@@ -7,7 +7,6 @@ define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_NO_RECORDS', 'No records found.');
 define('SUCCESS', 'success');
 define('FAILED', 'failed');
-define('ENCRYPTION_KEY_IV', '@#$%!@#$#$%!@#$%');
 define('YES', 'yes');
 define('NO', 'no');
 define('ERROR', 'error');
