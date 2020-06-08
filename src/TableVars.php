@@ -11,3 +11,5 @@ define('TABLE_ADMIN_CONFIG', 'admin_config');
 define('TABLE_APP_TOKENS', 'app_tokens');
 define('TABLE_REVIEW', 'review');
 define('TABLE_RATING', 'rating');
+define('TABLE_LOGS', 'logs');
+

@@ -42,6 +42,8 @@ if (!empty($_REQUEST['Service'])) {
         case User::FORGOT_PASSWORD_ACTION:
         case User::DELETE_ACCOUNT_ACTION:
         case User::DATA_TAKEOUT:
+        case User::LOGS_ACTION:
+
             $access_key = validateObject($postData, 'access_key', '');
             $access_key = addslashes($access_key);
 
