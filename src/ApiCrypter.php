@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Lifyzer\Api;
 
 class ApiCrypter
@@ -22,6 +23,7 @@ class ApiCrypter
                 $iv
             )
         );
+
         return $data;
     }
 
@@ -38,6 +40,7 @@ class ApiCrypter
             OPENSSL_RAW_DATA,
             $iv
         );
+
         return $decrypted;
     }
 }

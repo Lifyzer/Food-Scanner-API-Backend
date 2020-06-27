@@ -339,6 +339,7 @@ class User
                 return $generate_guid;
             }
         }
+
         return '';
     }
 
