@@ -9,6 +9,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class User
 {
+    public const LOGS_ACTION = 'AddLogs';
     public const LOGIN_ACTION = 'Login';
     public const REGISTRATION_ACTION = 'Registration';
     public const CHANGE_PASSWORD_ACTION = 'ChangePassword';
@@ -32,6 +33,9 @@ class User
             case self::LOGIN_ACTION:
                 return $this->login($postData);
 
+            case self::LOGS_ACTION:
+                return $this->addLogs($postData);
+
             case self::REGISTRATION_ACTION:
                 return $this->registration($postData);
 
@@ -53,6 +57,42 @@ class User
             default:
                 return null;
         }
+    }
+
+    private function addLogs($userData) {
+
+        $connection = $this->connection;
+
+        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = addslashes($user_id);
+
+        $api = validateObject($userData, 'api', "");
+        $api = addslashes($api); 
+
+        $response = validateObject($userData, 'response', "");
+        $response = addslashes($response); 
+
+        $user_array = [
+                'api' => $api,
+                'response' => $response,
+                'user_id' => $user_id
+            ];
+
+        $user_response = addData($connection, 'Registration', TABLE_LOGS, $user_array);
+
+        if ($user_response[STATUS_KEY] === SUCCESS) { 
+            $status = SUCCESS;
+            $message = "successfully loged";
+        }
+        else{
+            $status = FAILED;
+            $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
+        }
+
+        $data['status'] = $status;
+        $data['message'] = $message;
+        return $data;
+
     }
 
     private function registration($userData)
