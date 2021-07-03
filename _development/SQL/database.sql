@@ -12,7 +12,7 @@ CREATE TABLE admin_config (
   created datetime NOT NULL,
   modified timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   is_delete tinyint(1) NOT NULL DEFAULT '0',
-  is_testdata varchar(3) NOT NULL DEFAULT 'yes' COMMENT 'dev means non garbage dummy data',
+  is_testdata varchar(3) NOT NULL DEFAULT 'yes' COMMENT 'dev means non garbaged dummy data',
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
