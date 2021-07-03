@@ -1,18 +1,17 @@
 vendor
+composer.lock
 composer.phar
 .env
+_backup/
 cache/*
 !cache/.gitkeep
 logs/*
-!logs/.gitkeep
-
-# PHPUnit coverage
-coverage
-
-# Log files
+!log/.gitkeep
 *.log
 *.tmp
 
+# PHPUnit coverage
+coverage
 
 # PhpStorm
 .idea
