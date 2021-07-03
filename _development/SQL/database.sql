@@ -1,5 +1,5 @@
 --
--- Copyright:     (c) 2018-2020, Pierre-Henry Soria. All Rights Reserved.
+-- Copyright:     (c) 2018-2021, Pierre-Henry Soria. All Rights Reserved.
 -- License:       GNU General Public License <https://www.gnu.org/licenses/gpl-3.0.en.html>
 --
 
@@ -118,4 +118,39 @@ CREATE TABLE user (
   guid varchar(100) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE rating (
+  id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  is_rate enum('0','1') DEFAULT '0' COMMENT '0- No, 1-Yes',
+  device_type  enum('0','1') DEFAULT NULL COMMENT '0- Android, 1- IOS	',
+  is_test enum('0','1') NOT NULL DEFAULT '0',
+  is_delete enum('0','1') NOT NULL DEFAULT '0',
+  created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE review (
+  id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  product_id int(11) NOT NULL,
+  ratting float NOT NULL,
+  description varchar(256) CHARACTER SET utf8mb4 NOT NULL,
+  created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  is_delete tinyint(4) DEFAULT '0',
+  is_test tinyint(4) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE logs (
+  id int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  api varchar(256) NOT NULL,
+  response text NOT NULL,
+  created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
