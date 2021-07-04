@@ -86,7 +86,7 @@ class Product
                 TABLE_RATING,
                 $conditional_array);
 
-            if ($rating_response[STATUS_KEY] == SUCCESS) {
+            if ($rating_response[STATUS_KEY] === SUCCESS) {
                 $message = RATING_STATUS_STORED_SUCCESSFULLY;
                 $status = SUCCESS;
             } else {
@@ -160,7 +160,7 @@ class Product
             $status = SUCCESS;
             //START : if user have left 2 comments or rated 3 products (or more) then will rate status as TRUE else FALSE.
             $rate_status = $this->IsUserRate($user_id);
-            if ($rate_status == SUCCESS) {
+            if ($rate_status === SUCCESS) {
                 $select_user_rate_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "') as count_rate";
                 $select_user_desc_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' AND description != '') as count_comment";
                 $select_user_review_query = "SELECT " . $select_user_rate_query . "," . $select_user_desc_query;
@@ -221,12 +221,12 @@ class Product
             TABLE_REVIEW,
             $conditional_array);
 
-        if ($favourite_response[STATUS_KEY] == SUCCESS) {
+        if ($favourite_response[STATUS_KEY] === SUCCESS) {
             $status = SUCCESS;
             $message = REVIEW_ADDED_SUCCESSFULLY;
             //START : if user have left 2 comments or rated 3 products (or more) then will rate status as TRUE else FALSE.
             $rate_status = $this->IsUserRate($user_id);
-            if ($rate_status == SUCCESS) {
+            if ($rate_status === SUCCESS) {
                 $select_user_rate_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "') as count_rate";
                 $select_user_desc_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' AND description != '') as count_comment";
                 $select_user_review_query = "SELECT " . $select_user_rate_query . "," . $select_user_desc_query;
@@ -632,7 +632,7 @@ class Product
                         TABLE_HISTORY, ['created_date' => $current_date],
                         ['id' => $history_id, 'is_delete' => IS_DELETE, 'is_test' => IS_TESTDATA],
                         "");
-                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $data['status'] = SUCCESS;
                         $data['message'] = PRODUCT_FETCHED_SUCCESSFULLY;
@@ -647,7 +647,7 @@ class Product
                     $add_history_response = addData(
                         $connection, '',
                         TABLE_HISTORY, $history_array);
-                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($add_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $data['status'] = SUCCESS;
                         $data['message'] = PRODUCT_FETCHED_SUCCESSFULLY;
@@ -696,7 +696,7 @@ class Product
                 $product_array['is_delete'] = IS_DELETE;
                 $product_array['is_test'] = IS_TESTDATA;
                 $productDetails = $this->processProductDetails($product_array, $user_id);
-                if ($productDetails[STATUS_KEY] == SUCCESS) {
+                if ($productDetails[STATUS_KEY] === SUCCESS) {
                     return $productDetails;
                 } else {
                     $data['status'] = $productDetails[STATUS_KEY];
@@ -734,7 +734,7 @@ class Product
                 $insert_response = addData(
                     $connection, '',
                     TABLE_PRODUCT, $product_array);
-                if ($insert_response[STATUS_KEY] == SUCCESS) {
+                if ($insert_response[STATUS_KEY] === SUCCESS) {
                     $last_inserted_id = $insert_response[MESSAGE_KEY];
                     $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
                     addData($connection, '', TABLE_HISTORY, $history_array);
@@ -832,7 +832,7 @@ class Product
                         ['created_date' => $current_date],
                         ['id' => $history_id, 'is_delete' => IS_DELETE, 'is_test' => IS_TESTDATA],
                         "");
-                    if ($edit_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
@@ -846,7 +846,7 @@ class Product
                         $connection, '',
                         TABLE_HISTORY,
                         $history_array);
-                    if ($add_history_response[STATUS_KEY] == SUCCESS) {
+                    if ($add_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
                         $message = PRODUCT_FETCHED_SUCCESSFULLY;
                     } else {
@@ -934,7 +934,7 @@ class Product
                                 $connection, '',
                                 TABLE_PRODUCT,
                                 $product_array);
-                            if ($insert_response[STATUS_KEY] == SUCCESS) {
+                            if ($insert_response[STATUS_KEY] === SUCCESS) {
                                 $last_inserted_id = $insert_response[MESSAGE_KEY];
                                 //Insert data into history
                                 $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
@@ -1033,7 +1033,7 @@ class Product
                                     $connection, '',
                                     TABLE_PRODUCT,
                                     $product_array);
-                                if ($insert_response[STATUS_KEY] == SUCCESS) {
+                                if ($insert_response[STATUS_KEY] === SUCCESS) {
                                     $last_inserted_id = $insert_response[MESSAGE_KEY];
                                     //Insert data into history
                                     $history_array = ['user_id' => $user_id, 'product_id' => $last_inserted_id, 'created_date' => $current_date];
@@ -1273,7 +1273,7 @@ class Product
                 "addToFavourite",
                 TABLE_FAVOURITE,
                 $favourite_product_array);
-            if ($favourite_response[STATUS_KEY] == SUCCESS) {
+            if ($favourite_response[STATUS_KEY] === SUCCESS) {
                 $status = SUCCESS;
                 $message = FAVOURITE_SUCCESSFULLY;
             } else {
@@ -1282,9 +1282,9 @@ class Product
             }
         }
         //START : Check if user have added 5 or more product as favourite then  rate status will as true else false.
-        if ($status == SUCCESS) {
+        if ($status === SUCCESS) {
             $rate_status = $this->IsUserRate($user_id);
-            if ($rate_status == SUCCESS) {
+            if ($rate_status === SUCCESS) {
                 $select_user_fav_query = "SELECT count(*) as count_fav from " . TABLE_FAVOURITE . " WHERE user_id = " . $user_id . " 
                                     AND is_favourite = '1'
                                     AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' ";
