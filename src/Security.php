@@ -1,6 +1,7 @@
 <?php
 
 namespace Lifyzer\Api;
+
 use PDO;
 
 class Security

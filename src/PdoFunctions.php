@@ -1,6 +1,7 @@
 <?php
 
 namespace Lifyzer\Api;
+
 use PDO;
 use PDOException;
 
@@ -106,6 +107,7 @@ function editData(PDO $connection, $function_name = '', $table_name, $dataArray,
     $data['sql'] = $sql;
     return $data;
 }
+
 function getSingleTableData(PDO $connection, $table, $sql, $columns, $customCondition, $dataArray)
 {
     try {

@@ -6,7 +6,9 @@
  */
 
 declare(strict_types=1);
+
 namespace Lifyzer\Api;
+
 use PDO;
 
 class Database extends PDO

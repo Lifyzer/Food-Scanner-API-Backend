@@ -13,6 +13,7 @@ class AllowCors
     const ALLOW_CORS_METHOD_KEY = 'Access-Control-Allow-Methods';
     const ALLOW_CORS_ORIGIN_VALUE = '*';
     const ALLOW_CORS_METHOD_VALUE = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+
     /**
      * Initialize the Cross-Origin Resource Sharing (CORS) headers.
      *

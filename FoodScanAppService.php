@@ -34,7 +34,7 @@ if (!empty($_REQUEST['Service'])) {
         }
     }
     switch ($_REQUEST['Service']) {
-        /*********************  User Functions *********************/
+        /********** User Functions **********/
         case User::REGISTRATION_ACTION:
         case User::LOGIN_ACTION:
         case User::CHANGE_PASSWORD_ACTION:
@@ -88,7 +88,7 @@ if (!empty($_REQUEST['Service'])) {
             $secret_key = addslashes($secret_key);
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-            $isSecure  = YES;
+            $isSecure = YES;
 
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
@@ -99,7 +99,7 @@ if (!empty($_REQUEST['Service'])) {
             } else {
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
-              if ($isSecure !== YES || $isSecure !== YES) {
+                if ($isSecure !== YES || $isSecure !== YES) {
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
@@ -119,6 +119,6 @@ if (!empty($_REQUEST['Service'])) {
             $data['message'] = $_REQUEST['Service'];
     }
 }
-//(new AllowCors)->init(); // Set CORS headers
+// (new AllowCors)->init(); // Set CORS headers
 header('Content-type: application/json');
 echo json_encode($data);

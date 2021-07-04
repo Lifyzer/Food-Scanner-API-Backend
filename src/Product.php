@@ -468,7 +468,7 @@ class Product
                         $product_array['sodium'] = $key['value'];
                         break;
                     case 'Total lipid (fat)':
-                        $product_array['fat_amount'] = $key['value'];;
+                        $product_array['fat_amount'] = $key['value'];
                         break;
                 }
             }
@@ -481,20 +481,20 @@ class Product
     public function getSwissFoodDetails($product_name)
     {
         $ch = curl_init();
-        curl_setopt_array($ch, array(
+        curl_setopt_array($ch, [
             CURLOPT_URL => getenv('URL_SWISS_FOOD_API'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => "{\"query\":{\"query_string\":{\"query\":\"" . $product_name . "\"}}}",
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 "Authorization: Token token=" . getenv('SWISS_FOOD_KEY'),
                 "Content-ApiProviders: application/vnd.api+json",
                 "Accept: application/json",
                 "Content-ApiProviders: application/json"
-            ),
-        ));
+            ],
+        ]);
         $result = curl_exec($ch);
         curl_close($ch);
         $tempArr = json_decode($result, true);

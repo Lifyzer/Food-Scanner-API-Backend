@@ -1,9 +1,8 @@
 <?php
 
 declare(strict_types=1);
-namespace Lifyzer\Api;
 
-use function foo\func;
+namespace Lifyzer\Api;
 
 function errorLogFunction(string $errorMessage): void
 {
@@ -53,16 +52,18 @@ function generateRandomString(int $length = 10): string
     }
     return $randomString;
 }
-function curlRequestLoad($url,$isParam = false,$params=""){
+
+function curlRequestLoad($url, $isParam = false, $params = "")
+{
     $ch = curl_init();
-    curl_setopt_array($ch, array(
+    curl_setopt_array($ch, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_SSL_VERIFYHOST => 0,
-    ));
-    if ($isParam){
-        curl_setopt_array(CURLOPT_POSTFIELDS,$params);
+    ]);
+    if ($isParam) {
+        curl_setopt_array(CURLOPT_POSTFIELDS, $params);
     }
     $result = curl_exec($ch);
     curl_close($ch);

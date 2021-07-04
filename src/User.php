@@ -3,9 +3,8 @@
 namespace Lifyzer\Api;
 
 use PDO;
-use stdClass;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
+use stdClass;
 
 class User
 {
@@ -62,7 +61,8 @@ class User
         }
     }
 
-    private function addLogs($userData) {
+    private function addLogs($userData)
+    {
 
         $connection = $this->connection;
 
@@ -70,24 +70,23 @@ class User
         $user_id = addslashes($user_id);
 
         $api = validateObject($userData, 'api', "");
-        $api = addslashes($api); 
+        $api = addslashes($api);
 
         $response = validateObject($userData, 'response', "");
-        $response = addslashes($response); 
+        $response = addslashes($response);
 
         $user_array = [
-                'api' => $api,
-                'response' => $response,
-                'user_id' => $user_id
-            ];
+            'api' => $api,
+            'response' => $response,
+            'user_id' => $user_id
+        ];
 
         $user_response = addData($connection, 'Registration', TABLE_LOGS, $user_array);
 
-        if ($user_response[STATUS_KEY] === SUCCESS) { 
+        if ($user_response[STATUS_KEY] === SUCCESS) {
             $status = SUCCESS;
             $message = "successfully loged";
-        }
-        else{
+        } else {
             $status = FAILED;
             $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
         }
@@ -186,7 +185,7 @@ class User
                             ],
                             new Email()
                         );
-                    } catch (\PHPMailer\PHPMailer\Exception $e) {
+                    } catch (Exception $e) {
                         $status = FAILED;
                         $message = SOMETHING_WENT_WRONG_TRY_AGAIN_LATER;
                     }
@@ -456,7 +455,7 @@ class User
      * @param array $data
      * @param Email $email
      *
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     private function sendWelcomeEmail(array $data, Email $email)
     {
@@ -489,7 +488,7 @@ HTML;
      * @param array $data
      * @param Email $email
      *
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     private function sendForgotPassword(array $data, Email $email)
     {
