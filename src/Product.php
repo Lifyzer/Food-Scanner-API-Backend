@@ -343,7 +343,7 @@ class Product
         $product_array = [];
         switch ($scan_type) {
             case ScanningMethod::PRODUCT_NAME:
-                $url = getenv('URL_OPEN_FOOD_NAME_API') . urlencode($product_name) . "&page=1";
+                $url = getenv('URL_OPEN_FOOD_NAME_API') . urlencode($product_name) . '&page=1';
                 $tempArr = curlRequestLoad($url);
                 if (count($tempArr['products']) > 0) {
                     foreach ($tempArr['products'] as $key => $value) {
@@ -419,7 +419,7 @@ class Product
         $temp = -1;
         $skip = false;
         $selected_index = -1;
-        $url = getenv('URL_USA_FOOD_API') . getenv('USA_FOOD_KEY') . "&query=" . urlencode($product_name);
+        $url = getenv('URL_USA_FOOD_API') . getenv('USA_FOOD_KEY') . '&query=' . urlencode($product_name);
         $tempArr = curlRequestLoad($url);
 
         if (!empty($tempArr['foods'])) {

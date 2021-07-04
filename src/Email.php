@@ -6,12 +6,21 @@ namespace Lifyzer\Api;
 
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 class Email
 {
     private const SMTP_HOST_SERVER = 'smtp.webfaction.com';
     private const SMTP_PORT_SERVER = 465;
     private const SMTP_PREFIX_SERVER = 'ssl';
+
+    /** @var PHPMailer */
+    private $oMail;
+
+    public function __construct()
+    {
+        $this->oMail = new PHPMailer();
+    }
 
     /**
      * @param string $message
@@ -24,30 +33,30 @@ class Email
      */
     public function sendMail(string $message, string $subject, string $userEmailId): bool
     {
-            $senderEmailId = getenv('SENDER_EMAIL_ID');
-            $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD');
+        $sName = getenv('NAME');
+        $senderEmailId = getenv('SENDER_EMAIL_ID');
+        $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD');
 
-            //Server settings
-            $mail = new PHPMailer();
-            $mail->isSMTP();
-            $mail->CharSet = PHPMailer::CHARSET_UTF8;
-            $mail->SMTPSecure = self::SMTP_PREFIX_SERVER;
-            $mail->SMTPAuth = true;
-            $mail->Port = self::SMTP_PORT_SERVER;
-            $mail->Host = self::SMTP_HOST_SERVER;
-            $mail->Username = "lifyzer";
-            $mail->Password = $senderEmailPassword;
-            //$mail->SMTPDebug = \PHPMailer\PHPMailer\SMTP::DEBUG_SERVER; // When need to show log of SMTP process
+        // Server settings
+        $this->oMail->isSMTP();
+        $this->oMail->CharSet = PHPMailer::CHARSET_UTF8;
+        $this->oMail->SMTPSecure = self::SMTP_PREFIX_SERVER;
+        $this->oMail->SMTPAuth = true;
+        $this->oMail->Port = self::SMTP_PORT_SERVER;
+        $this->oMail->Host = self::SMTP_HOST_SERVER;
+        $this->oMail->Username = $senderEmailId;
+        $this->oMail->Password = $senderEmailPassword;
+        $this->oMail->SMTPDebug = SMTP::DEBUG_SERVER; // When need to show log of SMTP process
 
-            //Recipients
-            $mail->setFrom($senderEmailId, "Lifyzer");
-            $mail->addAddress($userEmailId);
+        // Recipients
+        $this->oMail->setFrom($senderEmailId, $sName);
+        $this->oMail->addAddress($userEmailId);
 
-            // Content
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body = $message;
+        // Content
+        $this->oMail->isHTML(true);
+        $this->oMail->Subject = $subject;
+        $this->oMail->Body = $message;
 
-            return (bool)$mail->send();
+        return (bool)$this->oMail->send();
     }
 }

@@ -9,6 +9,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class User
 {
+    public const COOKBOOK_PDF_URL = 'https://lifyzer.com/assets/books/9-Recipe-Vegetarian-Menu.pdf';
+    public const COOKBOOK_EPUB_URL = 'https://lifyzer.com/assets/books/9-Recipe-Vegetarian-Menu.epub';
+
     public const LOGS_ACTION = 'AddLogs';
     public const LOGIN_ACTION = 'Login';
     public const REGISTRATION_ACTION = 'Registration';
@@ -457,6 +460,9 @@ class User
      */
     private function sendWelcomeEmail(array $data, Email $email)
     {
+        $sCookbookPdfUrl = static::COOKBOOK_PDF_URL;
+        $sCookbookEpubUrl = static::COOKBOOK_EPUB_URL;
+
         $htmlMessage =
             <<<HTML
 <html><body>
@@ -465,7 +471,7 @@ class User
         <p>So glad to see you on the platform. I really hope you will enjoy your experience!</p>
         <p>You can even rate and comment your favorite products, and share your opinion with your friends! 🤗</p>
         <p>🏆 Finally, if you enjoy the experience, leave your feedback on the App Store, and I will do my best to send you a little surprise, just for YOU! ❤️</p>
-        <p>Psst, <a href="https://lifyzer.com/assets/books/9-Recipe-Vegetarian-Menu.pdf">Here is by gift to you!</a> (<a href="https://lifyzer.com/assets/books/9-Recipe-Vegetarian-Menu.epub">ePub format here</a>) 🧧 A vegetarian cookbook (worths $5.99 on Amazon). Hopefully, you will appreciate it! 😊</p>
+        <p>Psst, <a href="{$sCookbookPdfUrl}">Here is by gift to you!</a> (<a href="{$sCookbookEpubUrl}">ePub format here</a>) 🧧 A vegetarian cookbook (worths $5.99 on Amazon). Hopefully, you will appreciate it! 😊</p>
         <p>&nbsp;</p>
         <p>Best, 💚 <br />
         Pierre-Henry Soria</p>
