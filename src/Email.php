@@ -33,7 +33,7 @@ class Email
      */
     public function sendMail(string $message, string $subject, string $userEmailId): bool
     {
-        $sName = getenv('NAME');
+        $sName = getenv('SENDER_EMAIL_NAME');
         $senderEmailId = getenv('SENDER_EMAIL_ID');
         $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD');
 
