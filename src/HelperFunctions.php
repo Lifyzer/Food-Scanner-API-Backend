@@ -19,7 +19,7 @@ function errorLogFunction(string $errorMessage): void
     file_put_contents(Logger::LOG_PATH . $file, $current, FILE_APPEND);
 }
 
-function validateValue($value, $placeHolder)
+function validateValue(string $value, string $placeHolder): string
 {
     $value = strlen($value) > 0 ? $value : $placeHolder;
     return $value;
@@ -50,10 +50,11 @@ function generateRandomString(int $length = 10): string
     for ($i = 0; $i < $length; $i++) {
         $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
+
     return $randomString;
 }
 
-function curlRequestLoad($url, $isParam = false, $params = "")
+function curlRequestLoad($url, $isParam = false, $params = '')
 {
     $ch = curl_init();
     curl_setopt_array($ch, [
@@ -67,6 +68,6 @@ function curlRequestLoad($url, $isParam = false, $params = "")
     }
     $result = curl_exec($ch);
     curl_close($ch);
-    $tempArr = json_decode($result, true);
-    return $tempArr;
+
+    return json_decode($result, true);
 }
