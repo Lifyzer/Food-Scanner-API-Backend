@@ -2,8 +2,6 @@
 
 namespace Lifyzer\Api;
 
-//require_once __DIR__ . '/vendor/autoload.php'; <= This one is already included in /FoodScanAppService.php
-
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
