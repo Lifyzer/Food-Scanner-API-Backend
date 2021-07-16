@@ -30,6 +30,7 @@ function validateObject($object, $key, $placeHolder)
     if (isset($object->$key)) {
         return $object->$key;
     }
+
     return $placeHolder;
 }
 
@@ -57,15 +58,20 @@ function generateRandomString(int $length = 10): string
 function curlRequestLoad($url, $isParam = false, $params = '')
 {
     $ch = curl_init();
-    curl_setopt_array($ch, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => 0,
-    ]);
+    curl_setopt_array(
+        $ch,
+        [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ]
+    );
+
     if ($isParam) {
         curl_setopt_array(CURLOPT_POSTFIELDS, $params);
     }
+
     $result = curl_exec($ch);
     curl_close($ch);
 
