@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Lifyzer\Api;
 
+const BASE62_CHARACTERS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 function errorLogFunction(string $errorMessage): void
 {
     $file = date('F-j-Y') . '_log.txt';
@@ -46,10 +48,9 @@ function encryptPassword(string $password): string
 
 function generateRandomString(int $length = 10): string
 {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $randomString = '';
     for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        $randomString .= BASE62_CHARACTERS[rand(0, strlen(BASE62_CHARACTERS) - 1)];
     }
 
     return $randomString;
