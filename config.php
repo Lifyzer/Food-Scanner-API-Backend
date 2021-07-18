@@ -4,6 +4,7 @@ namespace Lifyzer\Api;
 
 use Dotenv\Dotenv;
 use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
 
 $requiredEnvFields = [
     'DB_HOST',
@@ -25,9 +26,13 @@ $requiredEnvFields = [
 ];
 
 // Setup cache config
-CacheManager::setDefaultConfig([
-    'path' => dirname(__DIR__) . '/cache',
-]);
+CacheManager::setDefaultConfig(
+    new ConfigurationOption(
+        [
+            'path' => dirname(__DIR__) . '/cache'
+        ]
+    )
+);
 
 $env = Dotenv::createImmutable(__DIR__);
 $env->load();
