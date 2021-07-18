@@ -5,7 +5,7 @@ namespace Lifyzer\Api;
 use PDO;
 use PDOException;
 
-function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
+function addData(PDO $connection, $function_name, $table_name, $dataArray)
 {
     $status = FAILED;
     $message = NO_ERROR;
@@ -50,7 +50,7 @@ function addData(PDO $connection, $function_name = "", $table_name, $dataArray)
     return $data;
 }
 
-function editData(PDO $connection, $function_name = '', $table_name, $dataArray, $conditionArray, $query = '')
+function editData(PDO $connection, $function_name, $table_name, $dataArray, $conditionArray, $query = '')
 {
     $sql = '';
     $data = [];
