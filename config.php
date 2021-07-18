@@ -3,7 +3,7 @@
 namespace Lifyzer\Api;
 
 use Dotenv\Dotenv;
-use phpFastCache\CacheManager;
+use Phpfastcache\CacheManager;
 
 $requiredEnvFields = [
     'DB_HOST',
