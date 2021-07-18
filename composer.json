@@ -10,11 +10,11 @@
     }
   ],
   "require": {
-    "php": ">=7.1.0",
+    "php": ">=7.3.0",
     "ext-json": "*",
-    "phpfastcache/phpfastcache": "^7.1",
     "vlucas/phpdotenv": "^4.2",
-    "phpmailer/phpmailer": "^6.1"
+    "phpmailer/phpmailer": "^6.1",
+    "phpfastcache/phpfastcache": "^8.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.0"
