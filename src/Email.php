@@ -31,9 +31,9 @@ class Email
      */
     public function sendMail(string $message, string $subject, string $userEmailId): bool
     {
-        $sName = getenv('SENDER_EMAIL_NAME');
-        $senderEmailId = getenv('SENDER_EMAIL_ID');
-        $senderEmailPassword = getenv('SENDER_EMAIL_PASSWORD');
+        $sName = $_ENV['SENDER_EMAIL_NAME'];
+        $senderEmailId = $_ENV['SENDER_EMAIL_ID'];
+        $senderEmailPassword = $_ENV['SENDER_EMAIL_PASSWORD'];
 
         // Server settings
         $this->oMail->isSMTP();

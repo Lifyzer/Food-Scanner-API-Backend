@@ -8,7 +8,7 @@ class ApiCrypter
 {
     public function encrypt($input, $key): string
     {
-        $iv = getenv('ENCRYPTION_KEY_IV');
+        $iv = $_ENV['ENCRYPTION_KEY_IV'];
         $plaintext = $input;
         $password = $key;
         $method = 'aes-256-cbc';
@@ -29,7 +29,7 @@ class ApiCrypter
 
     public function decrypt($crypt, $sKey): string
     {
-        $iv = getenv('ENCRYPTION_KEY_IV');
+        $iv = $_ENV['ENCRYPTION_KEY_IV'];
         $method = 'aes-256-cbc';
         $password = $sKey;
         $password = substr(hash('sha256', $password, true), 0, 32);

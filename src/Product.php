@@ -343,7 +343,7 @@ class Product
         $product_array = [];
         switch ($scan_type) {
             case ScanningMethod::PRODUCT_NAME:
-                $url = getenv('URL_OPEN_FOOD_NAME_API') . urlencode($product_name) . '&page=1';
+                $url = $_ENV['URL_OPEN_FOOD_NAME_API'] . urlencode($product_name) . '&page=1';
                 $tempArr = curlRequestLoad($url);
                 if (count($tempArr['products']) > 0) {
                     foreach ($tempArr['products'] as $key => $value) {
@@ -382,7 +382,7 @@ class Product
                 }
                 break;
             case ScanningMethod::BARCODE:
-                $url = getenv('URL_OPEN_FOOD_BARCODE_API') . urlencode($product_name) . ".json";
+                $url = $_ENV['URL_OPEN_FOOD_BARCODE_API'] . urlencode($product_name) . ".json";
                 $tempArr = curlRequestLoad($url);
                 if (count($tempArr['product']) > 0) {
                     $value = $tempArr['product'];
@@ -419,7 +419,7 @@ class Product
         $temp = -1;
         $skip = false;
         $selected_index = -1;
-        $url = getenv('URL_USA_FOOD_API') . getenv('USA_FOOD_KEY') . '&query=' . urlencode($product_name);
+        $url = $_ENV['URL_USA_FOOD_API'] . $_ENV['USA_FOOD_KEY'] . '&query=' . urlencode($product_name);
         $tempArr = curlRequestLoad($url);
 
         if (!empty($tempArr['foods'])) {
@@ -482,14 +482,14 @@ class Product
     {
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL => getenv('URL_SWISS_FOOD_API'),
+            CURLOPT_URL => $_ENV['URL_SWISS_FOOD_API'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => "{\"query\":{\"query_string\":{\"query\":\"" . $product_name . "\"}}}",
             CURLOPT_HTTPHEADER => [
-                "Authorization: Token token=" . getenv('SWISS_FOOD_KEY'),
+                "Authorization: Token token=" . $_ENV['SWISS_FOOD_KEY'],
                 "Content-ApiProviders: application/vnd.api+json",
                 "Accept: application/json",
                 "Content-ApiProviders: application/json"
