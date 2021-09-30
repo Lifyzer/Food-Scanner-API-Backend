@@ -1,0 +1,8 @@
+## Exclude development files from distribution
+/_development export-ignore
+/_backup export-ignore
+/_tests export-ignore
+phpunit.xml.dist export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+save-project.sh export-ignore
