@@ -10,3 +10,8 @@ I believe this one is really important. It will help your team to understand how
 
 * Minor thing, specific to the iOS GitHub repo: The iOS app uses dependencies with CocoaPods, and all pods are committed on GitHub, except a few ones which exceed 100mb (GitHub doesn’t allow binary file bigger than 100mb).
 I’m not sure if it’s still a good idea to commit all of them, or migrate package dependencies to something newer, like SPM? 
+
+
+-----
+
+Wanna help? 😼 **Just drop a new [Pull Request](https://github.com/Lifyzer/Food-Scanner-API-Backend/pulls)**, and I will be glad to review your changes 😻
