@@ -8,7 +8,7 @@ At the moment, the user sees several product’s keywords which are from the pro
 * Cache queries when possible in the PHP API, code refactoring and improve/secure the API, and facilitate any further new features, endpoints. 
 I believe this one is really important. It will help your team to understand how the backend works, behind the scene, and help them to be more efficient to work on new features, later on.
 
-* Minor thing, specific to the iOS GitHub repo: The iOS app uses dependencies with CocoaPods, and all pods are committed on GitHub, except a few ones which exceed 100mb (GitHub doesn’t allow binary file bigger than 100mb).
+* [Low Priority] Specific to the [iOS GitHub repo](https://github.com/Lifyzer/Food-Scanner-Swift-App): The iOS app uses dependencies with CocoaPods, and all pods are committed on GitHub, except a few ones which exceed 100mb (GitHub doesn’t allow binary file bigger than 100mb).
 I’m not sure if it’s still a good idea to commit all of them, or migrate package dependencies to something newer, like SPM? 
 
 
