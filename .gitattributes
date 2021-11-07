@@ -1,7 +1,5 @@
 ## Exclude development files from distribution
 /_development export-ignore
-/_backup export-ignore
-/_tests export-ignore
 /extras/assets export-ignore
 NEW_FEATURES.md export-ignore
 phpunit.xml.dist export-ignore
