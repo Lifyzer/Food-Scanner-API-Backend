@@ -1,6 +1,6 @@
 # Food Scanner API, Backend
 
-🍳 The YUMMIEST™ REST API for the Lifyzer Solution™ food scanner apps 😋 Thanks to data🤖, it will return back to its client apps the right result we expect 🥥
+🍳 The YUMMIEST™ REST API for the Lifyzer Solution™ food scanner apps 😋 Thanks to the power of data🤖, it will return back to its client apps the right result we expect 🥥
 
 ## Server Requirements
 
