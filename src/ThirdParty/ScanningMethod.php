@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Lifyzer\Api;
+namespace Lifyzer\Api\ThirdParty;
 
 final class ScanningMethod
 {

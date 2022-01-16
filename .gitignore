@@ -6,7 +6,7 @@ _backup/
 cache/*
 !cache/.gitkeep
 logs/*
-!log/.gitkeep
+!logs/.gitkeep
 *.log
 *.tmp
 
