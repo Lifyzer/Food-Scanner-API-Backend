@@ -3,8 +3,15 @@
 namespace Lifyzer\Api;
 
 use PDOException;
+use Whoops\Handler\JsonResponseHandler;
+use Whoops\Run as WhoopsRun;
 
-require_once __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
+
+$whoops = new WhoopsRun;
+$whoops->pushHandler(new JsonResponseHandler);
+$whoops->register();
+
 require 'config.php';
 require 'src/TableVars.php';
 require 'src/ConstantValues.php';
