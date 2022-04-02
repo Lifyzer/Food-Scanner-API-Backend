@@ -41,7 +41,7 @@ if (!empty($_REQUEST['Service'])) {
         }
     }
     switch ($_REQUEST['Service']) {
-        /********** User Functions **********/
+        /*** User ***/
         case User::REGISTRATION_ACTION:
         case User::LOGIN_ACTION:
         case User::CHANGE_PASSWORD_ACTION:
@@ -50,7 +50,6 @@ if (!empty($_REQUEST['Service'])) {
         case User::DELETE_ACCOUNT_ACTION:
         case User::DATA_TAKEOUT:
         case User::LOGS_ACTION:
-
             $access_key = validateObject($postData, 'access_key', '');
             $access_key = addslashes($access_key);
 
@@ -77,6 +76,8 @@ if (!empty($_REQUEST['Service'])) {
                 }
             }
             break;
+
+        /*** Food Items ***/
         case 'addToFavourite':
         case 'getAllUserFavourite':
         case 'getProductDetails':
@@ -115,6 +116,8 @@ if (!empty($_REQUEST['Service'])) {
                 }
             }
             break;
+
+        /*** Security ***/
         case Security::UPDATE_USER_TOKEN:
         case Security::TEST_ENCRYPTION:
         case Security::REFRESH_TOKEN:
@@ -126,6 +129,7 @@ if (!empty($_REQUEST['Service'])) {
             $data['message'] = $_REQUEST['Service'];
     }
 }
+
 // (new AllowCors)->init(); // Set CORS headers
 header('Content-type: application/json');
 echo json_encode($data);
