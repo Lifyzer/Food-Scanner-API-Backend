@@ -77,7 +77,7 @@ if (!empty($_REQUEST['Service'])) {
             }
             break;
 
-        /*** Food Items ***/
+        /*** Food Items & Reviews/Rating ***/
         case 'addToFavourite':
         case 'getAllUserFavourite':
         case 'getProductDetails':
