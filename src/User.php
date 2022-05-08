@@ -233,7 +233,7 @@ class User
         if (!empty($objUserEmail)) {
             $created_date = getDefaultDate();
             $update_array = ['first_name' => $first_name, 'email' => $email_id, 'modified_date' => $created_date];
-            $edit_response = editData($connection, "UpdateProfile", TABLE_USER, $update_array, ['id' => $user_id]);
+            $edit_response = editData($connection, 'UpdateProfile', TABLE_USER, $update_array, ['id' => $user_id]);
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 $getUser = getSingleTableData($connection, TABLE_USER, "", "*", "", ['id' => $user_id, 'is_delete' => $is_delete]);
                 if (!empty($getUser)) {
@@ -404,6 +404,7 @@ class User
                 'is_delete' => $is_delete
             ]
         );
+
         if (!empty($objUser)) {
             $userPassword = generateRandomString(self::FORGOT_PASSWORD_LENGTH);
             $dbPassword = encryptPassword($userPassword);
@@ -420,6 +421,7 @@ class User
                     'email' => $email_id
                 ]
             );
+
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 try {
                     $this->sendForgotPassword(

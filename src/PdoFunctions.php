@@ -11,6 +11,7 @@ function addData(PDO $connection, $functionName, $tableName, $dataArray)
     $message = NO_ERROR;
     $sql = '';
     $data = [];
+
     try {
         $numItems = count($dataArray);
         $cnt = 0;

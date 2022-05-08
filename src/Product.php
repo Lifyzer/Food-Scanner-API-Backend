@@ -122,7 +122,7 @@ class Product
 
         $edit_history_response = editData(
             $connection,
-            "deleteReview",
+            'deleteReview',
             TABLE_REVIEW,
             ['is_delete' => DELETE_STATUS::IS_DELETE],
             ['id' => $review_id, 'is_test' => IS_TESTDATA],
