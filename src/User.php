@@ -376,7 +376,7 @@ class User
         if (!empty($objUser)) {
             $security = new Security($connection);
             $generate_guid = $security->generateUniqueId();
-            $edit_response = editData($connection, 'UpdateGuid', TABLE_USER, ['guid' => $generate_guid], ['id' => $user_id]);
+            $edit_response = editData($connection, 'updateGuidForUser', TABLE_USER, ['guid' => $generate_guid], ['id' => $user_id]);
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 return $generate_guid;
             }

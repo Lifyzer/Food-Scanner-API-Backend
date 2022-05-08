@@ -5,7 +5,7 @@ namespace Lifyzer\Api;
 use PDO;
 use PDOException;
 
-function addData(PDO $connection, $function_name, $table_name, $dataArray)
+function addData(PDO $connection, $functionName, $tableName, $dataArray)
 {
     $status = FAILED;
     $message = NO_ERROR;
@@ -25,7 +25,7 @@ function addData(PDO $connection, $function_name, $table_name, $dataArray)
                 $values .= ':' . $key . ' , ';
             }
         }
-        $sql = 'INSERT INTO ' . $table_name . ' (' . $fields . ' ) VALUES (' . $values . ') ';
+        $sql = 'INSERT INTO ' . $tableName . ' (' . $fields . ' ) VALUES (' . $values . ') ';
         if ($stmt = $connection->prepare($sql)) {
             foreach ($dataArray as $key => $value) {
                 $stmt->bindValue(":$key", $value, PDO::PARAM_STR);
@@ -38,7 +38,7 @@ function addData(PDO $connection, $function_name, $table_name, $dataArray)
         }
     } catch (PDOException $exception) {
         $message = $exception->getMessage();
-        $err_msg = "\nFunction=> " . $function_name . " Query=> " . $sql . "  Error message= " . $message;
+        $err_msg = "\nFunction=> " . $functionName . " Query=> " . $sql . "  Error message= " . $message;
         errorLogFunction($err_msg);
         if (is_array($message)) {
             $message = implode(" , ", $message);
@@ -50,7 +50,7 @@ function addData(PDO $connection, $function_name, $table_name, $dataArray)
     return $data;
 }
 
-function editData(PDO $connection, $function_name, $table_name, $dataArray, $conditionArray, $query = '')
+function editData(PDO $connection, $functionName, $tableName, $dataArray, $conditionArray, $query = '')
 {
     $sql = '';
     $data = [];
@@ -81,7 +81,7 @@ function editData(PDO $connection, $function_name, $table_name, $dataArray, $con
             $execute_arr[":$key"] = $value;
         }
         if (empty($query)) {
-            $sql = 'UPDATE ' . $table_name . ' SET ' . $values . ' WHERE ' . $conditionValue;
+            $sql = 'UPDATE ' . $tableName . ' SET ' . $values . ' WHERE ' . $conditionValue;
         } else {
             $sql = $query;
         }
@@ -99,7 +99,7 @@ function editData(PDO $connection, $function_name, $table_name, $dataArray, $con
     } catch (PDOException $exception) {
         $status = FAILED;
         $message = $exception->getMessage();
-        $err_msg = "\nFunction=> " . $function_name . " Query=> " . $sql . "  Error message= " . $message;
+        $err_msg = "\nFunction=> " . $functionName . " Query=> " . $sql . "  Error message= " . $message;
         errorLogFunction($err_msg);
     }
     $data['status'] = $status;
