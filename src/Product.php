@@ -17,7 +17,7 @@ class Product
         $this->connection = $con;
     }
 
-    public function callService($service, $postData)
+    public function callService($service, $postData): ?array
     {
         switch ($service) {
             case 'updateRatingStatus':
