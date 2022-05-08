@@ -62,10 +62,10 @@ class Product
     {
         $connection = $this->connection;
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        $device_type = validateObject($userData, 'device_type', "");
+        $device_type = validateObject($userData, 'device_type', '');
         $device_type = addslashes($device_type);
 
         $rate_status = '1';
@@ -76,10 +76,10 @@ class Product
                                     AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' ";
         $select_user_rated_stmt = getSingleTableData(
             $connection,
-            "",
+            '',
             $select_user_rated_query,
-            "",
-            "",
+            '',
+            '',
             []
         );
         if (empty($select_user_rated_stmt)) {
@@ -117,7 +117,7 @@ class Product
     {
         $connection = $this->connection;
 
-        $review_id = validateObject($userData, 'review_id', "");
+        $review_id = validateObject($userData, 'review_id', '');
         $review_id = addslashes($review_id);
 
         $edit_history_response = editData(
@@ -126,7 +126,7 @@ class Product
             TABLE_REVIEW,
             ['is_delete' => DELETE_STATUS::IS_DELETE],
             ['id' => $review_id, 'is_test' => IS_TESTDATA],
-            ""
+            ''
         );
         if ($edit_history_response[STATUS_KEY] === SUCCESS) {
             $message = REVIEW_REMOVED_SUCCESSFULLY;
@@ -144,10 +144,10 @@ class Product
     {
         $connection = $this->connection;
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        $review_id = validateObject($userData, 'review_id', "");
+        $review_id = validateObject($userData, 'review_id', '');
         $review_id = addslashes($review_id);
 
         $ratting = validateObject($userData, 'ratting', '');
@@ -160,28 +160,28 @@ class Product
 
         $edit_review_response = editData(
             $connection,
-            "updateReview",
+            'updateReview',
             TABLE_REVIEW,
             ['ratting' => $ratting, 'description' => $desc],
             ['id' => $review_id, 'is_test' => IS_TESTDATA, 'is_delete' => IS_DELETE],
-            ""
+            ''
         );
 
         if ($edit_review_response[STATUS_KEY] === SUCCESS) {
             $message = REVIEW_UPDATED_SUCCESSFULLY;
             $status = SUCCESS;
             //START : if user have left 2 comments or rated 3 products (or more) then will rate status as TRUE else FALSE.
-            $rate_status = $this->IsUserRate($user_id);
+            $rate_status = $this->isUserRate($user_id);
             if ($rate_status === SUCCESS) {
                 $select_user_rate_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "') as count_rate";
                 $select_user_desc_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' AND description != '') as count_comment";
                 $select_user_review_query = "SELECT " . $select_user_rate_query . "," . $select_user_desc_query;
                 $select_user_review_stmt = getSingleTableData(
                     $connection,
-                    "",
+                    '',
                     $select_user_review_query,
-                    "",
-                    "",
+                    '',
+                    '',
                     []
                 );
                 if (!empty($select_user_review_stmt) &&
@@ -224,11 +224,11 @@ class Product
 
         editData(
             $connection,
-            "updateReview",
+            'updateReview',
             TABLE_REVIEW,
             ['is_delete' => DELETE_STATUS::IS_DELETE],
             ['user_id' => $user_id, 'product_id' => $product_id, 'is_test' => IS_TESTDATA, 'is_delete' => IS_DELETE],
-            ""
+            ''
         );
 
         $conditional_array = [
@@ -240,7 +240,7 @@ class Product
         ];
         $favourite_response = addData(
             $connection,
-            "addReview",
+            'addReview',
             TABLE_REVIEW,
             $conditional_array
         );
@@ -249,12 +249,12 @@ class Product
             $status = SUCCESS;
             $message = REVIEW_ADDED_SUCCESSFULLY;
             //START : if user have left 2 comments or rated 3 products (or more) then will rate status as TRUE else FALSE.
-            $rate_status = $this->IsUserRate($user_id);
+            $rate_status = $this->isUserRate($user_id);
             if ($rate_status === SUCCESS) {
                 $select_user_rate_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "') as count_rate";
                 $select_user_desc_query = "(SELECT COUNT(*) from " . TABLE_REVIEW . " WHERE user_id = " . $user_id . " AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' AND description != '') as count_comment";
                 $select_user_review_query = "SELECT " . $select_user_rate_query . "," . $select_user_desc_query;
-                $select_user_review_stmt = getSingleTableData($connection, "", $select_user_review_query, "", "", []);
+                $select_user_review_stmt = getSingleTableData($connection, '', $select_user_review_query, '', '', []);
                 if (!empty($select_user_review_stmt) &&
                     ($select_user_review_stmt['count_comment'] >= 2 || $select_user_review_stmt["count_rate"] >= 3)) {
                     $is_rate = true;
@@ -278,16 +278,16 @@ class Product
     public function getReviewList($userData)
     {
         $connection = $this->connection;
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
         $product_id = validateObject($userData, 'product_id', '');
         $product_id = addslashes($product_id);
 
-        $to_index = validateObject($userData, 'to_index', "");
+        $to_index = validateObject($userData, 'to_index', '');
         $to_index = addslashes($to_index);
 
-        $from_index = validateObject($userData, 'from_index', "");
+        $from_index = validateObject($userData, 'from_index', '');
         $from_index = addslashes($from_index);
 
         $posts = [];
@@ -295,11 +295,11 @@ class Product
         $select_total_review_query = "Select count(*) as total_review, avg(ratting) as avg_review , sum(ratting) as total_ratting from " . TABLE_REVIEW . " r where product_id = '" . $product_id . "' and is_test = '" . IS_TESTDATA . "' and is_delete = '" . IS_DELETE . "'";
         $select_total_review_stmt = getSingleTableData(
             $connection,
-            "",
+            '',
             $select_total_review_query,
-            "",
-            "",
-            ""
+            '',
+            '',
+            ''
         );
         if (!empty($select_total_review_stmt)) {
             $posts['total_review'] = $select_total_review_stmt['total_review'];
@@ -310,11 +310,11 @@ class Product
         $select_total_cust_review_query = "Select count(*) as total_cust_review, avg(ratting) as avg_cust_review from " . TABLE_REVIEW . " r where user_id != '" . $user_id . "' and product_id = '" . $product_id . "' and is_test = '" . IS_TESTDATA . "' and is_delete = '" . IS_DELETE . "'";
         $select_total_cust_review_stmt = getSingleTableData(
             $connection,
-            "",
+            '',
             $select_total_cust_review_query,
-            "",
-            "",
-            ""
+            '',
+            '',
+            ''
         );
         if (!empty($select_total_cust_review_stmt)) {
             $posts['total_cust_review'] = $select_total_cust_review_stmt['total_cust_review'];
@@ -324,11 +324,11 @@ class Product
         $select_total_user_query = "Select count(*) as total_user from " . TABLE_USER . " u where is_test = '" . IS_TESTDATA . "' and is_delete = '" . IS_DELETE . "'";
         $select_total_user_stmt = getSingleTableData(
             $connection,
-            "",
+            '',
             $select_total_user_query,
-            "",
-            "",
-            ""
+            '',
+            '',
+            ''
         );
         if (!empty($select_total_user_stmt)) {
             $posts['total_user'] = $select_total_user_stmt['total_user'];
@@ -337,10 +337,10 @@ class Product
         $select_user_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.description,r.ratting,r.modified_date from " . TABLE_REVIEW . " r," . TABLE_USER . " u," . TABLE_PRODUCT . " p where r.is_test = '" . IS_TESTDATA . "' and  r.user_id = u.id and r.product_id = p.id and r.user_id = '" . $user_id . "' and r.product_id = '" . $product_id . "' and r.is_delete = '" . IS_DELETE . "'";
         $select_user_stmt = getMultipleTableData(
             $connection,
-            "",
+            '',
             $select_user_query,
-            "",
-            ""
+            '',
+            ''
         );
         if ($select_user_stmt->rowCount() > 0) {
             while ($product = $select_user_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -353,10 +353,10 @@ class Product
         $select_customer_query = "Select r.id,u.first_name,u.last_name,u.user_image,r.description,r.ratting,r.modified_date from " . TABLE_REVIEW . " r," . TABLE_USER . " u," . TABLE_PRODUCT . " p where r.is_test = '" . IS_TESTDATA . "' and  r.user_id = u.id and r.product_id = p.id and r.user_id != '" . $user_id . "' and r.product_id = '" . $product_id . "' and r.is_delete = '" . IS_DELETE . "' ORDER BY r.created_date DESC limit $from_index,$to_index ";
         $select_customer_stmt = getMultipleTableData(
             $connection,
-            "",
+            '',
             $select_customer_query,
-            "",
-            ""
+            '',
+            ''
         );
         if ($select_customer_stmt->rowCount() > 0) {
             while ($product = $select_customer_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -419,7 +419,7 @@ class Product
                     ];
                     if (!empty($product_array)) {
                         if (array_key_exists("image_url", $value)) {
-                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
+                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], '');
                         }
                         if (array_key_exists("fat_amount", $value)) {
                             $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
@@ -670,9 +670,9 @@ class Product
                 $objFavourite = getSingleTableData(
                     $connection,
                     TABLE_FAVOURITE,
-                    "",
+                    '',
                     "id",
-                    "",
+                    '',
                     $conditional_array
                 );
                 $product['is_favourite'] = !empty($objFavourite) ? 1 : 0;
@@ -687,9 +687,9 @@ class Product
                 $objHistory = getSingleTableData(
                     $connection,
                     TABLE_HISTORY,
-                    "",
+                    '',
                     "id",
-                    "",
+                    '',
                     $conditional_array
                 );
                 if (!empty($objHistory)) {
@@ -700,7 +700,7 @@ class Product
                         TABLE_HISTORY,
                         ['created_date' => $current_date],
                         ['id' => $history_id, 'is_delete' => IS_DELETE, 'is_test' => IS_TESTDATA],
-                        ""
+                        ''
                     );
                     if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
@@ -798,9 +798,9 @@ class Product
         $objProductData = getSingleTableData(
             $connection,
             TABLE_PRODUCT,
-            "",
+            '',
             "*",
-            "",
+            '',
             $conditional_array_product
         );
         if (!empty($objProductData)) {
@@ -871,7 +871,7 @@ class Product
 
         $posts = [];
         $current_date = getDefaultDate();
-        $message = "";
+        $message = '';
         $status = FAILED;
         $is_favourite = 1;
 
@@ -901,9 +901,9 @@ class Product
                 $objFavourite = getSingleTableData(
                     $connection,
                     TABLE_FAVOURITE,
-                    "",
+                    '',
                     "id",
-                    "",
+                    '',
                     $conditional_array
                 );
                 if (!empty($objFavourite)) {
@@ -923,9 +923,9 @@ class Product
                 $objHistory = getSingleTableData(
                     $connection,
                     TABLE_HISTORY,
-                    "",
+                    '',
                     "id",
-                    "",
+                    '',
                     $conditional_array
                 );
                 if (!empty($objHistory)) {
@@ -936,7 +936,7 @@ class Product
                         TABLE_HISTORY,
                         ['created_date' => $current_date],
                         ['id' => $history_id, 'is_delete' => IS_DELETE, 'is_test' => IS_TESTDATA],
-                        ""
+                        ''
                     );
                     if ($edit_history_response[STATUS_KEY] === SUCCESS) {
                         $posts[] = $product;
@@ -1017,7 +1017,7 @@ class Product
                     ];
                     if (!empty($product_array)) {
                         if (array_key_exists("image_url", $value)) {
-                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], "");
+                            $product_array['product_image'] = ($value["image_url"] ? $value["image_url"] : '');//validateValue($value['image_url'], '');
                         }
                         if (array_key_exists("fat_amount", $value)) {
                             $product_array['fat_amount'] = ($value["nutriments"]["fat_amount"] ? $value["nutriments"]["fat_amount"] : '');//$value["nutriments"]["fat_amount"];
@@ -1030,9 +1030,9 @@ class Product
                         $objProductData = getSingleTableData(
                             $connection,
                             TABLE_PRODUCT,
-                            "",
+                            '',
                             "barcode_id",
-                            "",
+                            '',
                             $conditional_array_product
                         );
                         if (!empty($objProductData)) {
@@ -1143,9 +1143,9 @@ class Product
                             $objProductData = getSingleTableData(
                                 $connection,
                                 TABLE_PRODUCT,
-                                "",
+                                '',
                                 "barcode_id",
-                                "",
+                                '',
                                 $conditional_array_product
                             );
                             if (!empty($objProductData)) {
@@ -1218,7 +1218,7 @@ class Product
     public function removeProductFromHistory($userData)
     {
         $connection = $this->connection;
-        $history_id = validateObject($userData, 'history_id', "");
+        $history_id = validateObject($userData, 'history_id', '');
         $history_id = addslashes($history_id);
 
         $edit_history_response = editData(
@@ -1227,7 +1227,7 @@ class Product
             TABLE_HISTORY,
             ['is_delete' => DELETE_STATUS::IS_DELETE],
             ['id' => $history_id, 'is_test' => IS_TESTDATA],
-            ""
+            ''
         );
         if ($edit_history_response[STATUS_KEY] === SUCCESS) {
             $objHistory = getSingleTableData(
@@ -1250,7 +1250,7 @@ class Product
                     TABLE_FAVOURITE,
                     ['is_favourite' => $is_favourite = '0'],
                     $conditional_array,
-                    ""
+                    ''
                 );
             }
             $message = HISTORY_REMOVED_SUCCESSFULLY;
@@ -1268,13 +1268,13 @@ class Product
     {
         $connection = $this->connection;
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        $to_index = validateObject($userData, 'to_index', "");
+        $to_index = validateObject($userData, 'to_index', '');
         $to_index = addslashes($to_index);
 
-        $from_index = validateObject($userData, 'from_index', "");
+        $from_index = validateObject($userData, 'from_index', '');
         $from_index = addslashes($from_index);
 
         $posts = [];
@@ -1287,22 +1287,22 @@ class Product
         $conditional_array = ['user_id' => $user_id, 'is_delete' => IS_DELETE];
         $select_user_history_stmt = getMultipleTableData(
             $connection,
-            "",
+            '',
             $select_user_history_query,
-            "",
-            "",
+            '',
+            '',
             $conditional_array
         );
         if ($select_user_history_stmt->rowCount() > 0) {
             while ($history = $select_user_history_stmt->fetch(PDO::FETCH_ASSOC)) {
-                $select_total_review_query = "Select count(*) as total_review, avg(ratting) as avg_review from " . TABLE_REVIEW . " r where product_id = '" . $history['product_id'] . "' and is_test = '" . IS_TESTDATA . "' and is_delete = '" . IS_DELETE . "'";
+                $select_total_review_query = "SELECT COUNT(*) AS total_review, avg(ratting) AS avg_review FROM " . TABLE_REVIEW . " r WHERE product_id = '" . $history['product_id'] . "' AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "'";
                 $select_total_review_stmt = getSingleTableData(
                     $connection,
-                    "",
+                    '',
                     $select_total_review_query,
-                    "",
-                    "",
-                    ""
+                    '',
+                    '',
+                    ''
                 );
                 if (!empty($select_total_review_stmt)) {
                     $history['total_review'] = $select_total_review_stmt['total_review'];
@@ -1320,9 +1320,9 @@ class Product
                 $objFavourite = getSingleTableData(
                     $connection,
                     TABLE_FAVOURITE,
-                    "",
+                    '',
                     "id",
-                    "",
+                    '',
                     $conditional_array
                 );
                 if (!empty($objFavourite)) {
@@ -1348,13 +1348,13 @@ class Product
     {
         $connection = $this->connection;
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        $to_index = validateObject($userData, 'to_index', "");
+        $to_index = validateObject($userData, 'to_index', '');
         $to_index = addslashes($to_index);
 
-        $from_index = validateObject($userData, 'from_index', "");
+        $from_index = validateObject($userData, 'from_index', '');
         $from_index = addslashes($from_index);
 
         $posts = [];
@@ -1368,10 +1368,10 @@ class Product
                                         AND p.product_name != '' ORDER BY f.created_date DESC limit $from_index,$to_index ";
         $select_user_favourite_stmt = getMultipleTableData(
             $connection,
-            "",
+            '',
             $select_user_favourite_query,
-            "",
-            "",
+            '',
+            '',
             []
         );
         if ($select_user_favourite_stmt->rowCount() > 0) {
@@ -1381,11 +1381,11 @@ class Product
                 and is_test = '" . IS_TESTDATA . "' and is_delete = '" . IS_DELETE . "'";
                 $select_total_review_stmt = getSingleTableData(
                     $connection,
-                    "",
+                    '',
                     $select_total_review_query,
-                    "",
-                    "",
-                    ""
+                    '',
+                    '',
+                    ''
                 );
                 if (!empty($select_total_review_stmt)) {
                     $product['total_review'] = $select_total_review_stmt['total_review'];
@@ -1409,13 +1409,13 @@ class Product
     {
         $connection = $this->connection;
 
-        $user_id = validateObject($userData, 'user_id', "");
+        $user_id = validateObject($userData, 'user_id', '');
         $user_id = addslashes($user_id);
 
-        $product_id = validateObject($userData, 'product_id', "");
+        $product_id = validateObject($userData, 'product_id', '');
         $product_id = addslashes($product_id);
 
-        $is_favourite = validateObject($userData, 'is_favourite', "");
+        $is_favourite = validateObject($userData, 'is_favourite', '');
         $is_favourite = addslashes($is_favourite);
 
         $is_rate = false;
@@ -1430,9 +1430,9 @@ class Product
         $objFavourite = getSingleTableData(
             $connection,
             TABLE_FAVOURITE,
-            "",
+            '',
             "id,is_favourite",
-            "",
+            '',
             $conditional_array
         );
 
@@ -1443,7 +1443,7 @@ class Product
                 TABLE_FAVOURITE,
                 ['is_favourite' => $is_favourite, 'created_date' => $current_date],
                 ['id' => $objFavourite['id']],
-                ""
+                ''
             );
             if ($edit_response[STATUS_KEY] === SUCCESS) {
                 $status = SUCCESS;
@@ -1476,17 +1476,17 @@ class Product
         }
         //START : Check if user have added 5 or more product as favourite then  rate status will as true else false.
         if ($status === SUCCESS) {
-            $rate_status = $this->IsUserRate($user_id);
+            $rate_status = $this->isUserRate($user_id);
             if ($rate_status === SUCCESS) {
                 $select_user_fav_query = "SELECT count(*) as count_fav from " . TABLE_FAVOURITE . " WHERE user_id = " . $user_id . " 
                                     AND is_favourite = '1'
                                     AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' ";
                 $select_user_fav_stmt = getSingleTableData(
                     $connection,
-                    "",
+                    '',
                     $select_user_fav_query,
-                    "",
-                    "",
+                    '',
+                    '',
                     []
                 );
                 if (!empty($select_user_fav_stmt) && $select_user_fav_stmt['count_fav'] >= 5) {
@@ -1505,7 +1505,7 @@ class Product
         return $data;
     }
 
-    public function IsUserRate($user_id)
+    public function isUserRate($user_id): string
     {
         $connection = $this->connection;
         $select_user_rated_query = "SELECT * from " . TABLE_RATING . " WHERE user_id = " . $user_id . " 
@@ -1514,10 +1514,10 @@ class Product
                                     AND is_test = '" . IS_TESTDATA . "' AND is_delete = '" . IS_DELETE . "' ";
         $select_user_rated_stmt = getSingleTableData(
             $connection,
-            "",
+            '',
             $select_user_rated_query,
-            "",
-            "",
+            '',
+            '',
             []
         );
         if (!empty($select_user_rated_stmt)) {
