@@ -9,10 +9,10 @@ namespace Lifyzer\Api;
 
 class AllowCors
 {
-    const ALLOW_CORS_ORIGIN_KEY = 'Access-Control-Allow-Origin';
-    const ALLOW_CORS_METHOD_KEY = 'Access-Control-Allow-Methods';
-    const ALLOW_CORS_ORIGIN_VALUE = '*';
-    const ALLOW_CORS_METHOD_VALUE = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
+    private const ALLOW_CORS_ORIGIN_KEY = 'Access-Control-Allow-Origin';
+    private const ALLOW_CORS_METHOD_KEY = 'Access-Control-Allow-Methods';
+    private const ALLOW_CORS_ORIGIN_VALUE = '*';
+    private const ALLOW_CORS_METHOD_VALUE = 'GET, POST, PUT, DELETE, PATCH, OPTIONS';
 
     /**
      * Initialize the Cross-Origin Resource Sharing (CORS) headers.
@@ -31,7 +31,7 @@ class AllowCors
      * @param string $sKey The data key.
      * @param string $sValue The data value.
      */
-    private function set($sKey, $sValue): void
+    private function set(string $sKey, string $sValue): void
     {
         header($sKey . ':' . $sValue);
     }
