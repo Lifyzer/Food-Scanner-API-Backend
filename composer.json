@@ -6,11 +6,11 @@
     {
       "name": "Pierre-Henry Soria",
       "email": "hi@ph7.me",
-      "homepage": "http://ph7.me"
+      "homepage": "https://ph7.me"
     }
   ],
   "require": {
-    "php": ">=7.3.0",
+    "php": ">=7.4.0",
     "ext-json": "*",
     "vlucas/phpdotenv": "^5.4",
     "phpmailer/phpmailer": "^6.1",

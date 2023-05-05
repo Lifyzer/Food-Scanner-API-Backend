@@ -4,7 +4,7 @@
 
 ## Server Requirements
 
-* 🐘 [PHP 7.1](http://php.net/releases/7_1_0.php) or higher
+* 🐘 [PHP 7.4](https://www.php.net/releases/7_4_0.php) or higher
 * 💾 MySQL/MariaDB 5.5.3 or higher
 * 🎹 [Composer](https://getcomposer.org)
 

@@ -24,8 +24,7 @@ class User
     private const CSV_TAKEOUT_HEADER = 'user id,email,name,profile created date,profile modified date,terms acceptance date';
     private const FORGOT_PASSWORD_LENGTH = 10;
 
-    /** @var PDO */
-    protected $connection;
+    protected PDO $connection;
 
     public function __construct(PDO $con)
     {
