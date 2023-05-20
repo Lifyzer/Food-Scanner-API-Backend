@@ -18,9 +18,9 @@ require 'src/ConstantValues.php';
 require 'src/HelperFunctions.php';
 require 'src/PdoFunctions.php';
 
-$post_body = file_get_contents('php://input');
-$post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($post_body));
-$postData = json_decode($post_body);
+$postBody = file_get_contents('php://input');
+$post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($postBody));
+$postData = json_decode($postBody);
 
 $logger = new Logger();
 if (DEBUG_MODE) {
