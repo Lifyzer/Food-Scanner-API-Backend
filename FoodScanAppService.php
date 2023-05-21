@@ -19,7 +19,7 @@ require 'src/HelperFunctions.php';
 require 'src/PdoFunctions.php';
 
 $postBody = file_get_contents('php://input');
-$post_body = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($postBody));
+$postBody = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($postBody));
 $postData = json_decode($postBody);
 
 $logger = new Logger();
