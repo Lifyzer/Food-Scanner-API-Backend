@@ -8,6 +8,7 @@ use Whoops\Run as WhoopsRun;
 
 require __DIR__ . '/vendor/autoload.php';
 
+// handle nicely exceptions and convert them into JSON format
 $whoops = new WhoopsRun;
 $whoops->pushHandler(new JsonResponseHandler);
 $whoops->register();
