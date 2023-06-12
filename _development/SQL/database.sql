@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS product (
 
 
 CREATE TABLE user (
-  id int(11) UNSIGNED NOT NULL,
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
   email varchar(100) DEFAULT NULL,
   first_name varchar(100) DEFAULT NULL,
   last_name varchar(100) DEFAULT NULL,
