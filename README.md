@@ -21,9 +21,16 @@
 The index file to be called for requesting the API is `FoodScanAppService.php`. Make a request like `/FoodScanAppService.php?Service=...` to start using the food API.
 
 
+## [Used APIs](https://github.com/Lifyzer/Food-Scanner-API-Backend/issues/4)
+
+* Open Food Facts
+* FoodData Central (FDC) - US market
+* The Open Food Repo
+
+
 ## About
 
-[Pierre-Henry Soria](https://pierrehenry.be). A super-passionate software engineer. Love learning and discovering new exciting things all the time! 🚀
+[Pierre-Henry Soria](https://pierrehenry.be). A super passionate software engineer. I love learning and discovering new, exciting things all the time! 🚀
 
 ☕️ Are you enjoying my work? **[Offer me a coffee](https://ko-fi.com/phenry)** and boost the software development at the same time! 💪
 
