@@ -20,8 +20,13 @@ require 'src/HelperFunctions.php';
 require 'src/PdoFunctions.php';
 
 $postBody = file_get_contents('php://input');
-$postBody = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($postBody));
 $postData = json_decode($postBody);
+if (json_last_error() !== JSON_ERROR_NONE || !is_object($postData)) {
+    http_response_code(400);
+    header('Content-type: application/json');
+    echo json_encode(['status' => FAILED, 'message' => 'Request body must be a valid JSON object.']);
+    exit;
+}
 
 $logger = new Logger();
 if (DEBUG_MODE) {

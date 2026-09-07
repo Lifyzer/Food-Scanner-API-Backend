@@ -2,6 +2,10 @@
 // Run with `php tests/request-dispatch.php`; no database, credentials or network required.
 $cases = [
     ['result' => 'yes', 'status' => 'called'],
+    ['result' => 'yes', 'status' => 'called', 'body' => '{"text":"crêpe 🥞"}', 'text' => 'crêpe 🥞'],
+    ['result' => 'yes', 'status' => 'failed', 'body' => '{'],
+    ['result' => 'yes', 'status' => 'failed', 'body' => 'null'],
+    ['result' => 'yes', 'status' => 'failed', 'body' => '[]'],
     ['result' => 'no', 'status' => 'failed'],
     ['result' => 'error', 'status' => 'failed'],
     ['result' => null, 'status' => 'failed'],
@@ -28,6 +32,9 @@ foreach (['Login', 'getProductDetails'] as $service) {
         }
         if (isset($case['tokenKey']) && ($data[$case['tokenKey']] ?? null) !== 'token') {
             throw new RuntimeException('Validated token response was lost.');
+        }
+        if (isset($case['text']) && ($data['text'] ?? null) !== $case['text']) {
+            throw new RuntimeException('UTF-8 request text was corrupted.');
         }
         ++$count;
     }
