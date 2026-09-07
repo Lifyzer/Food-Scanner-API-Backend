@@ -29,7 +29,7 @@ $requiredEnvFields = [
 CacheManager::setDefaultConfig(
     new ConfigurationOption(
         [
-            'path' => dirname(__DIR__) . '/cache'
+            'path' => __DIR__ . '/cache'
         ]
     )
 );
