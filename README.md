@@ -40,3 +40,18 @@ The index file to be called for requesting the API is `FoodScanAppService.php`. 
 <!-- GitHub's Markdown reference links -->
 [twitter-image]: https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white
 [github-image]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
+
+## Offline validation and deployment limitations
+
+Run `php tests/request-dispatch.php` to exercise the real entrypoint routing with
+offline database/security/service doubles. This checks failed authentication,
+token response handling, malformed JSON, and UTF-8 preservation without credentials.
+Run `composer validate --no-check-publish` and `composer audit --locked` for the
+dependency contract. Composer resolves against PHP 7.4; the tests also run on PHP 8.5.
+The original project's licence metadata still needs clarification.
+
+These checks do not validate a live database, mobile-client compatibility or
+provider calls. The legacy token protocol still requires a dedicated review of
+account ownership, token expiry, recovery endpoints and shared-secret handling
+before this API is suitable for production deployment. Request routing fixes alone
+do not establish complete authentication or authorisation.

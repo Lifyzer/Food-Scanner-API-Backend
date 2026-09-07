@@ -20,8 +20,13 @@ require 'src/HelperFunctions.php';
 require 'src/PdoFunctions.php';
 
 $postBody = file_get_contents('php://input');
-$postBody = iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($postBody));
 $postData = json_decode($postBody);
+if (json_last_error() !== JSON_ERROR_NONE || !is_object($postData)) {
+    http_response_code(400);
+    header('Content-type: application/json');
+    echo json_encode(['status' => FAILED, 'message' => 'Request body must be a valid JSON object.']);
+    exit;
+}
 
 $logger = new Logger();
 if (DEBUG_MODE) {
@@ -58,17 +63,24 @@ if (!empty($_REQUEST['Service'])) {
             $secret_key = addslashes($secret_key);
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-            $isSecure = YES;
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
                 $data['message'] = MALICIOUS_SOURCE;
             } elseif ($isSecure === ERROR) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
+            } elseif ($isSecure !== YES && !(
+                is_array($isSecure)
+                && in_array($isSecure['key'] ?? null, ['Temp', 'User'], true)
+                && is_string($isSecure['value'] ?? null)
+                && $isSecure['value'] !== ''
+            )) {
+                $data['status'] = FAILED;
+                $data['message'] = TOKEN_ERROR;
             } else {
                 $user = new User($db);
                 $data = $user->callService($_REQUEST['Service'], $postData);
-                if ($isSecure !== YES || $isSecure !== YES) {
+                if (is_array($isSecure)) {
                     if ($isSecure['key'] == 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
@@ -97,7 +109,6 @@ if (!empty($_REQUEST['Service'])) {
             $secret_key = addslashes($secret_key);
 
             $isSecure = (new Security($db))->checkForSecurityNew($access_key, $secret_key);
-            $isSecure = YES;
 
             if ($isSecure === NO) {
                 $data['status'] = FAILED;
@@ -105,10 +116,18 @@ if (!empty($_REQUEST['Service'])) {
             } elseif ($isSecure === ERROR) {
                 $data['status'] = FAILED;
                 $data['message'] = TOKEN_ERROR;
+            } elseif ($isSecure !== YES && !(
+                is_array($isSecure)
+                && in_array($isSecure['key'] ?? null, ['Temp', 'User'], true)
+                && is_string($isSecure['value'] ?? null)
+                && $isSecure['value'] !== ''
+            )) {
+                $data['status'] = FAILED;
+                $data['message'] = TOKEN_ERROR;
             } else {
                 $product = new Product($db);
                 $data = $product->callService($_REQUEST['Service'], $postData);
-                if ($isSecure !== YES || $isSecure !== YES) {
+                if (is_array($isSecure)) {
                     if ($isSecure['key'] === 'Temp') {
                         $data['TempToken'] = $isSecure['value'];
                     } else {
